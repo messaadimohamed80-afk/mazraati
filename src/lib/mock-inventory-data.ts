@@ -1,0 +1,226 @@
+/* ===== Inventory Types ===== */
+
+export interface InventoryItem {
+    id: string;
+    farm_id: string;
+    name: string;
+    category: "equipment" | "chemicals" | "seeds" | "tools" | "supplies" | "spare_parts";
+    quantity: number;
+    unit: string;
+    min_stock: number;
+    location: string;
+    purchase_date: string;
+    purchase_price: number;
+    condition: "new" | "good" | "fair" | "needs_repair" | "broken";
+    last_maintenance?: string;
+    next_maintenance?: string;
+    notes?: string;
+    created_at: string;
+}
+
+/* ===== Mock Data ===== */
+
+export const MOCK_INVENTORY: InventoryItem[] = [
+    {
+        id: "inv-1",
+        farm_id: "farm-1",
+        name: "جرار فيات 640",
+        category: "equipment",
+        quantity: 1,
+        unit: "وحدة",
+        min_stock: 1,
+        location: "المخزن الرئيسي",
+        purchase_date: "2023-04-15",
+        purchase_price: 25000,
+        condition: "good",
+        last_maintenance: "2025-12-10",
+        next_maintenance: "2026-06-10",
+        notes: "جرار 65 حصان — حراثة + نقل",
+        created_at: "2023-04-15T10:00:00Z",
+    },
+    {
+        id: "inv-2",
+        farm_id: "farm-1",
+        name: "مضخة غاطسة Pedrollo",
+        category: "equipment",
+        quantity: 1,
+        unit: "وحدة",
+        min_stock: 1,
+        location: "البئر الرئيسي",
+        purchase_date: "2024-08-15",
+        purchase_price: 1800,
+        condition: "good",
+        last_maintenance: "2025-10-01",
+        next_maintenance: "2026-04-01",
+        notes: "3 حصان — تعمل بالطاقة الشمسية",
+        created_at: "2024-08-15T10:00:00Z",
+    },
+    {
+        id: "inv-3",
+        farm_id: "farm-1",
+        name: "محراث قلاب",
+        category: "equipment",
+        quantity: 1,
+        unit: "وحدة",
+        min_stock: 1,
+        location: "المخزن الرئيسي",
+        purchase_date: "2023-06-20",
+        purchase_price: 3500,
+        condition: "fair",
+        last_maintenance: "2025-09-15",
+        notes: "يحتاج تعديل الشفرات",
+        created_at: "2023-06-20T08:00:00Z",
+    },
+    {
+        id: "inv-4",
+        farm_id: "farm-1",
+        name: "سماد NPK 15-15-15",
+        category: "chemicals",
+        quantity: 200,
+        unit: "كغ",
+        min_stock: 100,
+        location: "مخزن الأسمدة",
+        purchase_date: "2025-01-10",
+        purchase_price: 180,
+        condition: "new",
+        notes: "سماد مركب للموسم الربيعي",
+        created_at: "2025-01-10T09:00:00Z",
+    },
+    {
+        id: "inv-5",
+        farm_id: "farm-1",
+        name: "مبيد حشري — كاراتي",
+        category: "chemicals",
+        quantity: 5,
+        unit: "لتر",
+        min_stock: 3,
+        location: "مخزن الأسمدة",
+        purchase_date: "2025-01-20",
+        purchase_price: 120,
+        condition: "new",
+        notes: "ضد ذبابة الزيتون",
+        created_at: "2025-01-20T10:00:00Z",
+    },
+    {
+        id: "inv-6",
+        farm_id: "farm-1",
+        name: "بذور طماطم — كاليندا",
+        category: "seeds",
+        quantity: 500,
+        unit: "جرام",
+        min_stock: 200,
+        location: "مخزن البذور",
+        purchase_date: "2025-02-01",
+        purchase_price: 85,
+        condition: "new",
+        notes: "صنف مبكر — البيوت البلاستيكية",
+        created_at: "2025-02-01T08:00:00Z",
+    },
+    {
+        id: "inv-7",
+        farm_id: "farm-1",
+        name: "بذور فلفل حار",
+        category: "seeds",
+        quantity: 100,
+        unit: "جرام",
+        min_stock: 150,
+        location: "مخزن البذور",
+        purchase_date: "2025-01-15",
+        purchase_price: 45,
+        condition: "new",
+        notes: "مخزون منخفض!",
+        created_at: "2025-01-15T09:00:00Z",
+    },
+    {
+        id: "inv-8",
+        farm_id: "farm-1",
+        name: "مقص تقليم كهربائي",
+        category: "tools",
+        quantity: 2,
+        unit: "وحدة",
+        min_stock: 1,
+        location: "ورشة العمل",
+        purchase_date: "2024-11-20",
+        purchase_price: 350,
+        condition: "good",
+        notes: "بطارية ليثيوم — شحن 8 ساعات",
+        created_at: "2024-11-20T10:00:00Z",
+    },
+    {
+        id: "inv-9",
+        farm_id: "farm-1",
+        name: "أنابيب ري 16mm",
+        category: "supplies",
+        quantity: 300,
+        unit: "متر",
+        min_stock: 100,
+        location: "مخزن الري",
+        purchase_date: "2024-10-01",
+        purchase_price: 240,
+        condition: "new",
+        created_at: "2024-10-01T08:00:00Z",
+    },
+    {
+        id: "inv-10",
+        farm_id: "farm-1",
+        name: "نقاطات ري",
+        category: "supplies",
+        quantity: 150,
+        unit: "وحدة",
+        min_stock: 200,
+        location: "مخزن الري",
+        purchase_date: "2024-10-01",
+        purchase_price: 60,
+        condition: "new",
+        notes: "مخزون يحتاج تعبئة",
+        created_at: "2024-10-01T08:00:00Z",
+    },
+    {
+        id: "inv-11",
+        farm_id: "farm-1",
+        name: "فلتر زيت جرار",
+        category: "spare_parts",
+        quantity: 3,
+        unit: "وحدة",
+        min_stock: 2,
+        location: "ورشة العمل",
+        purchase_date: "2025-01-05",
+        purchase_price: 45,
+        condition: "new",
+        created_at: "2025-01-05T09:00:00Z",
+    },
+    {
+        id: "inv-12",
+        farm_id: "farm-1",
+        name: "رشاش ظهري 16 لتر",
+        category: "tools",
+        quantity: 1,
+        unit: "وحدة",
+        min_stock: 1,
+        location: "مخزن الأسمدة",
+        purchase_date: "2024-05-10",
+        purchase_price: 120,
+        condition: "needs_repair",
+        notes: "تسريب في الخرطوم — يحتاج إصلاح",
+        created_at: "2024-05-10T10:00:00Z",
+    },
+];
+
+/* ===== Helper Maps ===== */
+
+export const INVENTORY_CATEGORY_MAP: Record<string, { label: string; icon: string; color: string }> = {
+    equipment: { label: "معدات", icon: "🚜", color: "#f59e0b" },
+    chemicals: { label: "أسمدة ومبيدات", icon: "🧪", color: "#ef4444" },
+    seeds: { label: "بذور", icon: "🌱", color: "#10b981" },
+    tools: { label: "أدوات", icon: "🔧", color: "#3b82f6" },
+    supplies: { label: "مستلزمات", icon: "📦", color: "#8b5cf6" },
+    spare_parts: { label: "قطع غيار", icon: "⚙️", color: "#64748b" },
+};
+
+export const INVENTORY_CONDITION_MAP: Record<string, { label: string; color: string; icon: string }> = {
+    new: { label: "جديد", color: "#10b981", icon: "✨" },
+    good: { label: "جيد", color: "#3b82f6", icon: "✅" },
+    fair: { label: "متوسط", color: "#f59e0b", icon: "⚠️" },
+    needs_repair: { label: "يحتاج إصلاح", color: "#ef4444", icon: "🔧" },
+    broken: { label: "معطّل", color: "#64748b", icon: "❌" },
+};

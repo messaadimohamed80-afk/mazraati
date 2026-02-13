@@ -1,64 +1,253 @@
-import Image from "next/image";
+import Sidebar from "@/components/Sidebar";
+import Header from "@/components/Header";
+import KpiCard from "@/components/KpiCard";
+import QuickAction from "@/components/QuickAction";
+import ModuleCard from "@/components/ModuleCard";
+import ActivityItem from "@/components/ActivityItem";
+// import WellStatusCard from "@/components/WellStatusCard"; // removed from dashboard
+import Footer from "@/components/Footer";
+import { formatCurrency } from "@/lib/mock-data";
+import { getExpenses, getCategories } from "@/lib/actions/expenses";
+import { getWells } from "@/lib/actions/water";
+import { getCrops, getTasks } from "@/lib/actions/crops";
+import { getAnimals } from "@/lib/actions/livestock";
+import { getInventory } from "@/lib/actions/inventory";
 
-export default function Home() {
+export default async function DashboardPage() {
+  /* ===== Fetch data from server actions ===== */
+  const [expenses, categories, wells, crops, tasks, animals, inventory] = await Promise.all([
+    getExpenses(),
+    getCategories(),
+    getWells(),
+    getCrops(),
+    getTasks(),
+    getAnimals(),
+    getInventory(),
+  ]);
+
+  /* ===== Real stats ===== */
+  const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0);
+  const totalBudget = categories.reduce((s, c) => s + (c.budget_planned || 0), 0);
+  const remaining = totalBudget - totalExpenses;
+  const budgetPercent = totalBudget > 0 ? Math.round((totalExpenses / totalBudget) * 100) : 0;
+  const activeCrops = crops.filter(c => c.status === "growing" || c.status === "planted").length;
+  const activeWells = wells.filter(w => w.status === "active").length;
+  const pendingTasks = tasks.filter(t => t.status !== "done").length;
+  const totalAnimals = animals.filter(a => a.status !== "sold").length;
+  const healthyAnimals = animals.filter(a => a.status === "healthy").length;
+  const totalInventory = inventory.length;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <div className="app-layout">
+      <Sidebar />
+      <main className="main-content">
+        <Header />
+
+        {/* Welcome Banner */}
+        <section className="welcome-banner">
+          <div className="welcome-content">
+            <div className="welcome-text">
+              <h2 className="welcome-title">
+                مرحباً بك في <span className="text-gradient">مزرعتي</span>
+              </h2>
+              <p className="welcome-desc">
+                لوحة تحكم ذكية لإدارة مزرعتك بكفاءة — تتبع المصاريف، المحاصيل،
+                الآبار، والمواشي في مكان واحد
+              </p>
+            </div>
+            <div className="welcome-stats">
+              <div className="welcome-stat">
+                <span className="welcome-stat-value">5</span>
+                <span className="welcome-stat-label">وحدات نشطة</span>
+              </div>
+              <div className="welcome-stat-divider" />
+              <div className="welcome-stat">
+                <span className="welcome-stat-value">{expenses.length}</span>
+                <span className="welcome-stat-label">معاملات مسجلة</span>
+              </div>
+              <div className="welcome-stat-divider" />
+              <div className="welcome-stat">
+                <span className="welcome-stat-value">{budgetPercent}%</span>
+                <span className="welcome-stat-label">استهلاك الميزانية</span>
+              </div>
+            </div>
+          </div>
+          <div className="welcome-decoration">
+            <div className="welcome-circle welcome-circle-1" />
+            <div className="welcome-circle welcome-circle-2" />
+            <div className="welcome-circle welcome-circle-3" />
+          </div>
+        </section>
+
+        {/* KPI Grid */}
+        <section className="dashboard-section">
+          <div className="kpi-grid stagger-children">
+            <KpiCard
+              icon="💰"
+              title="إجمالي الميزانية"
+              value={`${formatCurrency(totalBudget)}`}
+              subtitle={`${categories.length} تصنيفات`}
+              trend={{ value: "الكل مسجل", direction: "neutral" }}
+              color="#10b981"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+            <KpiCard
+              icon="✅"
+              title="المصروف الفعلي"
+              value={`${formatCurrency(totalExpenses)}`}
+              subtitle={`${expenses.length} معاملات مسجلة`}
+              trend={{ value: `${budgetPercent}% من الميزانية`, direction: budgetPercent > 70 ? "down" : "up" }}
+              color="#3b82f6"
+            />
+            <KpiCard
+              icon="📊"
+              title="المتبقي"
+              value={`${formatCurrency(remaining)}`}
+              subtitle={`${100 - budgetPercent}% من الميزانية`}
+              trend={{ value: remaining > 0 ? "ميزانية كافية" : "تجاوز الميزانية", direction: remaining > 0 ? "up" : "down" }}
+              color="#f59e0b"
+            />
+            <KpiCard
+              icon="🔵"
+              title="الآبار النشطة"
+              value={`${activeWells}`}
+              subtitle={`من أصل ${wells.length} آبار`}
+              trend={{ value: `${pendingTasks} مهمة قيد التنفيذ`, direction: "neutral" }}
+              color="#06b6d4"
+            />
+          </div>
+        </section>
+
+        {/* Quick Actions */}
+        <section className="dashboard-section">
+          <h2 className="section-title">
+            <span className="section-title-dot" style={{ background: "#10b981" }} />
+            <span>إجراءات سريعة</span>
+          </h2>
+          <div className="quick-actions-grid">
+            <QuickAction icon="➕" label="إضافة مصروف" color="#10b981" href="/expenses" />
+            <QuickAction icon="🌾" label="تسجيل محصول" color="#f59e0b" href="/crops" />
+            <QuickAction icon="🐑" label="إضافة حيوان" color="#8b5cf6" href="/livestock" />
+            <QuickAction icon="📋" label="مهمة جديدة" color="#ef4444" href="/tasks" />
+            <QuickAction icon="💧" label="قراءة البئر" color="#06b6d4" href="/water" />
+            <QuickAction icon="📄" label="تصدير تقرير" color="#64748b" href="/reports" />
+          </div>
+        </section>
+
+        {/* Modules Overview */}
+        <section className="dashboard-section">
+          <h2 className="section-title">
+            <span className="section-title-dot" style={{ background: "#3b82f6" }} />
+            <span>الوحدات</span>
+          </h2>
+          <div className="modules-grid stagger-children">
+            <ModuleCard
+              icon="💰"
+              title="المحاسبة"
+              desc="المصاريف، الميزانية، العملات"
+              count={`${expenses.length} معاملات`}
+              color="#10b981"
+              href="/expenses"
+              progress={30}
+            />
+            <ModuleCard
+              icon="💧"
+              title="إدارة الآبار"
+              desc="الآبار، الخزانات، شبكة الري"
+              count={`${activeWells} بئر نشط`}
+              color="#06b6d4"
+              href="/water"
+              progress={100}
+            />
+            <ModuleCard
+              icon="🌾"
+              title="المحاصيل"
+              desc="التخطيط، الحصاد، العوائد"
+              count={`${activeCrops} محاصيل نشطة`}
+              color="#f59e0b"
+              href="/crops"
+              progress={65}
+            />
+            <ModuleCard
+              icon="🐑"
+              title="المواشي"
+              desc="القطيع، الصحة، التغذية"
+              count={`${totalAnimals} رؤوس`}
+              color="#8b5cf6"
+              href="/livestock"
+              progress={Math.round((healthyAnimals / totalAnimals) * 100)}
+            />
+            <ModuleCard
+              icon="✅"
+              title="المهام"
+              desc="التخطيط، التذكيرات، الفريق"
+              count={`${pendingTasks} مهام نشطة`}
+              color="#ef4444"
+              href="/tasks"
+              progress={40}
+            />
+            <ModuleCard
+              icon="📦"
+              title="المخزون"
+              desc="المعدات، المواد، القطع"
+              count={`${totalInventory} عنصر`}
+              color="#ec4899"
+              href="/inventory"
+              progress={Math.round((inventory.filter(i => i.condition === 'good' || i.condition === 'new').length / totalInventory) * 100)}
+            />
+          </div>
+        </section>
+
+        {/* Two Column: Activity + Well */}
+        <section className="dashboard-section">
+          <div className="two-col-grid">
+            {/* Activity Timeline */}
+            <div>
+              <h2 className="section-title">
+                <span className="section-title-dot" style={{ background: "#f59e0b" }} />
+                <span>آخر النشاطات</span>
+              </h2>
+              <div className="activity-card glass-card">
+                <div className="activity-timeline">
+                  <ActivityItem
+                    title="حفر الآبار"
+                    desc="تحويل بنكي"
+                    amount={formatCurrency(34200)}
+                    time="23 جانفي 2025"
+                    color="#ef4444"
+                    icon="⛏️"
+                  />
+                  <ActivityItem
+                    title="حفر الآبار"
+                    desc="تحويل بنكي دولي"
+                    amount={formatCurrency(8600)}
+                    time="26 ديسمبر 2024"
+                    color="#f59e0b"
+                    icon="⛏️"
+                  />
+                  <ActivityItem
+                    title="محصول الحمص"
+                    desc="شراء البذور والأسمدة"
+                    amount={formatCurrency(5100)}
+                    time="1 ديسمبر 2024"
+                    color="#10b981"
+                    icon="🌾"
+                  />
+                  <ActivityItem
+                    title="السكانار"
+                    desc="فحص التربة والموقع"
+                    amount={formatCurrency(2500)}
+                    time="11 أكتوبر 2023"
+                    color="#3b82f6"
+                    icon="🔍"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <Footer />
       </main>
     </div>
   );

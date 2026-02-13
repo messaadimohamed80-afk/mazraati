@@ -1,0 +1,222 @@
+import { Well, WellLayer, WaterTank, IrrigationNetwork } from "./types";
+
+/* ===== Wells ===== */
+export const MOCK_WELLS: Well[] = [
+    {
+        id: "well-1",
+        farm_id: "farm-1",
+        name: "البئر الرئيسي",
+        depth_meters: 120,
+        water_level_meters: 45,
+        water_quality: "fresh",
+        status: "active",
+        total_cost: 42800,
+        salinity_ppm: 320,
+        latitude: 36.8065,
+        longitude: 10.1815,
+        created_at: "2024-06-15T10:00:00Z",
+    },
+    {
+        id: "well-2",
+        farm_id: "farm-1",
+        name: "بئر القطعة الجنوبية",
+        depth_meters: 85,
+        water_level_meters: 32,
+        water_quality: "fresh",
+        status: "active",
+        total_cost: 18500,
+        salinity_ppm: 410,
+        latitude: 36.8070,
+        longitude: 10.1820,
+        created_at: "2024-09-20T14:00:00Z",
+    },
+    {
+        id: "well-3",
+        farm_id: "farm-1",
+        name: "بئر القطعة الشمالية",
+        depth_meters: 150,
+        water_level_meters: 68,
+        water_quality: "brackish",
+        status: "testing",
+        total_cost: 35200,
+        salinity_ppm: 980,
+        latitude: 36.8080,
+        longitude: 10.1800,
+        created_at: "2025-01-10T08:00:00Z",
+    },
+    {
+        id: "well-4",
+        farm_id: "farm-1",
+        name: "البئر القديم",
+        depth_meters: 60,
+        water_level_meters: 55,
+        water_quality: "saline",
+        status: "inactive",
+        total_cost: 8000,
+        salinity_ppm: 2400,
+        created_at: "2023-03-01T09:00:00Z",
+    },
+];
+
+/* ===== Well Layers (for well-1) ===== */
+export const MOCK_WELL_LAYERS: WellLayer[] = [
+    { id: "wl-1", well_id: "well-1", depth_from: 0, depth_to: 8, layer_type: "soil", notes: "تربة زراعية" },
+    { id: "wl-2", well_id: "well-1", depth_from: 8, depth_to: 25, layer_type: "clay", notes: "طين أحمر" },
+    { id: "wl-3", well_id: "well-1", depth_from: 25, depth_to: 45, layer_type: "rock", notes: "صخر كلسي" },
+    { id: "wl-4", well_id: "well-1", depth_from: 45, depth_to: 52, layer_type: "sand" },
+    { id: "wl-5", well_id: "well-1", depth_from: 52, depth_to: 78, layer_type: "water", notes: "طبقة مائية رئيسية" },
+    { id: "wl-6", well_id: "well-1", depth_from: 78, depth_to: 95, layer_type: "gravel" },
+    { id: "wl-7", well_id: "well-1", depth_from: 95, depth_to: 120, layer_type: "rock", notes: "صخر صلب" },
+];
+
+/* ===== Water Tanks ===== */
+export const MOCK_TANKS: WaterTank[] = [
+    {
+        id: "tank-1",
+        farm_id: "farm-1",
+        name: "الخزان الرئيسي",
+        type: "elevated",
+        capacity_liters: 10000,
+        current_level_percent: 72,
+        source: "البئر الرئيسي",
+        status: "active",
+        last_filled: "2025-02-09",
+        notes: "خزان بلاستيكي 10 م³",
+        created_at: "2024-07-01T10:00:00Z",
+    },
+    {
+        id: "tank-2",
+        farm_id: "farm-1",
+        name: "خزان الري",
+        type: "ground",
+        capacity_liters: 25000,
+        current_level_percent: 45,
+        source: "بئر القطعة الجنوبية",
+        status: "active",
+        last_filled: "2025-02-07",
+        notes: "حوض خرساني",
+        created_at: "2024-08-15T12:00:00Z",
+    },
+    {
+        id: "tank-3",
+        farm_id: "farm-1",
+        name: "خزان مياه الأمطار",
+        type: "underground",
+        capacity_liters: 50000,
+        current_level_percent: 88,
+        source: "مياه أمطار",
+        status: "active",
+        last_filled: "2025-01-28",
+        notes: "ماجل تحت أرضي",
+        created_at: "2024-05-20T09:00:00Z",
+    },
+    {
+        id: "tank-4",
+        farm_id: "farm-1",
+        name: "خزان احتياطي",
+        type: "ground",
+        capacity_liters: 5000,
+        current_level_percent: 0,
+        source: "—",
+        status: "empty",
+        notes: "معطّل مؤقتاً",
+        created_at: "2024-11-01T08:00:00Z",
+    },
+];
+
+/* ===== Irrigation Networks ===== */
+export const MOCK_IRRIGATION: IrrigationNetwork[] = [
+    {
+        id: "irr-1",
+        farm_id: "farm-1",
+        name: "شبكة الري بالتنقيط — الزيتون",
+        type: "drip",
+        coverage_hectares: 2.5,
+        source_id: "tank-2",
+        source_name: "خزان الري",
+        status: "active",
+        flow_rate_lph: 800,
+        last_maintenance: "2025-01-15",
+        notes: "خراطيم 16mm مع نقاطات كل 60 سم",
+        created_at: "2024-09-01T10:00:00Z",
+    },
+    {
+        id: "irr-2",
+        farm_id: "farm-1",
+        name: "رشاشات الحديقة",
+        type: "sprinkler",
+        coverage_hectares: 0.5,
+        source_id: "tank-1",
+        source_name: "الخزان الرئيسي",
+        status: "active",
+        flow_rate_lph: 1200,
+        last_maintenance: "2025-02-01",
+        created_at: "2024-10-15T14:00:00Z",
+    },
+    {
+        id: "irr-3",
+        farm_id: "farm-1",
+        name: "ري القطعة الجنوبية",
+        type: "flood",
+        coverage_hectares: 1.0,
+        source_id: "well-1",
+        source_name: "البئر الرئيسي",
+        status: "maintenance",
+        flow_rate_lph: 3000,
+        last_maintenance: "2024-12-20",
+        notes: "يحتاج إصلاح القنوات",
+        created_at: "2024-07-20T08:00:00Z",
+    },
+    {
+        id: "irr-4",
+        farm_id: "farm-1",
+        name: "شبكة التنقيط — الخضروات",
+        type: "drip",
+        coverage_hectares: 0.8,
+        source_name: "خزان مياه الأمطار",
+        status: "planned",
+        notes: "مخطط للموسم القادم",
+        created_at: "2025-02-05T11:00:00Z",
+    },
+];
+
+/* ===== Helper Maps ===== */
+export const WELL_STATUS_MAP: Record<string, { label: string; color: string; icon: string }> = {
+    drilling: { label: "قيد الحفر", color: "#f59e0b", icon: "⛏️" },
+    testing: { label: "قيد الاختبار", color: "#3b82f6", icon: "🔬" },
+    active: { label: "نشط", color: "#10b981", icon: "✅" },
+    inactive: { label: "معطّل", color: "#64748b", icon: "⏸️" },
+};
+
+export const WATER_QUALITY_MAP: Record<string, { label: string; color: string }> = {
+    fresh: { label: "عذبة", color: "#10b981" },
+    brackish: { label: "مالحة قليلاً", color: "#f59e0b" },
+    saline: { label: "مالحة", color: "#ef4444" },
+};
+
+export const TANK_TYPE_MAP: Record<string, { label: string; icon: string }> = {
+    ground: { label: "أرضي", icon: "🏗️" },
+    elevated: { label: "مرتفع", icon: "🗼" },
+    underground: { label: "تحت أرضي", icon: "🕳️" },
+};
+
+export const TANK_STATUS_MAP: Record<string, { label: string; color: string }> = {
+    active: { label: "نشط", color: "#10b981" },
+    maintenance: { label: "صيانة", color: "#f59e0b" },
+    empty: { label: "فارغ", color: "#ef4444" },
+    inactive: { label: "معطّل", color: "#64748b" },
+};
+
+export const IRRIGATION_TYPE_MAP: Record<string, { label: string; icon: string }> = {
+    drip: { label: "تنقيط", icon: "💧" },
+    sprinkler: { label: "رشاشات", icon: "🌧️" },
+    flood: { label: "غمر", icon: "🌊" },
+    pivot: { label: "محوري", icon: "🔄" },
+};
+
+export const IRRIGATION_STATUS_MAP: Record<string, { label: string; color: string }> = {
+    active: { label: "نشط", color: "#10b981" },
+    maintenance: { label: "صيانة", color: "#f59e0b" },
+    inactive: { label: "معطّل", color: "#64748b" },
+    planned: { label: "مخطط", color: "#3b82f6" },
+};
