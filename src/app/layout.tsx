@@ -1,7 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans_Arabic } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import Script from "next/script";
 
 const ibmPlexArabic = IBM_Plex_Sans_Arabic({
   variable: "--font-arabic",
@@ -10,10 +13,20 @@ const ibmPlexArabic = IBM_Plex_Sans_Arabic({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  themeColor: "#10b981",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
-  title: "مزرعتي — إدارة المزرعة الذكية",
+  title: {
+    default: "مزرعتي — إدارة المزرعة الذكية",
+    template: "%s | مزرعتي",
+  },
   description:
-    "منصة عربية متكاملة لإدارة المزارع: المصاريف، المحاصيل، المواشي، الآبار، والتقارير المالية",
+    "منصة عربية متكاملة لإدارة المزارع: تتبع المصاريف، المحاصيل، المواشي، الآبار، الطاقة، والتقارير المالية. مجانية وسهلة الاستخدام.",
   keywords: [
     "إدارة المزرعة",
     "مصاريف المزرعة",
@@ -21,13 +34,44 @@ export const metadata: Metadata = {
     "مواشي",
     "آبار",
     "محاصيل",
+    "تطبيق مزرعة",
     "farm management",
-    "Arabic",
+    "Arabic farm app",
+    "agriculture",
+    "مزرعتي",
+    "mazraati",
   ],
   manifest: "/manifest.json",
-  themeColor: "#0a0f1a",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/icons/icon.svg",
+    apple: "/icons/icon.svg",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "مزرعتي",
+  },
+  openGraph: {
+    type: "website",
+    locale: "ar_SA",
+    url: "https://mazraati-three.vercel.app",
+    siteName: "مزرعتي",
+    title: "مزرعتي — إدارة المزرعة الذكية",
+    description:
+      "منصة عربية متكاملة لإدارة المزارع — المصاريف، المحاصيل، المواشي، الآبار، الطاقة، والتقارير. مجانية.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "مزرعتي — إدارة المزرعة الذكية",
+    description:
+      "أول منصة عربية لإدارة المزارع — تتبع المصاريف والمحاصيل والمواشي مجاناً",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
   },
 };
 
@@ -38,8 +82,25 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" className="dark">
+      <head>
+        <link rel="apple-touch-icon" href="/icons/icon.svg" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+      </head>
       <body className={`${ibmPlexArabic.variable} font-arabic antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
+        <Script id="sw-register" strategy="afterInteractive">
+          {`
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                  .then(function(reg) { console.log('SW registered:', reg.scope); })
+                  .catch(function(err) { console.log('SW registration failed:', err); });
+              });
+            }
+          `}
+        </Script>
       </body>
     </html>
   );
