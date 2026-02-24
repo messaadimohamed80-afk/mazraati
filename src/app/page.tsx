@@ -33,9 +33,19 @@ export default async function DashboardPage() {
   const activeCrops = crops.filter(c => c.status === "growing" || c.status === "planted").length;
   const activeWells = wells.filter(w => w.status === "active").length;
   const pendingTasks = tasks.filter(t => t.status !== "done").length;
+  const doneTasks = tasks.filter(t => t.status === "done").length;
   const totalAnimals = animals.filter(a => a.status !== "sold").length;
   const healthyAnimals = animals.filter(a => a.status === "healthy").length;
   const totalInventory = inventory.length;
+  const goodInventory = inventory.filter(i => i.condition === 'good' || i.condition === 'new').length;
+
+  // Computed progress values (safe from NaN)
+  const livestockHealth = totalAnimals > 0 ? Math.round((healthyAnimals / totalAnimals) * 100) : 0;
+  const inventoryCondition = totalInventory > 0 ? Math.round((goodInventory / totalInventory) * 100) : 0;
+  const cropsProgress = crops.length > 0 ? Math.round((activeCrops / crops.length) * 100) : 0;
+  const tasksProgress = tasks.length > 0 ? Math.round((doneTasks / tasks.length) * 100) : 0;
+  const wellsProgress = wells.length > 0 ? Math.round((activeWells / wells.length) * 100) : 0;
+  const expensesProgress = budgetPercent;
 
   return (
     <div className="app-layout">
@@ -147,7 +157,7 @@ export default async function DashboardPage() {
               count={`${expenses.length} معاملات`}
               color="#10b981"
               href="/expenses"
-              progress={30}
+              progress={expensesProgress}
             />
             <ModuleCard
               icon="💧"
@@ -156,7 +166,7 @@ export default async function DashboardPage() {
               count={`${activeWells} بئر نشط`}
               color="#06b6d4"
               href="/water"
-              progress={100}
+              progress={wellsProgress}
             />
             <ModuleCard
               icon="🌾"
@@ -165,7 +175,7 @@ export default async function DashboardPage() {
               count={`${activeCrops} محاصيل نشطة`}
               color="#f59e0b"
               href="/crops"
-              progress={65}
+              progress={cropsProgress}
             />
             <ModuleCard
               icon="🐑"
@@ -174,7 +184,7 @@ export default async function DashboardPage() {
               count={`${totalAnimals} رؤوس`}
               color="#8b5cf6"
               href="/livestock"
-              progress={Math.round((healthyAnimals / totalAnimals) * 100)}
+              progress={livestockHealth}
             />
             <ModuleCard
               icon="✅"
@@ -183,7 +193,7 @@ export default async function DashboardPage() {
               count={`${pendingTasks} مهام نشطة`}
               color="#ef4444"
               href="/tasks"
-              progress={40}
+              progress={tasksProgress}
             />
             <ModuleCard
               icon="📦"
@@ -192,7 +202,7 @@ export default async function DashboardPage() {
               count={`${totalInventory} عنصر`}
               color="#ec4899"
               href="/inventory"
-              progress={Math.round((inventory.filter(i => i.condition === 'good' || i.condition === 'new').length / totalInventory) * 100)}
+              progress={inventoryCondition}
             />
           </div>
         </section>

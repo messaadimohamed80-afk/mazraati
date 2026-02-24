@@ -21,6 +21,7 @@ export default function SettingsPage() {
     const [notifOverdue, setNotifOverdue] = useState(true);
     const [notifWeather, setNotifWeather] = useState(false);
     const [saved, setSaved] = useState(false);
+    const [error, setError] = useState("");
 
     // Load settings from server
     useEffect(() => {
@@ -31,16 +32,21 @@ export default function SettingsPage() {
             if (s.email) setEmail(s.email);
             if (s.location) setLocation(s.location);
             if (s.currency) setCurrency(s.currency);
-        }).catch(console.error);
+        }).catch(() => setError("تعذر تحميل الإعدادات"));
     }, []);
 
     const handleSave = async () => {
-        const result = await updateFarmSettings({ farmName, ownerName, phone, email, location, currency });
-        if (result.success) {
-            setSaved(true);
-            setTimeout(() => setSaved(false), 2500);
-        } else {
-            console.error("Save failed:", result.error);
+        setError("");
+        try {
+            const result = await updateFarmSettings({ farmName, ownerName, phone, email, location, currency });
+            if (result.success) {
+                setSaved(true);
+                setTimeout(() => setSaved(false), 2500);
+            } else {
+                setError(result.error || "فشل في حفظ الإعدادات");
+            }
+        } catch {
+            setError("حدث خطأ أثناء الحفظ");
         }
     };
 
@@ -166,6 +172,13 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Save */}
+                {error && (
+                    <div style={{ padding: "0 1.5rem", marginBottom: "0.5rem" }}>
+                        <div style={{ padding: "0.75rem 1rem", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "var(--radius-sm)", color: "#ef4444", fontSize: "0.85rem" }}>
+                            ⚠️ {error}
+                        </div>
+                    </div>
+                )}
                 <div style={{ padding: "0 1.5rem 2rem", display: "flex", justifyContent: "flex-end", gap: "0.6rem" }}>
                     <button className="modal-btn modal-btn-save" onClick={handleSave}>
                         {saved ? "✅ تم الحفظ!" : "💾 حفظ الإعدادات"}

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "@/components/ThemeProvider";
 
 const navItems = [
@@ -24,6 +24,18 @@ const bottomItems = [
 export default function Sidebar() {
     const pathname = usePathname();
     const [collapsed, setCollapsed] = useState(false);
+
+    // Persist collapsed state to localStorage
+    useEffect(() => {
+        const saved = localStorage.getItem("sidebar-collapsed");
+        if (saved === "true") setCollapsed(true);
+    }, []);
+
+    const toggleCollapsed = () => {
+        const next = !collapsed;
+        setCollapsed(next);
+        localStorage.setItem("sidebar-collapsed", String(next));
+    };
 
     return (
         <>
@@ -87,7 +99,7 @@ export default function Sidebar() {
 
                     {/* Collapse toggle */}
                     <button
-                        onClick={() => setCollapsed(!collapsed)}
+                        onClick={toggleCollapsed}
                         className="sidebar-toggle"
                         aria-label="Toggle sidebar"
                     >

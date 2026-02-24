@@ -75,6 +75,7 @@ export const metadata: Metadata = {
   },
 };
 
+import { ToastProvider } from "@/components/Toast";
 import InstallPrompt from "@/components/InstallPrompt";
 
 export default function RootLayout({
@@ -89,7 +90,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body className={`${ibmPlexArabic.variable} font-arabic antialiased`}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </ThemeProvider>
         <InstallPrompt />
         <Analytics />
         <SpeedInsights />
