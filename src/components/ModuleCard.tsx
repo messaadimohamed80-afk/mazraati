@@ -24,6 +24,7 @@ export default function ModuleCard({
     return (
         <Link
             href={href}
+            prefetch={false}
             className={`module-card glass-card ${comingSoon ? "module-coming-soon" : ""}`}
             style={{ textDecoration: "none" }}
         >

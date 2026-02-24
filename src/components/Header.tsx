@@ -135,7 +135,7 @@ export default function Header() {
     const router = useRouter();
     const page = PAGE_TITLES[pathname] || PAGE_TITLES["/"];
 
-    /* Fetched data for search + notifications */
+    /* Fetched data for search + notifications — LAZY loaded on first interaction */
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [crops, setCrops] = useState<Crop[]>([]);
@@ -144,8 +144,11 @@ export default function Header() {
     const [vaccinations, setVaccinations] = useState<VaccinationRecord[]>([]);
     const [feed, setFeed] = useState<FeedRecord[]>([]);
     const [inventory, setInventory] = useState<InventoryItem[]>([]);
+    const [dataLoaded, setDataLoaded] = useState(false);
 
-    useEffect(() => {
+    const loadHeaderData = () => {
+        if (dataLoaded) return;
+        setDataLoaded(true);
         Promise.all([
             getExpenses().then(setExpenses).catch(() => { }),
             getCategories().then(setCategories).catch(() => { }),
@@ -156,7 +159,7 @@ export default function Header() {
             getFeedRecords().then(setFeed).catch(() => { }),
             getInventory().then(setInventory).catch(() => { }),
         ]);
-    }, []);
+    };
 
     /* Search */
     const [searchOpen, setSearchOpen] = useState(false);
@@ -183,6 +186,7 @@ export default function Header() {
         const handler = (e: KeyboardEvent) => {
             if (e.key === "/" && !searchOpen && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) {
                 e.preventDefault();
+                loadHeaderData();
                 setSearchOpen(true);
             }
             if (e.key === "Escape") {
@@ -215,7 +219,7 @@ export default function Header() {
                 </div>
 
                 {/* Center - search trigger */}
-                <div className="header-search" onClick={() => setSearchOpen(true)} role="button" tabIndex={0}>
+                <div className="header-search" onClick={() => { loadHeaderData(); setSearchOpen(true); }} role="button" tabIndex={0}>
                     <span className="header-search-icon">🔍</span>
                     <span className="header-search-placeholder">ابحث في المزرعة...</span>
                     <kbd className="header-search-kbd">/</kbd>
@@ -228,7 +232,7 @@ export default function Header() {
                         <button
                             className="header-icon-btn"
                             title="الإشعارات"
-                            onClick={() => { setNotifOpen(!notifOpen); setSearchOpen(false); }}
+                            onClick={() => { loadHeaderData(); setNotifOpen(!notifOpen); setSearchOpen(false); }}
                         >
                             <span>🔔</span>
                             {notifications.length > 0 && (

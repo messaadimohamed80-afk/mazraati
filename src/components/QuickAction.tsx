@@ -25,7 +25,7 @@ export default function QuickAction({ icon, label, color, href, onClick }: Quick
 
     if (href) {
         return (
-            <Link href={href} className="quick-action-card" style={{ textDecoration: "none" }}>
+            <Link href={href} prefetch={false} className="quick-action-card" style={{ textDecoration: "none" }}>
                 {content}
             </Link>
         );
