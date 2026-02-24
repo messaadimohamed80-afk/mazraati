@@ -7,8 +7,6 @@ import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
-    MOCK_CROPS,
-    MOCK_TASKS,
     CROP_STATUS_MAP,
     getCropIcon,
     getCropColor,
@@ -18,6 +16,7 @@ import {
     TASK_STATUS_MAP,
     getCropPhenologyStages,
 } from "@/lib/mock-crops-tasks-data";
+import { Crop, Task } from "@/lib/types";
 import { getCrop, getTasksForCrop } from "@/lib/actions/crops";
 
 const FieldMap = dynamic(() => import("@/components/FieldMap"), { ssr: false, loading: () => <div style={{ height: 450, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-secondary)" }}>⏳ جارٍ تحميل الخريطة...</div> });
@@ -25,15 +24,29 @@ const ClimatePanel = dynamic(() => import("@/components/ClimatePanel"), { ssr: f
 
 export default function CropDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
-    const mockCrop = MOCK_CROPS.find((c) => c.id === id) ?? null;
-    const mockTasks = MOCK_TASKS.filter((t) => t.crop_id === id || t.id.includes("task"));
-    const [crop, setCrop] = useState(mockCrop);
-    const [tasks, setTasks] = useState(mockTasks);
+    const [crop, setCrop] = useState<Crop | null>(null);
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getCrop(id).then((c) => { if (c) setCrop(c); }).catch(console.error);
-        getTasksForCrop(id).then(setTasks).catch(console.error);
+        Promise.all([
+            getCrop(id).then((c) => { if (c) setCrop(c); }).catch(() => { }),
+            getTasksForCrop(id).then(setTasks).catch(() => { }),
+        ]).finally(() => setLoading(false));
     }, [id]);
+
+    if (loading) {
+        return (
+            <div className="app-layout">
+                <Sidebar />
+                <main className="main-content">
+                    <Header />
+                    <div className="page-loading"><div className="page-loading-spinner" />جاري التحميل...</div>
+                    <Footer />
+                </main>
+            </div>
+        );
+    }
 
     const cropData = crop;
 

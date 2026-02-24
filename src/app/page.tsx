@@ -4,10 +4,9 @@ import KpiCard from "@/components/KpiCard";
 import QuickAction from "@/components/QuickAction";
 import ModuleCard from "@/components/ModuleCard";
 import ActivityItem from "@/components/ActivityItem";
-// import WellStatusCard from "@/components/WellStatusCard"; // removed from dashboard
 import Footer from "@/components/Footer";
 import OnboardingModal from "@/components/OnboardingModal";
-import { formatCurrency } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/utils";
 import { getExpenses, getCategories } from "@/lib/actions/expenses";
 import { getWells } from "@/lib/actions/water";
 import { getCrops, getTasks } from "@/lib/actions/crops";

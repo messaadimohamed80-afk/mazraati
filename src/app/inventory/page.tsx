@@ -6,11 +6,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import InventoryModal from "@/components/InventoryModal";
 import {
-    MOCK_INVENTORY,
     INVENTORY_CATEGORY_MAP,
     INVENTORY_CONDITION_MAP,
 } from "@/lib/mock-inventory-data";
-import { formatCurrency } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/utils";
+import { InventoryItem } from "@/lib/types";
 import { getInventory } from "@/lib/actions/inventory";
 
 type CategoryFilter = "all" | "equipment" | "chemicals" | "seeds" | "tools" | "supplies" | "spare_parts";
@@ -21,7 +21,7 @@ export default function InventoryPage() {
     const [view, setView] = useState<ViewMode>("items");
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [inventory, setInventory] = useState([] as typeof MOCK_INVENTORY);
+    const [inventory, setInventory] = useState<InventoryItem[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -303,7 +303,7 @@ export default function InventoryPage() {
 
                 <Footer />
             </main>
-            {showModal && <InventoryModal onClose={() => setShowModal(false)} onSave={(data) => { console.log("New item:", data); setShowModal(false); }} />}
+            {showModal && <InventoryModal onClose={() => setShowModal(false)} onSave={() => { setShowModal(false); }} />}
         </div>
     );
 }

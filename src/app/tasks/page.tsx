@@ -4,12 +4,12 @@ import { useState, useMemo, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import {
-    MOCK_TASKS,
     TASK_PRIORITY_MAP,
     TASK_STATUS_MAP,
     isOverdue,
     getDaysUntil,
 } from "@/lib/mock-crops-tasks-data";
+import { Task } from "@/lib/types";
 import { getTasks } from "@/lib/actions/crops";
 import Footer from "@/components/Footer";
 
@@ -18,7 +18,7 @@ type TaskFilter = "all" | "pending" | "in_progress" | "done" | "overdue";
 export default function TasksPage() {
     const [filter, setFilter] = useState<TaskFilter>("all");
     const [search, setSearch] = useState("");
-    const [tasks, setTasks] = useState([] as typeof MOCK_TASKS);
+    const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

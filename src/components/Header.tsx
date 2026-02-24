@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { MOCK_EXPENSES, MOCK_CATEGORIES } from "@/lib/mock-data";
-import { MOCK_CROPS, MOCK_TASKS, isOverdue } from "@/lib/mock-crops-tasks-data";
-import { MOCK_ANIMALS, MOCK_VACCINATIONS, MOCK_FEED } from "@/lib/mock-livestock-data";
-import { MOCK_INVENTORY } from "@/lib/mock-inventory-data";
+import { Expense, Category, Crop, Task, Animal, VaccinationRecord, FeedRecord, InventoryItem } from "@/lib/types";
+import { isOverdue } from "@/lib/mock-crops-tasks-data";
+import { getExpenses, getCategories } from "@/lib/actions/expenses";
+import { getCrops, getTasks } from "@/lib/actions/crops";
+import { getAnimals, getVaccinations, getFeedRecords } from "@/lib/actions/livestock";
+import { getInventory } from "@/lib/actions/inventory";
 
 const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
     "/": { title: "لوحة التحكم", subtitle: "نظرة عامة على المزرعة" },
@@ -37,22 +39,29 @@ interface SearchItem {
     href: string;
 }
 
-function buildSearchIndex(): SearchItem[] {
+function buildSearchIndex(
+    expenses: Expense[],
+    categories: Category[],
+    crops: Crop[],
+    tasks: Task[],
+    animals: Animal[],
+    inventory: InventoryItem[],
+): SearchItem[] {
     const items: SearchItem[] = [];
-    MOCK_EXPENSES.forEach((e) => {
-        const cat = MOCK_CATEGORIES.find((c) => c.id === e.category_id);
+    expenses.forEach((e) => {
+        const cat = categories.find((c) => c.id === e.category_id);
         items.push({ type: "expense", icon: "💰", label: e.description, sub: cat?.name || "", href: "/expenses" });
     });
-    MOCK_CROPS.forEach((c) => {
+    crops.forEach((c) => {
         items.push({ type: "crop", icon: "🌾", label: `${c.crop_type} — ${c.variety || ""}`, sub: c.field_name || "", href: `/crops/${c.id}` });
     });
-    MOCK_TASKS.forEach((t) => {
+    tasks.forEach((t) => {
         items.push({ type: "task", icon: "✅", label: t.title, sub: t.assigned_to || "", href: "/tasks" });
     });
-    MOCK_ANIMALS.forEach((a) => {
+    animals.forEach((a) => {
         items.push({ type: "animal", icon: "🐑", label: `${a.tag_number} — ${a.name}`, sub: a.breed, href: "/livestock" });
     });
-    MOCK_INVENTORY.forEach((i) => {
+    inventory.forEach((i) => {
         items.push({ type: "inventory", icon: "📦", label: i.name, sub: i.location, href: "/inventory" });
     });
     return items;
@@ -67,30 +76,36 @@ interface NotifItem {
     href: string;
 }
 
-function buildNotifications(): NotifItem[] {
+function buildNotifications(
+    tasks: Task[],
+    vaccinations: VaccinationRecord[],
+    feed: FeedRecord[],
+    inventory: InventoryItem[],
+    animals: Animal[],
+): NotifItem[] {
     const notifs: NotifItem[] = [];
     // Overdue tasks
-    const overdueTasks = MOCK_TASKS.filter((t) => t.status !== "done" && isOverdue(t.due_date));
+    const overdueTasks = tasks.filter((t) => t.status !== "done" && isOverdue(t.due_date));
     if (overdueTasks.length > 0) {
         notifs.push({ id: "overdue-tasks", icon: "⚠️", text: `${overdueTasks.length} مهام متأخرة`, color: "#ef4444", href: "/tasks" });
     }
     // Overdue vaccinations
-    const overdueVax = MOCK_VACCINATIONS.filter((v) => v.next_due && new Date(v.next_due) < new Date());
+    const overdueVax = vaccinations.filter((v) => v.next_due && new Date(v.next_due) < new Date());
     if (overdueVax.length > 0) {
         notifs.push({ id: "overdue-vax", icon: "💉", text: `${overdueVax.length} تطعيم متأخر`, color: "#f59e0b", href: "/livestock" });
     }
     // Low feed
-    const lowFeed = MOCK_FEED.filter((f) => f.remaining_kg / f.quantity_kg < 0.3);
+    const lowFeed = feed.filter((f) => f.remaining_kg / f.quantity_kg < 0.3);
     if (lowFeed.length > 0) {
         notifs.push({ id: "low-feed", icon: "🌾", text: `${lowFeed.length} أعلاف مخزون منخفض`, color: "#f97316", href: "/livestock" });
     }
     // Low inventory
-    const lowInv = MOCK_INVENTORY.filter((i) => i.quantity <= i.min_stock);
+    const lowInv = inventory.filter((i) => i.quantity <= i.min_stock);
     if (lowInv.length > 0) {
         notifs.push({ id: "low-inv", icon: "📦", text: `${lowInv.length} مخزون منخفض`, color: "#ec4899", href: "/inventory" });
     }
     // Sick animals
-    const sickAnimals = MOCK_ANIMALS.filter((a) => a.status === "sick");
+    const sickAnimals = animals.filter((a) => a.status === "sick");
     if (sickAnimals.length > 0) {
         notifs.push({ id: "sick", icon: "🤒", text: `${sickAnimals.length} حيوان مريض`, color: "#ef4444", href: "/livestock" });
     }
@@ -120,11 +135,34 @@ export default function Header() {
     const router = useRouter();
     const page = PAGE_TITLES[pathname] || PAGE_TITLES["/"];
 
+    /* Fetched data for search + notifications */
+    const [expenses, setExpenses] = useState<Expense[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [crops, setCrops] = useState<Crop[]>([]);
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [animals, setAnimals] = useState<Animal[]>([]);
+    const [vaccinations, setVaccinations] = useState<VaccinationRecord[]>([]);
+    const [feed, setFeed] = useState<FeedRecord[]>([]);
+    const [inventory, setInventory] = useState<InventoryItem[]>([]);
+
+    useEffect(() => {
+        Promise.all([
+            getExpenses().then(setExpenses).catch(() => { }),
+            getCategories().then(setCategories).catch(() => { }),
+            getCrops().then(setCrops).catch(() => { }),
+            getTasks().then(setTasks).catch(() => { }),
+            getAnimals().then(setAnimals).catch(() => { }),
+            getVaccinations().then(setVaccinations).catch(() => { }),
+            getFeedRecords().then(setFeed).catch(() => { }),
+            getInventory().then(setInventory).catch(() => { }),
+        ]);
+    }, []);
+
     /* Search */
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const searchRef = useRef<HTMLInputElement>(null);
-    const allItems = useMemo(() => buildSearchIndex(), []);
+    const allItems = useMemo(() => buildSearchIndex(expenses, categories, crops, tasks, animals, inventory), [expenses, categories, crops, tasks, animals, inventory]);
     const searchResults = useMemo(() => {
         if (!searchQuery.trim()) return [];
         const q = searchQuery.toLowerCase();
@@ -135,7 +173,7 @@ export default function Header() {
 
     /* Notifications */
     const [notifOpen, setNotifOpen] = useState(false);
-    const notifications = useMemo(() => buildNotifications(), []);
+    const notifications = useMemo(() => buildNotifications(tasks, vaccinations, feed, inventory, animals), [tasks, vaccinations, feed, inventory, animals]);
 
     /* Weather */
     const weather = useMemo(() => getWeather(), []);

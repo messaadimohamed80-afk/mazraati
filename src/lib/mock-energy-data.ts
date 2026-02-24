@@ -1,4 +1,5 @@
-import { formatCurrency } from "./mock-data";
+
+
 
 /* ===== Types (inline for energy module) ===== */
 export interface SolarPanel {

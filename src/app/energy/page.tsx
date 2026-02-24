@@ -4,16 +4,14 @@ import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import {
-    MOCK_SOLAR,
-    MOCK_ELECTRICITY,
-    MOCK_GENERATORS,
     SOLAR_STATUS_MAP,
     ELEC_STATUS_MAP,
     ELEC_TARIFF_MAP,
     GEN_STATUS_MAP,
     FUEL_TYPE_MAP,
 } from "@/lib/mock-energy-data";
-import { formatCurrency } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/utils";
+import { SolarPanel, ElectricityMeter, Generator } from "@/lib/types";
 import { getSolarPanels, getElectricityMeters, getGenerators } from "@/lib/actions/energy";
 import Footer from "@/components/Footer";
 
@@ -21,9 +19,9 @@ type EnergyTab = "solar" | "electricity" | "generators";
 
 export default function EnergyPage() {
     const [activeTab, setActiveTab] = useState<EnergyTab>("solar");
-    const [solar, setSolar] = useState([] as typeof MOCK_SOLAR);
-    const [electricity, setElectricity] = useState([] as typeof MOCK_ELECTRICITY);
-    const [generators, setGenerators] = useState([] as typeof MOCK_GENERATORS);
+    const [solar, setSolar] = useState<SolarPanel[]>([]);
+    const [electricity, setElectricity] = useState<ElectricityMeter[]>([]);
+    const [generators, setGenerators] = useState<Generator[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

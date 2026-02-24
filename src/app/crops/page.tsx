@@ -5,12 +5,12 @@ import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import {
-    MOCK_CROPS,
     CROP_STATUS_MAP,
     getCropIcon,
     getCropColor,
     getDaysUntil,
 } from "@/lib/mock-crops-tasks-data";
+import { Crop } from "@/lib/types";
 import { getCrops } from "@/lib/actions/crops";
 import Footer from "@/components/Footer";
 
@@ -19,7 +19,7 @@ type CropFilter = "all" | "planned" | "planted" | "growing" | "harvested";
 export default function CropsPage() {
     const [filter, setFilter] = useState<CropFilter>("all");
     const [search, setSearch] = useState("");
-    const [crops, setCrops] = useState([] as typeof MOCK_CROPS);
+    const [crops, setCrops] = useState<Crop[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

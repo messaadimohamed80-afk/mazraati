@@ -141,3 +141,119 @@ export interface Task {
     created_at: string;
 }
 
+/* ===== Energy Types ===== */
+
+export interface SolarPanel {
+    id: string;
+    farm_id: string;
+    name: string;
+    capacity_kw: number;
+    panel_count: number;
+    daily_production_kwh: number;
+    efficiency_percent: number;
+    installation_date: string;
+    inverter_type: string;
+    status: "active" | "maintenance" | "inactive";
+    total_cost: number;
+    notes?: string;
+    created_at: string;
+}
+
+export interface ElectricityMeter {
+    id: string;
+    farm_id: string;
+    name: string;
+    meter_number: string;
+    provider: string;
+    monthly_consumption_kwh: number;
+    monthly_cost: number;
+    currency: string;
+    tariff_type: "agricultural" | "residential" | "commercial";
+    status: "active" | "suspended" | "disconnected";
+    last_reading_date: string;
+    notes?: string;
+    created_at: string;
+}
+
+export interface Generator {
+    id: string;
+    farm_id: string;
+    name: string;
+    fuel_type: "diesel" | "gasoline" | "gas";
+    capacity_kva: number;
+    runtime_hours: number;
+    fuel_consumption_lph: number;
+    last_maintenance: string;
+    next_maintenance_hours: number;
+    status: "running" | "standby" | "maintenance" | "broken";
+    total_cost: number;
+    notes?: string;
+    created_at: string;
+}
+
+/* ===== Livestock Types ===== */
+
+export interface Animal {
+    id: string;
+    farm_id: string;
+    name: string;
+    type: "sheep" | "cattle" | "poultry" | "goat";
+    breed: string;
+    gender: "male" | "female";
+    birth_date?: string;
+    weight_kg?: number;
+    tag_number: string;
+    status: "healthy" | "sick" | "pregnant" | "sold" | "deceased";
+    mother_id?: string;
+    acquisition_date: string;
+    acquisition_type: "born" | "purchased";
+    purchase_price?: number;
+    notes?: string;
+    created_at: string;
+}
+
+export interface VaccinationRecord {
+    id: string;
+    animal_id: string;
+    vaccine_name: string;
+    date: string;
+    next_due?: string;
+    administered_by?: string;
+    cost?: number;
+    notes?: string;
+    created_at: string;
+}
+
+export interface FeedRecord {
+    id: string;
+    farm_id: string;
+    feed_type: string;
+    quantity_kg: number;
+    cost_per_kg: number;
+    purchase_date: string;
+    remaining_kg: number;
+    notes?: string;
+    created_at: string;
+}
+
+/* ===== Inventory Types ===== */
+
+export interface InventoryItem {
+    id: string;
+    farm_id: string;
+    name: string;
+    category: "equipment" | "chemicals" | "seeds" | "tools" | "supplies" | "spare_parts";
+    quantity: number;
+    unit: string;
+    min_stock: number;
+    location: string;
+    purchase_date: string;
+    purchase_price: number;
+    condition: "new" | "good" | "fair" | "needs_repair" | "broken";
+    last_maintenance?: string;
+    next_maintenance?: string;
+    notes?: string;
+    created_at: string;
+}
+
+

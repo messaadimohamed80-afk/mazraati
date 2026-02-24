@@ -5,11 +5,8 @@ import dynamic from "next/dynamic";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { MOCK_EXPENSES, MOCK_CATEGORIES, formatCurrency } from "@/lib/mock-data";
-import { MOCK_CROPS, MOCK_TASKS } from "@/lib/mock-crops-tasks-data";
-import { MOCK_ANIMALS, MOCK_FEED } from "@/lib/mock-livestock-data";
-import { MOCK_INVENTORY } from "@/lib/mock-inventory-data";
-import { MOCK_WELLS } from "@/lib/mock-water-data";
+import { formatCurrency } from "@/lib/utils";
+import { Expense, Category, Crop, Task, Well, Animal, FeedRecord, InventoryItem } from "@/lib/types";
 import { getExpenses, getCategories } from "@/lib/actions/expenses";
 import { getCrops, getTasks } from "@/lib/actions/crops";
 import { getAnimals, getFeedRecords } from "@/lib/actions/livestock";
@@ -31,14 +28,14 @@ const Pie = dynamic(() => import("recharts").then((m) => m.Pie), { ssr: false })
 const Cell = dynamic(() => import("recharts").then((m) => m.Cell), { ssr: false });
 
 export default function ReportsPage() {
-    const [expenses, setExpenses] = useState([] as typeof MOCK_EXPENSES);
-    const [categories, setCategories] = useState([] as typeof MOCK_CATEGORIES);
-    const [crops, setCrops] = useState([] as typeof MOCK_CROPS);
-    const [tasks, setTasks] = useState([] as typeof MOCK_TASKS);
-    const [animals, setAnimals] = useState([] as typeof MOCK_ANIMALS);
-    const [feed, setFeed] = useState([] as typeof MOCK_FEED);
-    const [inventory, setInventory] = useState([] as typeof MOCK_INVENTORY);
-    const [wells, setWells] = useState([] as typeof MOCK_WELLS);
+    const [expenses, setExpenses] = useState<Expense[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [crops, setCrops] = useState<Crop[]>([]);
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [animals, setAnimals] = useState<Animal[]>([]);
+    const [feed, setFeed] = useState<FeedRecord[]>([]);
+    const [inventory, setInventory] = useState<InventoryItem[]>([]);
+    const [wells, setWells] = useState<Well[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

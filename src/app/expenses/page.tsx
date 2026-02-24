@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import ExpenseModal from "@/components/ExpenseModal";
-import { MOCK_CATEGORIES, formatCurrency, formatDate } from "@/lib/mock-data";
+import { formatCurrency, formatDate } from "@/lib/utils";
 import { getExpenses, getCategories } from "@/lib/actions/expenses";
 import { Expense, Category } from "@/lib/types";
 import Footer from "@/components/Footer";

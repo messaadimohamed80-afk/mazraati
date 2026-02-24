@@ -4,9 +4,6 @@ import { useState, useMemo, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import {
-    MOCK_WELLS,
-    MOCK_TANKS,
-    MOCK_IRRIGATION,
     MOCK_WELL_LAYERS,
     WELL_STATUS_MAP,
     WATER_QUALITY_MAP,
@@ -15,7 +12,8 @@ import {
     IRRIGATION_TYPE_MAP,
     IRRIGATION_STATUS_MAP,
 } from "@/lib/mock-water-data";
-import { formatCurrency } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/utils";
+import { Well, WaterTank, IrrigationNetwork } from "@/lib/types";
 import { getWells, getTanks, getIrrigation } from "@/lib/actions/water";
 import Footer from "@/components/Footer";
 
@@ -24,9 +22,9 @@ type WaterTab = "wells" | "tanks" | "irrigation";
 export default function WaterPage() {
     const [activeTab, setActiveTab] = useState<WaterTab>("wells");
     const [selectedWellId, setSelectedWellId] = useState<string | null>(null);
-    const [wells, setWells] = useState([] as typeof MOCK_WELLS);
-    const [tanks, setTanks] = useState([] as typeof MOCK_TANKS);
-    const [irrigation, setIrrigation] = useState([] as typeof MOCK_IRRIGATION);
+    const [wells, setWells] = useState<Well[]>([]);
+    const [tanks, setTanks] = useState<WaterTank[]>([]);
+    const [irrigation, setIrrigation] = useState<IrrigationNetwork[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

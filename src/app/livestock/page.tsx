@@ -6,14 +6,12 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import LivestockModal from "@/components/LivestockModal";
 import {
-    MOCK_ANIMALS,
-    MOCK_VACCINATIONS,
-    MOCK_FEED,
     ANIMAL_TYPE_MAP,
     ANIMAL_STATUS_MAP,
     GENDER_MAP,
 } from "@/lib/mock-livestock-data";
-import { formatCurrency } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/utils";
+import { Animal, VaccinationRecord, FeedRecord } from "@/lib/types";
 import { getAnimals, getVaccinations, getFeedRecords } from "@/lib/actions/livestock";
 
 type TabKey = "all" | "sheep" | "cattle" | "poultry" | "goat";
@@ -24,9 +22,9 @@ export default function LivestockPage() {
     const [view, setView] = useState<ViewMode>("animals");
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [animals, setAnimals] = useState([] as typeof MOCK_ANIMALS);
-    const [vaccinations, setVaccinations] = useState([] as typeof MOCK_VACCINATIONS);
-    const [feed, setFeed] = useState([] as typeof MOCK_FEED);
+    const [animals, setAnimals] = useState<Animal[]>([]);
+    const [vaccinations, setVaccinations] = useState<VaccinationRecord[]>([]);
+    const [feed, setFeed] = useState<FeedRecord[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -390,7 +388,7 @@ export default function LivestockPage() {
 
                 <Footer />
             </main>
-            {showModal && <LivestockModal onClose={() => setShowModal(false)} onSave={(data) => { console.log("New animal:", data); setShowModal(false); }} />}
+            {showModal && <LivestockModal onClose={() => setShowModal(false)} onSave={() => { setShowModal(false); }} />}
         </div>
     );
 }
