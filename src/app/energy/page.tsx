@@ -21,14 +21,17 @@ type EnergyTab = "solar" | "electricity" | "generators";
 
 export default function EnergyPage() {
     const [activeTab, setActiveTab] = useState<EnergyTab>("solar");
-    const [solar, setSolar] = useState(MOCK_SOLAR);
-    const [electricity, setElectricity] = useState(MOCK_ELECTRICITY);
-    const [generators, setGenerators] = useState(MOCK_GENERATORS);
+    const [solar, setSolar] = useState([] as typeof MOCK_SOLAR);
+    const [electricity, setElectricity] = useState([] as typeof MOCK_ELECTRICITY);
+    const [generators, setGenerators] = useState([] as typeof MOCK_GENERATORS);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getSolarPanels().then(setSolar).catch(console.error);
-        getElectricityMeters().then(setElectricity).catch(console.error);
-        getGenerators().then(setGenerators).catch(console.error);
+        Promise.all([
+            getSolarPanels().then(setSolar),
+            getElectricityMeters().then(setElectricity),
+            getGenerators().then(setGenerators),
+        ]).catch(console.error).finally(() => setLoading(false));
     }, []);
 
     /* ===== Stats ===== */
@@ -44,6 +47,18 @@ export default function EnergyPage() {
         { key: "electricity", label: "الكهرباء", icon: "🔌", count: electricity.length },
         { key: "generators", label: "المولدات", icon: "⚙️", count: generators.length },
     ];
+
+    if (loading) {
+        return (
+            <div className="app-layout">
+                <Sidebar />
+                <main className="main-content">
+                    <Header />
+                    <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="app-layout">
@@ -118,7 +133,7 @@ export default function EnergyPage() {
                     {activeTab === "solar" && (
                         <div className="water-content">
                             <div className="water-cards-grid">
-                                {MOCK_SOLAR.map((panel) => {
+                                {solar.map((panel) => {
                                     const status = SOLAR_STATUS_MAP[panel.status];
                                     const effColor =
                                         panel.efficiency_percent > 75 ? "#10b981"
@@ -205,7 +220,7 @@ export default function EnergyPage() {
                                 <h4 className="energy-summary-title">📊 ملخص الطاقة الشمسية</h4>
                                 <div className="energy-summary-grid">
                                     <div className="energy-summary-item">
-                                        <span className="energy-summary-val">{MOCK_SOLAR.reduce((s, p) => s + p.panel_count, 0)}</span>
+                                        <span className="energy-summary-val">{solar.reduce((s, p) => s + p.panel_count, 0)}</span>
                                         <span className="energy-summary-lbl">إجمالي الألواح</span>
                                     </div>
                                     <div className="energy-summary-item">
@@ -229,7 +244,7 @@ export default function EnergyPage() {
                     {activeTab === "electricity" && (
                         <div className="water-content">
                             <div className="water-cards-grid water-cards-wide">
-                                {MOCK_ELECTRICITY.map((meter) => {
+                                {electricity.map((meter) => {
                                     const status = ELEC_STATUS_MAP[meter.status];
                                     const consumptionPercent = Math.min((meter.monthly_consumption_kwh / 600) * 100, 100);
 
@@ -303,7 +318,7 @@ export default function EnergyPage() {
                     {activeTab === "generators" && (
                         <div className="water-content">
                             <div className="water-cards-grid">
-                                {MOCK_GENERATORS.map((gen) => {
+                                {generators.map((gen) => {
                                     const status = GEN_STATUS_MAP[gen.status];
                                     const fuel = FUEL_TYPE_MAP[gen.fuel_type];
                                     const maintenancePercent = Math.round((gen.runtime_hours / gen.next_maintenance_hours) * 100);

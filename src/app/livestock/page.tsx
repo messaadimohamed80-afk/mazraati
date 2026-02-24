@@ -24,14 +24,17 @@ export default function LivestockPage() {
     const [view, setView] = useState<ViewMode>("animals");
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [animals, setAnimals] = useState(MOCK_ANIMALS);
-    const [vaccinations, setVaccinations] = useState(MOCK_VACCINATIONS);
-    const [feed, setFeed] = useState(MOCK_FEED);
+    const [animals, setAnimals] = useState([] as typeof MOCK_ANIMALS);
+    const [vaccinations, setVaccinations] = useState([] as typeof MOCK_VACCINATIONS);
+    const [feed, setFeed] = useState([] as typeof MOCK_FEED);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getAnimals().then(setAnimals).catch(console.error);
-        getVaccinations().then(setVaccinations).catch(console.error);
-        getFeedRecords().then(setFeed).catch(console.error);
+        Promise.all([
+            getAnimals().then(setAnimals),
+            getVaccinations().then(setVaccinations),
+            getFeedRecords().then(setFeed),
+        ]).catch(console.error).finally(() => setLoading(false));
     }, []);
 
     const activeAnimals = animals.filter((a) => a.status !== "sold" && a.status !== "deceased");
@@ -42,23 +45,23 @@ export default function LivestockPage() {
     const sickCount = activeAnimals.filter((a) => a.status === "sick").length;
     const pregnantCount = activeAnimals.filter((a) => a.status === "pregnant").length;
 
-    const totalFeedCost = MOCK_FEED.reduce((s, f) => s + f.quantity_kg * f.cost_per_kg, 0);
-    const totalPurchaseCost = MOCK_ANIMALS.filter((a) => a.purchase_price).reduce((s, a) => s + (a.purchase_price || 0), 0);
+    const totalFeedCost = feed.reduce((s, f) => s + f.quantity_kg * f.cost_per_kg, 0);
+    const totalPurchaseCost = animals.filter((a) => a.purchase_price).reduce((s, a) => s + (a.purchase_price || 0), 0);
 
     const filteredAnimals = useMemo(() => {
-        return MOCK_ANIMALS.filter((a) => {
+        return animals.filter((a) => {
             if (tab !== "all" && a.type !== tab) return false;
             if (search && !a.name.includes(search) && !a.breed.includes(search) && !a.tag_number.includes(search)) return false;
             return true;
         });
-    }, [tab, search]);
+    }, [tab, search, animals]);
 
     const tabs: { key: TabKey; label: string; icon: string; count: number }[] = [
-        { key: "all", label: "الكل", icon: "📋", count: MOCK_ANIMALS.length },
-        { key: "sheep", label: "أغنام", icon: "🐑", count: MOCK_ANIMALS.filter((a) => a.type === "sheep").length },
-        { key: "cattle", label: "أبقار", icon: "🐄", count: MOCK_ANIMALS.filter((a) => a.type === "cattle").length },
-        { key: "poultry", label: "دواجن", icon: "🐔", count: MOCK_ANIMALS.filter((a) => a.type === "poultry").length },
-        { key: "goat", label: "ماعز", icon: "🐐", count: MOCK_ANIMALS.filter((a) => a.type === "goat").length },
+        { key: "all", label: "الكل", icon: "📋", count: animals.length },
+        { key: "sheep", label: "أغنام", icon: "🐑", count: animals.filter((a) => a.type === "sheep").length },
+        { key: "cattle", label: "أبقار", icon: "🐄", count: animals.filter((a) => a.type === "cattle").length },
+        { key: "poultry", label: "دواجن", icon: "🐔", count: animals.filter((a) => a.type === "poultry").length },
+        { key: "goat", label: "ماعز", icon: "🐐", count: animals.filter((a) => a.type === "goat").length },
     ];
 
     const viewTabs: { key: ViewMode; label: string; icon: string }[] = [
@@ -67,7 +70,7 @@ export default function LivestockPage() {
         { key: "feed", label: "الأعلاف", icon: "🌾" },
     ];
 
-    const upcomingVaccinations = MOCK_VACCINATIONS.filter((v) => {
+    const upcomingVaccinations = vaccinations.filter((v) => {
         if (!v.next_due) return false;
         const due = new Date(v.next_due);
         const now = new Date();
@@ -75,7 +78,19 @@ export default function LivestockPage() {
         return diff <= 30 && diff >= 0;
     });
 
-    const lowFeed = MOCK_FEED.filter((f) => f.remaining_kg / f.quantity_kg < 0.3);
+    const lowFeed = feed.filter((f) => f.remaining_kg / f.quantity_kg < 0.3);
+
+    if (loading) {
+        return (
+            <div className="app-layout">
+                <Sidebar />
+                <main className="main-content">
+                    <Header />
+                    <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="app-layout">
@@ -189,7 +204,7 @@ export default function LivestockPage() {
                                 const typeInfo = ANIMAL_TYPE_MAP[animal.type];
                                 const statusInfo = ANIMAL_STATUS_MAP[animal.status];
                                 const genderInfo = GENDER_MAP[animal.gender];
-                                const animalVax = MOCK_VACCINATIONS.filter((v) => v.animal_id === animal.id);
+                                const animalVax = vaccinations.filter((v) => v.animal_id === animal.id);
                                 const latestVax = animalVax.length > 0 ? animalVax[animalVax.length - 1] : null;
 
                                 return (
@@ -297,8 +312,8 @@ export default function LivestockPage() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {MOCK_VACCINATIONS.map((vax) => {
-                                        const animal = MOCK_ANIMALS.find((a) => a.id === vax.animal_id);
+                                    {vaccinations.map((vax) => {
+                                        const animal = animals.find((a) => a.id === vax.animal_id);
                                         const isDue = vax.next_due && new Date(vax.next_due) <= new Date();
                                         return (
                                             <tr key={vax.id} className={isDue ? "livestock-row-alert" : ""}>
@@ -338,22 +353,22 @@ export default function LivestockPage() {
                         )}
 
                         <div className="livestock-feed-grid">
-                            {MOCK_FEED.map((feed) => {
-                                const percent = Math.round((feed.remaining_kg / feed.quantity_kg) * 100);
+                            {feed.map((feedItem) => {
+                                const percent = Math.round((feedItem.remaining_kg / feedItem.quantity_kg) * 100);
                                 const isLow = percent < 30;
                                 const barColor = isLow ? "#ef4444" : percent < 60 ? "#f59e0b" : "#10b981";
 
                                 return (
-                                    <div key={feed.id} className="livestock-feed-card glass-card">
+                                    <div key={feedItem.id} className="livestock-feed-card glass-card">
                                         <div className="livestock-feed-header">
-                                            <h4 className="livestock-feed-name">🌾 {feed.feed_type}</h4>
-                                            <span className="livestock-feed-cost">{formatCurrency(feed.quantity_kg * feed.cost_per_kg)}</span>
+                                            <h4 className="livestock-feed-name">🌾 {feedItem.feed_type}</h4>
+                                            <span className="livestock-feed-cost">{formatCurrency(feedItem.quantity_kg * feedItem.cost_per_kg)}</span>
                                         </div>
 
                                         <div className="livestock-feed-bar-area">
                                             <div className="livestock-feed-bar-header">
                                                 <span>المخزون المتبقي</span>
-                                                <span style={{ color: barColor, fontWeight: 700 }}>{feed.remaining_kg} كغ / {feed.quantity_kg} كغ</span>
+                                                <span style={{ color: barColor, fontWeight: 700 }}>{feedItem.remaining_kg} كغ / {feedItem.quantity_kg} كغ</span>
                                             </div>
                                             <div className="livestock-feed-bar">
                                                 <div className="livestock-feed-bar-fill" style={{ width: `${percent}%`, background: barColor }} />
@@ -362,10 +377,10 @@ export default function LivestockPage() {
                                         </div>
 
                                         <div className="livestock-feed-meta">
-                                            <span>📅 شراء: {new Date(feed.purchase_date).toLocaleDateString("ar-TN")}</span>
-                                            <span>💰 {feed.cost_per_kg} د.ت/كغ</span>
+                                            <span>📅 شراء: {new Date(feedItem.purchase_date).toLocaleDateString("ar-TN")}</span>
+                                            <span>💰 {feedItem.cost_per_kg} د.ت/كغ</span>
                                         </div>
-                                        {feed.notes && <p className="livestock-card-notes">{feed.notes}</p>}
+                                        {feedItem.notes && <p className="livestock-card-notes">{feedItem.notes}</p>}
                                     </div>
                                 );
                             })}

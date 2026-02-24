@@ -18,10 +18,11 @@ type TaskFilter = "all" | "pending" | "in_progress" | "done" | "overdue";
 export default function TasksPage() {
     const [filter, setFilter] = useState<TaskFilter>("all");
     const [search, setSearch] = useState("");
-    const [tasks, setTasks] = useState(MOCK_TASKS);
+    const [tasks, setTasks] = useState([] as typeof MOCK_TASKS);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getTasks().then(setTasks).catch(console.error);
+        getTasks().then(setTasks).catch(console.error).finally(() => setLoading(false));
     }, []);
 
     const overdueTasks = tasks.filter((t) => t.status !== "done" && isOverdue(t.due_date));
@@ -49,6 +50,18 @@ export default function TasksPage() {
         { key: "overdue", label: "متأخرة", count: overdueTasks.length, icon: "⚠️" },
     ];
 
+    if (loading) {
+        return (
+            <div className="app-layout">
+                <Sidebar />
+                <main className="main-content">
+                    <Header />
+                    <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
+                </main>
+            </div>
+        );
+    }
+
     return (
         <div className="app-layout">
             <Sidebar />
@@ -68,7 +81,7 @@ export default function TasksPage() {
                     <div className="water-stat-card">
                         <div className="water-stat-icon" style={{ background: "rgba(59,130,246,0.12)", color: "#3b82f6" }}>📋</div>
                         <div className="water-stat-info">
-                            <span className="water-stat-value">{MOCK_TASKS.length}</span>
+                            <span className="water-stat-value">{tasks.length}</span>
                             <span className="water-stat-label">إجمالي المهام</span>
                         </div>
                     </div>

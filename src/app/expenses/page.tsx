@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import ExpenseModal from "@/components/ExpenseModal";
-import { MOCK_EXPENSES, MOCK_CATEGORIES, formatCurrency, formatDate } from "@/lib/mock-data";
+import { MOCK_CATEGORIES, formatCurrency, formatDate } from "@/lib/mock-data";
 import { getExpenses, getCategories } from "@/lib/actions/expenses";
 import { Expense, Category } from "@/lib/types";
 import Footer from "@/components/Footer";
@@ -13,8 +13,9 @@ type SortKey = "date" | "amount" | "category";
 type SortDir = "asc" | "desc";
 
 export default function ExpensesPage() {
-    const [expenses, setExpenses] = useState<Expense[]>(MOCK_EXPENSES);
-    const [categories, setCategories] = useState<Category[]>(MOCK_CATEGORIES);
+    const [expenses, setExpenses] = useState<Expense[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [sortKey, setSortKey] = useState<SortKey>("date");
@@ -24,8 +25,10 @@ export default function ExpensesPage() {
     const [dateRange, setDateRange] = useState("all");
 
     useEffect(() => {
-        getExpenses().then(setExpenses).catch(console.error);
-        getCategories().then(setCategories).catch(console.error);
+        Promise.all([
+            getExpenses().then(setExpenses),
+            getCategories().then(setCategories),
+        ]).catch(console.error).finally(() => setLoading(false));
     }, []);
 
     // ===== Computed =====
@@ -75,9 +78,9 @@ export default function ExpensesPage() {
     const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
     const avgExpense = expenses.length > 0 ? totalExpenses / expenses.length : 0;
     const categoryBreakdown = useMemo(() => {
-        const map = new Map<string, { category: typeof MOCK_CATEGORIES[0]; total: number; count: number }>();
+        const map = new Map<string, { category: Category; total: number; count: number }>();
         expenses.forEach((e) => {
-            const cat = e.category || MOCK_CATEGORIES.find((c) => c.id === e.category_id);
+            const cat = e.category || categories.find((c) => c.id === e.category_id);
             if (!cat) return;
             const existing = map.get(cat.id);
             if (existing) {
@@ -88,7 +91,7 @@ export default function ExpensesPage() {
             }
         });
         return Array.from(map.values()).sort((a, b) => b.total - a.total);
-    }, [expenses]);
+    }, [expenses, categories]);
 
     const topCategory = categoryBreakdown[0];
 
@@ -109,7 +112,7 @@ export default function ExpensesPage() {
             farm_id: "farm-1",
             created_by: "user-1",
             created_at: new Date().toISOString(),
-            category: MOCK_CATEGORIES.find((c) => c.id === expense.category_id),
+            category: categories.find((c) => c.id === expense.category_id),
         };
         setExpenses((prev) => [newExpense, ...prev]);
         setShowModal(false);
@@ -123,7 +126,7 @@ export default function ExpensesPage() {
                     ? {
                         ...e,
                         ...expense,
-                        category: MOCK_CATEGORIES.find((c) => c.id === expense.category_id),
+                        category: categories.find((c) => c.id === expense.category_id),
                     }
                     : e
             )
@@ -145,6 +148,18 @@ export default function ExpensesPage() {
         setEditingExpense(null);
         setShowModal(true);
     };
+
+    if (loading) {
+        return (
+            <div className="app-layout">
+                <Sidebar />
+                <main className="main-content">
+                    <Header />
+                    <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="app-layout">
@@ -275,7 +290,7 @@ export default function ExpensesPage() {
                                     className="expense-filter-select"
                                 >
                                     <option value="all">كل التصنيفات</option>
-                                    {MOCK_CATEGORIES.map((cat) => (
+                                    {categories.map((cat) => (
                                         <option key={cat.id} value={cat.id}>
                                             {cat.icon} {cat.name}
                                         </option>
@@ -375,7 +390,7 @@ export default function ExpensesPage() {
                 {showModal && (
                     <ExpenseModal
                         expense={editingExpense}
-                        categories={MOCK_CATEGORIES}
+                        categories={categories}
                         onSave={editingExpense ? handleEditExpense : handleAddExpense}
                         onClose={() => {
                             setShowModal(false);

@@ -19,10 +19,11 @@ type CropFilter = "all" | "planned" | "planted" | "growing" | "harvested";
 export default function CropsPage() {
     const [filter, setFilter] = useState<CropFilter>("all");
     const [search, setSearch] = useState("");
-    const [crops, setCrops] = useState(MOCK_CROPS);
+    const [crops, setCrops] = useState([] as typeof MOCK_CROPS);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getCrops().then(setCrops).catch(console.error);
+        getCrops().then(setCrops).catch(console.error).finally(() => setLoading(false));
     }, []);
 
     const filtered = useMemo(() => {
@@ -34,18 +35,30 @@ export default function CropsPage() {
     }, [filter, search, crops]);
 
     /* Stats */
-    const totalArea = MOCK_CROPS.reduce((s, c) => s + (c.area_hectares || 0), 0);
-    const activeCrops = MOCK_CROPS.filter((c) => c.status === "growing" || c.status === "planted").length;
-    const harvestedCount = MOCK_CROPS.filter((c) => c.status === "harvested").length;
-    const totalYield = MOCK_CROPS.reduce((s, c) => s + (c.yield_kg || 0), 0);
+    const totalArea = crops.reduce((s, c) => s + (c.area_hectares || 0), 0);
+    const activeCrops = crops.filter((c) => c.status === "growing" || c.status === "planted").length;
+    const harvestedCount = crops.filter((c) => c.status === "harvested").length;
+    const totalYield = crops.reduce((s, c) => s + (c.yield_kg || 0), 0);
 
     const statusFilters: { key: CropFilter; label: string; count: number }[] = [
-        { key: "all", label: "الكل", count: MOCK_CROPS.length },
-        { key: "growing", label: "ينمو", count: MOCK_CROPS.filter((c) => c.status === "growing").length },
-        { key: "planted", label: "مزروع", count: MOCK_CROPS.filter((c) => c.status === "planted").length },
-        { key: "planned", label: "مخطط", count: MOCK_CROPS.filter((c) => c.status === "planned").length },
-        { key: "harvested", label: "تم الحصاد", count: MOCK_CROPS.filter((c) => c.status === "harvested").length },
+        { key: "all", label: "الكل", count: crops.length },
+        { key: "growing", label: "ينمو", count: crops.filter((c) => c.status === "growing").length },
+        { key: "planted", label: "مزروع", count: crops.filter((c) => c.status === "planted").length },
+        { key: "planned", label: "مخطط", count: crops.filter((c) => c.status === "planned").length },
+        { key: "harvested", label: "تم الحصاد", count: crops.filter((c) => c.status === "harvested").length },
     ];
+
+    if (loading) {
+        return (
+            <div className="app-layout">
+                <Sidebar />
+                <main className="main-content">
+                    <Header />
+                    <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="app-layout">

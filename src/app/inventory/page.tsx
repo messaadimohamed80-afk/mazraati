@@ -21,10 +21,11 @@ export default function InventoryPage() {
     const [view, setView] = useState<ViewMode>("items");
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [inventory, setInventory] = useState(MOCK_INVENTORY);
+    const [inventory, setInventory] = useState([] as typeof MOCK_INVENTORY);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getInventory().then(setInventory).catch(console.error);
+        getInventory().then(setInventory).catch(console.error).finally(() => setLoading(false));
     }, []);
 
     const totalItems = inventory.length;
@@ -35,19 +36,19 @@ export default function InventoryPage() {
     const categoryStats = Object.entries(INVENTORY_CATEGORY_MAP).map(([key, info]) => ({
         key,
         ...info,
-        count: MOCK_INVENTORY.filter((i) => i.category === key).length,
-        value: MOCK_INVENTORY.filter((i) => i.category === key).reduce((s, i) => s + i.purchase_price, 0),
+        count: inventory.filter((i) => i.category === key).length,
+        value: inventory.filter((i) => i.category === key).reduce((s, i) => s + i.purchase_price, 0),
     }));
 
     const filteredItems = useMemo(() => {
-        return MOCK_INVENTORY.filter((item) => {
+        return inventory.filter((item) => {
             if (categoryFilter !== "all" && item.category !== categoryFilter) return false;
             if (search && !item.name.includes(search) && !item.notes?.includes(search)) return false;
             return true;
         });
-    }, [categoryFilter, search]);
+    }, [categoryFilter, search, inventory]);
 
-    const maintenanceItems = MOCK_INVENTORY.filter(
+    const maintenanceItems = inventory.filter(
         (i) => i.last_maintenance || i.next_maintenance || i.condition === "needs_repair"
     );
 
@@ -60,6 +61,18 @@ export default function InventoryPage() {
         { key: "items", label: "المخزون", icon: "📦" },
         { key: "maintenance", label: "الصيانة", icon: "🔧" },
     ];
+
+    if (loading) {
+        return (
+            <div className="app-layout">
+                <Sidebar />
+                <main className="main-content">
+                    <Header />
+                    <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="app-layout">

@@ -31,24 +31,27 @@ const Pie = dynamic(() => import("recharts").then((m) => m.Pie), { ssr: false })
 const Cell = dynamic(() => import("recharts").then((m) => m.Cell), { ssr: false });
 
 export default function ReportsPage() {
-    const [expenses, setExpenses] = useState(MOCK_EXPENSES);
-    const [categories, setCategories] = useState(MOCK_CATEGORIES);
-    const [crops, setCrops] = useState(MOCK_CROPS);
-    const [tasks, setTasks] = useState(MOCK_TASKS);
-    const [animals, setAnimals] = useState(MOCK_ANIMALS);
-    const [feed, setFeed] = useState(MOCK_FEED);
-    const [inventory, setInventory] = useState(MOCK_INVENTORY);
-    const [wells, setWells] = useState(MOCK_WELLS);
+    const [expenses, setExpenses] = useState([] as typeof MOCK_EXPENSES);
+    const [categories, setCategories] = useState([] as typeof MOCK_CATEGORIES);
+    const [crops, setCrops] = useState([] as typeof MOCK_CROPS);
+    const [tasks, setTasks] = useState([] as typeof MOCK_TASKS);
+    const [animals, setAnimals] = useState([] as typeof MOCK_ANIMALS);
+    const [feed, setFeed] = useState([] as typeof MOCK_FEED);
+    const [inventory, setInventory] = useState([] as typeof MOCK_INVENTORY);
+    const [wells, setWells] = useState([] as typeof MOCK_WELLS);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getExpenses().then(setExpenses).catch(console.error);
-        getCategories().then(setCategories).catch(console.error);
-        getCrops().then(setCrops).catch(console.error);
-        getTasks().then(setTasks).catch(console.error);
-        getAnimals().then(setAnimals).catch(console.error);
-        getFeedRecords().then(setFeed).catch(console.error);
-        getInventory().then(setInventory).catch(console.error);
-        getWells().then(setWells).catch(console.error);
+        Promise.all([
+            getExpenses().then(setExpenses),
+            getCategories().then(setCategories),
+            getCrops().then(setCrops),
+            getTasks().then(setTasks),
+            getAnimals().then(setAnimals),
+            getFeedRecords().then(setFeed),
+            getInventory().then(setInventory),
+            getWells().then(setWells),
+        ]).catch(console.error).finally(() => setLoading(false));
     }, []);
 
     /* ===== Computed data ===== */
@@ -155,6 +158,18 @@ export default function ReportsPage() {
         a.click();
         URL.revokeObjectURL(url);
     }, [totalExpenses, remaining, expenses, crops, animals, inventory, tasks]);
+
+    if (loading) {
+        return (
+            <div className="app-layout">
+                <Sidebar />
+                <main className="main-content">
+                    <Header />
+                    <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="app-layout">

@@ -6396,6 +6396,7 @@ body {
     opacity: 0;
     transform: translateX(-50%) translateY(100%);
   }
+
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
@@ -6407,6 +6408,7 @@ body {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
+
   to {
     opacity: 0;
     transform: translateX(-50%) translateY(100%);
@@ -6497,7 +6499,9 @@ body {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 480px) {
@@ -6542,13 +6546,23 @@ body {
 }
 
 @keyframes onboardingFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes onboardingFadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
 }
 
 .onboarding-modal {
@@ -6575,6 +6589,7 @@ body {
     opacity: 0;
     transform: scale(0.9) translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -6586,6 +6601,7 @@ body {
     opacity: 1;
     transform: scale(1) translateY(0);
   }
+
   to {
     opacity: 0;
     transform: scale(0.9) translateY(20px);
@@ -6653,6 +6669,7 @@ body {
     opacity: 0;
     transform: translateX(-15px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -6667,8 +6684,15 @@ body {
 }
 
 @keyframes onboardingBounce {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.15);
+  }
 }
 
 .onboarding-title {
@@ -6794,4 +6818,35 @@ body {
   background: linear-gradient(135deg, #128c7e, #075e54) !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+/* ========================================
+   PAGE LOADING SPINNER
+   ======================================== */
+
+.page-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.page-loading-spinner {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: page-spin 0.7s linear infinite;
+}
+
+@keyframes page-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

@@ -24,14 +24,17 @@ type WaterTab = "wells" | "tanks" | "irrigation";
 export default function WaterPage() {
     const [activeTab, setActiveTab] = useState<WaterTab>("wells");
     const [selectedWellId, setSelectedWellId] = useState<string | null>(null);
-    const [wells, setWells] = useState(MOCK_WELLS);
-    const [tanks, setTanks] = useState(MOCK_TANKS);
-    const [irrigation, setIrrigation] = useState(MOCK_IRRIGATION);
+    const [wells, setWells] = useState([] as typeof MOCK_WELLS);
+    const [tanks, setTanks] = useState([] as typeof MOCK_TANKS);
+    const [irrigation, setIrrigation] = useState([] as typeof MOCK_IRRIGATION);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getWells().then(setWells).catch(console.error);
-        getTanks().then(setTanks).catch(console.error);
-        getIrrigation().then(setIrrigation).catch(console.error);
+        Promise.all([
+            getWells().then(setWells),
+            getTanks().then(setTanks),
+            getIrrigation().then(setIrrigation),
+        ]).catch(console.error).finally(() => setLoading(false));
     }, []);
 
     /* ===== Stats ===== */
@@ -39,14 +42,14 @@ export default function WaterPage() {
     const activeWells = wells.filter((w) => w.status === "active").length;
     const totalTankCapacity = tanks.reduce((s, t) => s + t.capacity_liters, 0);
     const avgTankLevel = Math.round(
-        MOCK_TANKS.filter((t) => t.status === "active").reduce((s, t) => s + t.current_level_percent, 0) /
-        Math.max(MOCK_TANKS.filter((t) => t.status === "active").length, 1)
+        tanks.filter((t) => t.status === "active").reduce((s, t) => s + t.current_level_percent, 0) /
+        Math.max(tanks.filter((t) => t.status === "active").length, 1)
     );
-    const totalIrrigationArea = MOCK_IRRIGATION.reduce((s, i) => s + i.coverage_hectares, 0);
-    const totalInvestment = MOCK_WELLS.reduce((s, w) => s + (w.total_cost || 0), 0);
+    const totalIrrigationArea = irrigation.reduce((s, i) => s + i.coverage_hectares, 0);
+    const totalInvestment = wells.reduce((s, w) => s + (w.total_cost || 0), 0);
 
     /* ===== Well layers for selected well ===== */
-    const selectedWell = MOCK_WELLS.find((w) => w.id === selectedWellId);
+    const selectedWell = wells.find((w) => w.id === selectedWellId);
     const wellLayers = useMemo(
         () => MOCK_WELL_LAYERS.filter((l) => l.well_id === selectedWellId),
         [selectedWellId]
@@ -70,10 +73,22 @@ export default function WaterPage() {
     };
 
     const tabs: { key: WaterTab; label: string; icon: string; count: number }[] = [
-        { key: "wells", label: "الآبار", icon: "🔵", count: MOCK_WELLS.length },
-        { key: "tanks", label: "الصهاريج والخزانات", icon: "🛢️", count: MOCK_TANKS.length },
-        { key: "irrigation", label: "شبكة الري", icon: "🌱", count: MOCK_IRRIGATION.length },
+        { key: "wells", label: "الآبار", icon: "🔵", count: wells.length },
+        { key: "tanks", label: "الصهاريج والخزانات", icon: "🛢️", count: tanks.length },
+        { key: "irrigation", label: "شبكة الري", icon: "🌱", count: irrigation.length },
     ];
+
+    if (loading) {
+        return (
+            <div className="app-layout">
+                <Sidebar />
+                <main className="main-content">
+                    <Header />
+                    <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="app-layout">
@@ -148,7 +163,7 @@ export default function WaterPage() {
                     {activeTab === "wells" && (
                         <div className="water-content">
                             <div className="water-cards-grid">
-                                {MOCK_WELLS.map((well) => {
+                                {wells.map((well) => {
                                     const status = WELL_STATUS_MAP[well.status];
                                     const quality = WATER_QUALITY_MAP[well.water_quality];
                                     const waterPercent = well.water_level_meters
@@ -272,7 +287,7 @@ export default function WaterPage() {
                     {activeTab === "tanks" && (
                         <div className="water-content">
                             <div className="water-cards-grid">
-                                {MOCK_TANKS.map((tank) => {
+                                {tanks.map((tank) => {
                                     const typeInfo = TANK_TYPE_MAP[tank.type];
                                     const statusInfo = TANK_STATUS_MAP[tank.status];
                                     const levelColor =
@@ -349,7 +364,7 @@ export default function WaterPage() {
                     {activeTab === "irrigation" && (
                         <div className="water-content">
                             <div className="water-cards-grid water-cards-wide">
-                                {MOCK_IRRIGATION.map((irr) => {
+                                {irrigation.map((irr) => {
                                     const typeInfo = IRRIGATION_TYPE_MAP[irr.type];
                                     const statusInfo = IRRIGATION_STATUS_MAP[irr.status];
 
