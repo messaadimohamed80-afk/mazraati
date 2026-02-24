@@ -75,6 +75,8 @@ export const metadata: Metadata = {
   },
 };
 
+import InstallPrompt from "@/components/InstallPrompt";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -88,6 +90,7 @@ export default function RootLayout({
       </head>
       <body className={`${ibmPlexArabic.variable} font-arabic antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
+        <InstallPrompt />
         <Analytics />
         <SpeedInsights />
         <Script id="sw-register" strategy="afterInteractive">

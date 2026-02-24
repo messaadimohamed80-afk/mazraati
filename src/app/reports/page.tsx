@@ -95,6 +95,30 @@ export default function ReportsPage() {
     /* ===== Export functions ===== */
     const handlePrint = useCallback(() => { window.print(); }, []);
 
+    const handleWhatsAppShare = useCallback(() => {
+        const lines = [
+            "📊 *تقرير مزرعتي*",
+            `📅 ${new Date().toLocaleDateString("ar-SA")}`,
+            "",
+            `💰 الميزانية: ${formatCurrency(budget)}`,
+            `📉 المصاريف: ${formatCurrency(totalExpenses)}`,
+            `📊 المتبقي: ${formatCurrency(remaining)}`,
+            `📋 نسبة الاستهلاك: ${Math.round((totalExpenses / budget) * 100)}%`,
+            "",
+            "🌾 *أصول المزرعة:*",
+            `  💧 آبار: ${wells.length}`,
+            `  🌾 محاصيل نشطة: ${activeCrops}`,
+            `  🐑 رؤوس ماشية: ${activeAnimals}`,
+            `  📦 عناصر مخزون: ${inventory.length}`,
+            `  ✅ مهام قيد التنفيذ: ${pendingTasks}`,
+            "",
+            "— مزرعتي | إدارة المزرعة الذكية",
+            "https://mazraati-three.vercel.app",
+        ];
+        const text = encodeURIComponent(lines.join("\n"));
+        window.open(`https://wa.me/?text=${text}`, "_blank");
+    }, [budget, totalExpenses, remaining, wells, activeCrops, activeAnimals, inventory, pendingTasks]);
+
     const handleExportCSV = useCallback(() => {
         const header = "الوصف,الفئة,المبلغ,التاريخ\n";
         const rows = expenses.map((e) => {
@@ -328,6 +352,7 @@ export default function ReportsPage() {
                         <button className="reports-export-btn" onClick={handlePrint}>🖨️ طباعة</button>
                         <button className="reports-export-btn" onClick={handleExportCSV}>📊 تصدير CSV</button>
                         <button className="reports-export-btn" onClick={handleExportJSON}>📄 تصدير JSON</button>
+                        <button className="reports-export-btn reports-whatsapp-btn" onClick={handleWhatsAppShare}>📱 مشاركة عبر واتساب</button>
                     </div>
                 </div>
 

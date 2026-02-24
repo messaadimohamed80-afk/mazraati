@@ -6,6 +6,7 @@ import ModuleCard from "@/components/ModuleCard";
 import ActivityItem from "@/components/ActivityItem";
 // import WellStatusCard from "@/components/WellStatusCard"; // removed from dashboard
 import Footer from "@/components/Footer";
+import OnboardingModal from "@/components/OnboardingModal";
 import { formatCurrency } from "@/lib/mock-data";
 import { getExpenses, getCategories } from "@/lib/actions/expenses";
 import { getWells } from "@/lib/actions/water";
@@ -245,6 +246,9 @@ export default async function DashboardPage() {
             </div>
           </div>
         </section>
+
+        {/* Onboarding */}
+        <OnboardingModal />
 
         {/* Footer */}
         <Footer />
