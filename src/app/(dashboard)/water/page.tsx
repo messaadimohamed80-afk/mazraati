@@ -22,14 +22,13 @@ export default function WaterPage() {
     const [wells, setWells] = useState<Well[]>([]);
     const [tanks, setTanks] = useState<WaterTank[]>([]);
     const [irrigation, setIrrigation] = useState<IrrigationNetwork[]>([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         Promise.all([
             getWells().then(setWells),
             getTanks().then(setTanks),
             getIrrigation().then(setIrrigation),
-        ]).catch(console.error).finally(() => setLoading(false));
+        ]).catch(console.error);
     }, []);
 
     /* ===== Stats ===== */
@@ -73,11 +72,7 @@ export default function WaterPage() {
         { key: "irrigation", label: "شبكة الري", icon: "🌱", count: irrigation.length },
     ];
 
-    if (loading) {
-        return (
-            <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
-        );
-    }
+
 
     return (
         <>

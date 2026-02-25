@@ -22,14 +22,13 @@ export default function LivestockPage() {
     const [animals, setAnimals] = useState<Animal[]>([]);
     const [vaccinations, setVaccinations] = useState<VaccinationRecord[]>([]);
     const [feed, setFeed] = useState<FeedRecord[]>([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         Promise.all([
             getAnimals().then(setAnimals),
             getVaccinations().then(setVaccinations),
             getFeedRecords().then(setFeed),
-        ]).catch(console.error).finally(() => setLoading(false));
+        ]).catch(console.error);
     }, []);
 
     const activeAnimals = animals.filter((a) => a.status !== "sold" && a.status !== "deceased");
@@ -75,11 +74,7 @@ export default function LivestockPage() {
 
     const lowFeed = feed.filter((f) => f.remaining_kg / f.quantity_kg < 0.3);
 
-    if (loading) {
-        return (
-            <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
-        );
-    }
+
 
     return (
         <>

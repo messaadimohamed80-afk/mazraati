@@ -19,14 +19,13 @@ export default function EnergyPage() {
     const [solar, setSolar] = useState<SolarPanel[]>([]);
     const [electricity, setElectricity] = useState<ElectricityMeter[]>([]);
     const [generators, setGenerators] = useState<Generator[]>([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         Promise.all([
             getSolarPanels().then(setSolar),
             getElectricityMeters().then(setElectricity),
             getGenerators().then(setGenerators),
-        ]).catch(console.error).finally(() => setLoading(false));
+        ]).catch(console.error);
     }, []);
 
     /* ===== Stats ===== */
@@ -43,11 +42,7 @@ export default function EnergyPage() {
         { key: "generators", label: "المولدات", icon: "⚙️", count: generators.length },
     ];
 
-    if (loading) {
-        return (
-            <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
-        );
-    }
+
 
     return (
         <>

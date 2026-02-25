@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import CropModal from "@/components/CropModal";
 import {
     CROP_STATUS_MAP,
     getCropIcon,
@@ -9,7 +10,7 @@ import {
     getDaysUntil,
 } from "@/lib/mock-crops-tasks-data";
 import { Crop } from "@/lib/types";
-import { getCrops } from "@/lib/actions/crops";
+import { getCrops, createCrop } from "@/lib/actions/crops";
 
 type CropFilter = "all" | "planned" | "planted" | "growing" | "harvested";
 
@@ -17,10 +18,10 @@ export default function CropsPage() {
     const [filter, setFilter] = useState<CropFilter>("all");
     const [search, setSearch] = useState("");
     const [crops, setCrops] = useState<Crop[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        getCrops().then(setCrops).catch(console.error).finally(() => setLoading(false));
+        getCrops().then(setCrops).catch(console.error);
     }, []);
 
     const filtered = useMemo(() => {
@@ -45,11 +46,7 @@ export default function CropsPage() {
         { key: "harvested", label: "تم الحصاد", count: crops.filter((c) => c.status === "harvested").length },
     ];
 
-    if (loading) {
-        return (
-            <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
-        );
-    }
+
 
     return (
         <>
@@ -60,6 +57,7 @@ export default function CropsPage() {
                     <h1 className="page-title">🌾 إدارة المحاصيل</h1>
                     <p className="page-subtitle">تتبع المحاصيل والمواسم والإنتاج</p>
                 </div>
+                <button className="modal-btn modal-btn-save" onClick={() => setShowModal(true)}>+ إضافة محصول</button>
             </div>
 
             {/* Stats */}
@@ -223,6 +221,22 @@ export default function CropsPage() {
                 )}
             </div>
 
+            {showModal && <CropModal onClose={() => setShowModal(false)} onSave={async (data) => {
+                try {
+                    const newCrop = await createCrop({
+                        crop_type: data.crop_type,
+                        variety: data.variety || undefined,
+                        field_name: data.field_name || undefined,
+                        area_hectares: data.area_hectares ? parseFloat(data.area_hectares) : undefined,
+                        planting_date: data.planting_date || undefined,
+                        expected_harvest: data.expected_harvest || undefined,
+                        status: data.status || undefined,
+                        notes: data.notes || undefined,
+                    });
+                    setCrops((prev) => [...prev, newCrop]);
+                } catch (e) { console.error(e); }
+                setShowModal(false);
+            }} />}
         </>
     );
 }

@@ -16,10 +16,9 @@ export default function TasksPage() {
     const [filter, setFilter] = useState<TaskFilter>("all");
     const [search, setSearch] = useState("");
     const [tasks, setTasks] = useState<Task[]>([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getTasks().then(setTasks).catch(console.error).finally(() => setLoading(false));
+        getTasks().then(setTasks).catch(console.error);
     }, []);
 
     const overdueTasks = tasks.filter((t) => t.status !== "done" && isOverdue(t.due_date));
@@ -47,11 +46,7 @@ export default function TasksPage() {
         { key: "overdue", label: "متأخرة", count: overdueTasks.length, icon: "⚠️" },
     ];
 
-    if (loading) {
-        return (
-            <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
-        );
-    }
+
 
     return (
         <>
