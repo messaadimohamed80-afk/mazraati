@@ -19,10 +19,10 @@ export default function InventoryPage() {
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [inventory, setInventory] = useState<InventoryItem[]>([]);
-    const [loading, setLoading] = useState(true);
+
 
     useEffect(() => {
-        getInventory().then(setInventory).catch(console.error).finally(() => setLoading(false));
+        getInventory().then(setInventory).catch(console.error);
     }, []);
 
     const totalItems = inventory.length;
@@ -59,11 +59,7 @@ export default function InventoryPage() {
         { key: "maintenance", label: "الصيانة", icon: "🔧" },
     ];
 
-    if (loading) {
-        return (
-            <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
-        );
-    }
+
 
     return (
         <>

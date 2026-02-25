@@ -33,7 +33,7 @@ export default function ReportsPage() {
     const [feed, setFeed] = useState<FeedRecord[]>([]);
     const [inventory, setInventory] = useState<InventoryItem[]>([]);
     const [wells, setWells] = useState<Well[]>([]);
-    const [loading, setLoading] = useState(true);
+
 
     useEffect(() => {
         Promise.all([
@@ -45,7 +45,7 @@ export default function ReportsPage() {
             getFeedRecords().then(setFeed),
             getInventory().then(setInventory),
             getWells().then(setWells),
-        ]).catch(console.error).finally(() => setLoading(false));
+        ]).catch(console.error);
     }, []);
 
     /* ===== Computed data ===== */
@@ -153,11 +153,7 @@ export default function ReportsPage() {
         URL.revokeObjectURL(url);
     }, [totalExpenses, remaining, expenses, crops, animals, inventory, tasks]);
 
-    if (loading) {
-        return (
-            <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
-        );
-    }
+
 
     return (
         <>

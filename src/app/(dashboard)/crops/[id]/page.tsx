@@ -24,19 +24,17 @@ export default function CropDetailPage({ params }: { params: Promise<{ id: strin
     const { id } = use(params);
     const [crop, setCrop] = useState<Crop | null>(null);
     const [tasks, setTasks] = useState<Task[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         Promise.all([
             getCrop(id).then((c) => { if (c) setCrop(c); }).catch(() => { }),
             getTasksForCrop(id).then(setTasks).catch(() => { }),
-        ]).finally(() => setLoading(false));
+        ]).finally(() => setLoaded(true));
     }, [id]);
 
-    if (loading) {
-        return (
-            <div className="page-loading"><div className="page-loading-spinner" />جاري التحميل...</div>
-        );
+    if (!loaded) {
+        return <div style={{ minHeight: "60vh" }} />;
     }
 
     const cropData = crop;

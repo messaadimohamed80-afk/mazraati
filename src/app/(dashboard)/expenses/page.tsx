@@ -12,7 +12,7 @@ type SortDir = "asc" | "desc";
 export default function ExpensesPage() {
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
-    const [loading, setLoading] = useState(true);
+
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [sortKey, setSortKey] = useState<SortKey>("date");
@@ -25,7 +25,7 @@ export default function ExpensesPage() {
         Promise.all([
             getExpenses().then(setExpenses),
             getCategories().then(setCategories),
-        ]).catch(console.error).finally(() => setLoading(false));
+        ]).catch(console.error);
     }, []);
 
     // ===== Computed =====
@@ -146,11 +146,7 @@ export default function ExpensesPage() {
         setShowModal(true);
     };
 
-    if (loading) {
-        return (
-            <div className="page-loading"><span className="page-loading-spinner" />جاري التحميل...</div>
-        );
-    }
+
 
     return (
         <>
