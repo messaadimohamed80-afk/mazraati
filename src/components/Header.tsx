@@ -178,8 +178,13 @@ export default function Header() {
     const [notifOpen, setNotifOpen] = useState(false);
     const notifications = useMemo(() => buildNotifications(tasks, vaccinations, feed, inventory, animals), [tasks, vaccinations, feed, inventory, animals]);
 
-    /* Weather */
-    const weather = useMemo(() => getWeather(), []);
+    /* Weather — deferred to client to avoid hydration mismatch */
+    const [weather, setWeather] = useState<{ temp: number; icon: string; desc: string; humidity: number } | null>(null);
+    const [formattedDate, setFormattedDate] = useState("");
+    useEffect(() => {
+        setWeather(getWeather());
+        setFormattedDate(getFormattedDate());
+    }, []);
 
     /* Keyboard shortcut */
     useEffect(() => {
@@ -213,7 +218,7 @@ export default function Header() {
                     <div>
                         <h1 className="header-title">{page.title}</h1>
                         <p className="header-subtitle">
-                            آخر تحديث: <span dir="ltr">{getFormattedDate()}</span>
+                            آخر تحديث: <span dir="ltr">{formattedDate}</span>
                         </p>
                     </div>
                 </div>
@@ -262,10 +267,12 @@ export default function Header() {
                     </div>
 
                     {/* Weather */}
-                    <div className="header-badge" title={`${weather.desc} — رطوبة ${weather.humidity}%`}>
-                        <span>{weather.icon}</span>
-                        <span>{weather.temp}°C</span>
-                    </div>
+                    {weather && (
+                        <div className="header-badge" title={`${weather.desc} — رطوبة ${weather.humidity}%`}>
+                            <span>{weather.icon}</span>
+                            <span>{weather.temp}°C</span>
+                        </div>
+                    )}
 
                     {/* Exchange rate badge */}
                     <div className="header-badge">
