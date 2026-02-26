@@ -1,0 +1,549 @@
+﻿   SIDEBAR ΓÇö COMING SOON BADGE
+   ======================================== */
+
+.sidebar-link-soon {
+  opacity: 0.5;
+}
+
+.sidebar-soon-badge {
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  margin-right: auto;
+  white-space: nowrap;
+}
+
+/* ========================================
+   COMING SOON PAGES
+   ======================================== */
+
+.coming-soon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative background */
+.coming-soon-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.coming-soon-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid;
+}
+
+.coming-soon-circle-1 {
+  width: 300px;
+  height: 300px;
+  top: -80px;
+  right: -60px;
+  animation: float 10s ease-in-out infinite;
+}
+
+.coming-soon-circle-2 {
+  width: 200px;
+  height: 200px;
+  bottom: -40px;
+  left: -30px;
+  animation: float 8s ease-in-out infinite reverse;
+}
+
+.coming-soon-circle-3 {
+  width: 150px;
+  height: 150px;
+  top: 40%;
+  left: 15%;
+  border: none;
+  animation: float 12s ease-in-out infinite 2s;
+}
+
+.coming-soon-card {
+  text-align: center;
+  max-width: 520px;
+  width: 100%;
+  padding: 2.5rem 2rem;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Accent gradient bar at top */
+.coming-soon-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.coming-soon-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  margin-bottom: 1.25rem;
+  transition: transform var(--transition-base);
+}
+
+.coming-soon-card:hover .coming-soon-icon {
+  transform: scale(1.08);
+}
+
+.coming-soon-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+}
+
+.coming-soon-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0 0 1.25rem;
+  line-height: 1.7;
+}
+
+.coming-soon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(245, 158, 11, 0.15);
+}
+
+.coming-soon-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+/* Progress bar section */
+.coming-soon-progress-section {
+  margin: 0 0 1.5rem;
+  padding: 0 0.5rem;
+}
+
+.coming-soon-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.coming-soon-progress-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.coming-soon-progress-value {
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.coming-soon-progress-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.1);
+  overflow: hidden;
+}
+
+.coming-soon-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.coming-soon-progress-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.coming-soon-eta {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* Features */
+.coming-soon-features {
+  text-align: right;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  background: rgba(148, 163, 184, 0.03);
+  border: 1px solid rgba(148, 163, 184, 0.06);
+}
+
+.coming-soon-features h3 {
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  color: var(--text-secondary);
+}
+
+.coming-soon-features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.coming-soon-features li {
+  font-size: 0.78rem;
+  padding: 0.55rem 0.5rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+  opacity: 0;
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+.coming-soon-features li:hover {
+  background: rgba(148, 163, 184, 0.04);
+}
+
+.coming-soon-features li:last-child {
+  border-bottom: none;
+}
+
+.coming-soon-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+}
+
+.coming-soon-back:hover {
+  background: rgba(16, 185, 129, 0.06);
+  border-color: rgba(16, 185, 129, 0.15);
+}
+
+/* ========================================
+   LIVESTOCK MODULE
+   ======================================== */
+
+.livestock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.livestock-card {
+  position: relative;
+  overflow: hidden;
+  padding: 1.25rem;
+}
+
+.livestock-card-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.livestock-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.livestock-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.livestock-card-title-area {
+  flex: 1;
+  min-width: 0;
+}
+
+.livestock-card-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.livestock-card-tag {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.livestock-status-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.livestock-card-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(148, 163, 184, 0.03);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(148, 163, 184, 0.06);
+}
+
+.livestock-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.livestock-detail-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.livestock-detail-value {
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.livestock-card-vax {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  padding: 0.5rem 0.6rem;
+  background: rgba(139, 92, 246, 0.05);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.5rem;
+}
+
+.livestock-vax-next {
+  color: var(--text-muted);
+}
+
+.livestock-card-notes {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin: 0;
+  font-style: italic;
+}
+
+/* Vaccination table */
+.livestock-section {
+  margin-bottom: 1.5rem;
+}
+
+.livestock-section-title {
+  font-size: 1rem;
+  font-weight: 800;
+  margin: 0 0 1rem;
+  color: var(--text-primary);
+}
+
+.livestock-table-container {
+  padding: 1.25rem;
+  overflow-x: auto;
+}
+
+.livestock-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.livestock-table th {
+  text-align: right;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  white-space: nowrap;
+}
+
+.livestock-table td {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+  color: var(--text-secondary);
+}
+
+.livestock-table-tag {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-right: 0.25rem;
+}
+
+.livestock-row-alert {
+  background: rgba(239, 68, 68, 0.04);
+}
+
+.livestock-overdue {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+/* Alerts */
+.livestock-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid;
+  margin-bottom: 1rem;
+}
+
+.livestock-alert-icon {
+  font-size: 1.5rem;
+}
+
+.livestock-alert strong {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  margin-bottom: 0.15rem;
+}
+
+.livestock-alert p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Feed cards */
+.livestock-feed-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.livestock-feed-card {
+  padding: 1.25rem;
+}
+
+.livestock-feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.livestock-feed-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.livestock-feed-cost {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+}
+
+.livestock-feed-bar-area {
+  margin-bottom: 0.75rem;
+}
+
+.livestock-feed-bar-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.livestock-feed-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.1);
+  overflow: hidden;
+}
+
+.livestock-feed-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.8s ease;
+}
+
+.livestock-feed-percent {
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: block;
+  text-align: left;
+  margin-top: 0.3rem;
+}
+
+.livestock-feed-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.06);
+}
+
+/* ========================================

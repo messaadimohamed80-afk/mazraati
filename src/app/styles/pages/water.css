@@ -1,0 +1,578 @@
+﻿   RESPONSIVE ΓÇö EXPENSES
+   ======================================== */
+@media (max-width: 1024px) {
+  .expense-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .expense-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .expense-filters {
+    flex-direction: column;
+  }
+
+  .expense-filter-select {
+    width: 100%;
+  }
+
+  .expense-table th:nth-child(5),
+  .expense-table td:nth-child(5) {
+    display: none;
+  }
+
+  .category-picker {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .modal-row {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .expense-table th:nth-child(3),
+  .expense-table td:nth-child(3) {
+    display: none;
+  }
+
+  .category-picker {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ========================================
+   WATER MODULE
+   ======================================== */
+
+/* Stats grid */
+.water-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  padding: 1.25rem 2rem 0;
+}
+
+.water-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-normal);
+}
+
+.water-stat-card:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.water-stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.water-stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.water-stat-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.water-stat-value small {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.water-stat-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Tab navigation */
+.water-tabs-section {
+  margin: 1.25rem 2rem 0;
+  padding: 0 !important;
+}
+
+.water-tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: rgba(148, 163, 184, 0.04);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.water-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.water-tab:hover {
+  background: rgba(148, 163, 184, 0.06);
+  color: var(--text-secondary);
+}
+
+.water-tab-active {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #60a5fa;
+}
+
+.water-tab-icon {
+  font-size: 1rem;
+}
+
+.water-tab-count {
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(148, 163, 184, 0.1);
+  padding: 0.1rem 0.45rem;
+  border-radius: 10px;
+}
+
+.water-tab-active .water-tab-count {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+}
+
+/* Content area */
+.water-content {
+  padding: 1.25rem;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Card grid */
+.water-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.water-cards-wide {
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+}
+
+.water-card {
+  padding: 1.25rem !important;
+  cursor: default;
+  transition: all var(--transition-normal);
+  animation: fadeInUp 0.4s ease both;
+}
+
+.water-card:nth-child(2) {
+  animation-delay: 0.05s;
+}
+
+.water-card:nth-child(3) {
+  animation-delay: 0.1s;
+}
+
+.water-card:nth-child(4) {
+  animation-delay: 0.15s;
+}
+
+.water-card:hover {
+  border-color: rgba(59, 130, 246, 0.25);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+}
+
+.water-card-selected {
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+}
+
+.water-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.water-card-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.water-card-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  border: 1px solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.water-card-type-tag {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+.water-card-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.water-card-details-row {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.water-card-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.water-detail-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.water-detail-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.water-card-note {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 0.5rem 0.75rem;
+  background: rgba(148, 163, 184, 0.04);
+  border-radius: var(--radius-sm);
+  border-right: 3px solid var(--border);
+}
+
+.water-card-expand-hint {
+  text-align: center;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
+  opacity: 0.6;
+}
+
+/* ===== Well Visualization ===== */
+.well-viz {
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 0;
+}
+
+.well-tube {
+  position: relative;
+  width: 56px;
+  height: 120px;
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.08) 0%, rgba(148, 163, 184, 0.15) 100%);
+  border: 2px solid var(--border);
+  border-radius: 4px 4px 8px 8px;
+  overflow: hidden;
+}
+
+.well-water {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, #1d4ed8, #60a5fa88);
+  border-radius: 0 0 6px 6px;
+  transition: height 1s ease;
+  animation: waterRise 1.2s ease both;
+}
+
+@keyframes waterRise {
+  from {
+    height: 0 !important;
+  }
+}
+
+.well-depth-label {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+  z-index: 2;
+}
+
+.well-level-marker {
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  height: 2px;
+  background: #60a5fa;
+  z-index: 2;
+}
+
+.well-level-text {
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: #60a5fa;
+  white-space: nowrap;
+}
+
+/* ===== Well Layers Panel ===== */
+.well-layers-panel {
+  margin-top: 1.25rem;
+  padding: 1.5rem !important;
+  animation: fadeInUp 0.3s ease;
+}
+
+.well-layers-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+.well-layers-viz {
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.well-layer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.75rem;
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 600;
+  min-height: 24px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: all var(--transition-fast);
+  animation: fadeIn 0.4s ease both;
+}
+
+.well-layer-bar:hover {
+  filter: brightness(1.15);
+  transform: scaleY(1.05);
+}
+
+.well-layer-label {
+  white-space: nowrap;
+}
+
+.well-layer-note {
+  font-size: 0.62rem;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+.well-layers-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.well-layer-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.well-layer-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+/* ===== Tank Gauge ===== */
+.tank-gauge {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.tank-gauge-container {
+  position: relative;
+  width: 64px;
+  height: 100px;
+  background: rgba(148, 163, 184, 0.06);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tank-gauge-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 0 0 6px 6px;
+  transition: height 1s ease;
+  animation: waterRise 1.2s ease both;
+}
+
+.tank-gauge-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.tank-gauge-percent {
+  font-size: 1.3rem;
+  font-weight: 900;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.tank-gauge-capacity {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ===== Irrigation Coverage ===== */
+.irr-coverage {
+  margin: 0.5rem 0;
+}
+
+.irr-coverage-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.irr-coverage-value {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.irr-coverage-bar {
+  height: 8px;
+  background: rgba(148, 163, 184, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.irr-coverage-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s ease;
+  animation: barGrow 1s ease both;
+}
+
+@keyframes barGrow {
+  from {
+    width: 0 !important;
+  }
+}
+
+/* ===== Responsive ΓÇö Water ===== */
+@media (max-width: 1280px) {
+  .water-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .water-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .water-cards-wide {
+    grid-template-columns: 1fr;
+  }
+
+  .water-card-details-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .water-stats-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .water-tabs-section {
+    margin: 1rem;
+  }
+
+  .water-tabs {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .water-tab {
+    justify-content: flex-start;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .water-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .well-layers-viz {
+    height: 220px;
+  }
+}
+
+/* ========================================

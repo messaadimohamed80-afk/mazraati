@@ -1,0 +1,400 @@
+﻿   CROPS MODULE
+   ======================================== */
+
+/* Toolbar: filters + search */
+.crops-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.crops-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.crops-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(148, 163, 184, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.crops-filter-btn:hover {
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--text-primary);
+}
+
+.crops-filter-active {
+  background: var(--primary);
+  color: #fff !important;
+  border-color: var(--primary);
+}
+
+.crops-filter-count {
+  font-size: 0.65rem;
+  opacity: 0.75;
+  min-width: 16px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 0 0.3rem;
+}
+
+.crops-filter-active .crops-filter-count {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.crops-search {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(148, 163, 184, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: var(--radius-md);
+  margin-right: auto;
+  min-width: 180px;
+}
+
+.crops-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  width: 100%;
+}
+
+/* Crop cards grid */
+.crops-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.crop-card {
+  animation: fadeInUp 0.35s ease;
+}
+
+.crop-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.crop-card-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.crop-card-title-area {
+  flex: 1;
+  min-width: 0;
+}
+
+.crop-card-name {
+  font-size: 1rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.crop-card-variety {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* Growth progress */
+.crop-growth {
+  margin: 0.6rem 0;
+}
+
+.crop-growth-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.crop-harvest-countdown {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+/* Yield badge */
+.crop-yield-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  margin: 0.6rem 0;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  border-radius: var(--radius-md);
+}
+
+.crop-yield-icon {
+  font-size: 1.2rem;
+}
+
+.crop-yield-val {
+  font-size: 1rem;
+  font-weight: 900;
+  color: #f59e0b;
+}
+
+.crop-yield-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+/* Empty state */
+.crops-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.crops-empty span {
+  font-size: 2.5rem;
+}
+
+/* ========================================
+   TASKS MODULE
+   ======================================== */
+
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.task-card {
+  display: flex;
+  overflow: hidden;
+  animation: fadeInUp 0.35s ease;
+}
+
+.task-done {
+  opacity: 0.65;
+}
+
+.task-overdue {
+  border: 1px solid rgba(239, 68, 68, 0.25) !important;
+}
+
+.task-priority-stripe {
+  width: 4px;
+  min-height: 100%;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  flex-shrink: 0;
+}
+
+.task-card-body {
+  flex: 1;
+  padding: 0.85rem 1rem;
+  min-width: 0;
+}
+
+.task-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.task-card-title-area {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.task-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 900;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.task-card-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.task-title-done {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.task-card-badges {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.task-priority-badge,
+.task-status-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.task-description {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0.4rem 0 0 1.75rem;
+  line-height: 1.5;
+}
+
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-right: 1.75rem;
+}
+
+.task-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.task-meta-overdue {
+  color: #ef4444 !important;
+  font-weight: 700;
+}
+
+.task-meta-recurring {
+  color: var(--primary) !important;
+  font-weight: 600;
+}
+
+.task-days-badge {
+  font-size: 0.6rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.12);
+  color: #3b82f6;
+  font-weight: 700;
+  margin-right: 0.25rem;
+}
+
+.task-overdue-badge {
+  font-size: 0.6rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  font-weight: 700;
+  margin-right: 0.25rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Responsive ΓÇö Crops + Tasks */
+@media (max-width: 768px) {
+  .crops-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 1rem;
+  }
+
+  .crops-search {
+    margin-right: 0;
+    min-width: unset;
+  }
+
+  .crops-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1rem 1rem;
+  }
+
+  .tasks-list {
+    padding: 0 1rem 1rem;
+  }
+
+  .task-card-top {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .task-card-badges {
+    padding-right: 1.75rem;
+  }
+
+  .task-meta {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .crops-filters {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.25rem;
+  }
+
+  .crops-filter-btn {
+    white-space: nowrap;
+  }
+}
+
+/* ========================================

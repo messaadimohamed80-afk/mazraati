@@ -1,0 +1,122 @@
+﻿.leaflet-draw-toolbar {
+  direction: ltr;
+}
+
+.leaflet-right .leaflet-draw-toolbar {
+  direction: ltr;
+}
+
+/* ===== Phenology Timeline (Crop Detail Page) ===== */
+.crop-detail-phenology {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.phenology-timeline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.5rem 0.5rem 0.5rem;
+  position: relative;
+  overflow-x: auto;
+  gap: 0;
+  direction: ltr;
+}
+
+.phenology-stage-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  min-width: 60px;
+  flex-shrink: 0;
+  gap: 0.4rem;
+}
+
+.phenology-line {
+  position: absolute;
+  top: 22px;
+  left: -50%;
+  width: 100%;
+  height: 2.5px;
+  background: rgba(255, 255, 255, 0.06);
+  z-index: 0;
+}
+
+.phenology-line-done {
+  opacity: 0.5;
+}
+
+.phenology-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.phenology-dot-active {
+  transform: scale(1.25);
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+.phenology-dot-past {
+  opacity: 0.65;
+}
+
+.phenology-dot-future {
+  opacity: 0.35;
+}
+
+.phenology-emoji {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.phenology-label {
+  font-size: 0.7rem;
+  color: var(--text-muted, rgba(255, 255, 255, 0.35));
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.phenology-label-active {
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.phenology-desc {
+  font-size: 0.65rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.55));
+  text-align: center;
+  max-width: 100px;
+  line-height: 1.4;
+  margin-top: 0.15rem;
+}
+
+/* Light theme */
+[data-theme="light"] .phenology-line {
+  background: #e2e8f0;
+}
+
+[data-theme="light"] .phenology-dot {
+  border-color: #e2e8f0;
+  background: #f8fafc;
+}
+
+[data-theme="light"] .phenology-label {
+  color: #94a3b8;
+}
+
+[data-theme="light"] .phenology-desc {
+  color: #64748b;
+}
+
+/* ===== Climate Panel ===== */

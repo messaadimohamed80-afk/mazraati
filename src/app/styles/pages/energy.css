@@ -1,0 +1,167 @@
+﻿   ENERGY MODULE
+   ======================================== */
+
+/* Ring gauge for solar efficiency */
+.energy-gauge-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0.5rem 0;
+}
+
+.energy-ring-gauge {
+  position: relative;
+  width: 90px;
+  height: 90px;
+}
+
+.energy-ring-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.energy-ring-bg {
+  fill: none;
+  stroke: rgba(148, 163, 184, 0.08);
+  stroke-width: 8;
+}
+
+.energy-ring-fill {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 1.2s ease;
+  animation: ringFill 1.2s ease both;
+}
+
+@keyframes ringFill {
+  from {
+    stroke-dasharray: 0 264;
+  }
+}
+
+.energy-ring-value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.energy-ring-num {
+  font-size: 1.3rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.energy-ring-label {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.energy-gauge-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.energy-gauge-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.energy-gauge-stat-val {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.energy-gauge-stat-lbl {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+/* Energy summary */
+.energy-summary {
+  margin-top: 1.25rem;
+  padding: 1.25rem !important;
+  animation: fadeInUp 0.4s ease;
+}
+
+.energy-summary-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+.energy-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.energy-summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background: rgba(148, 163, 184, 0.04);
+  border-radius: var(--radius-md);
+}
+
+.energy-summary-val {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.energy-summary-lbl {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Generator runtime */
+.gen-runtime {
+  margin: 0.5rem 0;
+}
+
+.gen-runtime-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.gen-runtime-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Responsive ΓÇö Energy */
+@media (max-width: 768px) {
+  .energy-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .energy-gauge-area {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .energy-gauge-stats {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+}
+
+/* ========================================

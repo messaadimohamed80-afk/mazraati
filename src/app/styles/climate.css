@@ -1,0 +1,323 @@
+﻿.climate-panel {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.climate-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.climate-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #06b6d4;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.climate-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  color: #f59e0b;
+  font-size: 0.9rem;
+}
+
+.climate-error-detail {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.climate-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .climate-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Current Weather */
+.climate-current {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.climate-current-main {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.climate-weather-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.climate-temp-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.climate-temp {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.climate-weather-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 0.15rem;
+}
+
+.climate-stats {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.climate-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 0.5rem 0.25rem;
+  gap: 0.15rem;
+}
+
+.climate-stat-icon {
+  font-size: 1rem;
+}
+
+.climate-stat-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.climate-stat-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+/* GDD Progress */
+.climate-gdd {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.climate-gdd-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.climate-gdd-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.climate-gdd-base {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: monospace;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.climate-gdd-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+}
+
+.climate-gdd-value {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.climate-gdd-unit {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.climate-gdd-next {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.climate-gdd-bar-container {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.climate-gdd-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s ease-out;
+}
+
+.climate-gdd-stage-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.climate-gdd-predicted {
+  font-size: 0.75rem;
+}
+
+.climate-gdd-predicted strong {
+  font-weight: 700;
+}
+
+.climate-gdd-today {
+  font-size: 0.7rem;
+  color: #10b981;
+  font-weight: 600;
+}
+
+/* 7-Day Forecast */
+.climate-forecast {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 1rem;
+}
+
+.climate-forecast-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+}
+
+.climate-forecast-strip {
+  display: flex;
+  gap: 0;
+  justify-content: space-between;
+}
+
+.climate-forecast-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  gap: 0.3rem;
+}
+
+.climate-forecast-day-name {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.climate-forecast-precip {
+  font-size: 0.9rem;
+}
+
+.climate-forecast-temps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.climate-forecast-high {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.climate-forecast-low {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.climate-forecast-bar-bg {
+  width: 6px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.climate-forecast-bar-inner {
+  width: 100%;
+  border-radius: 3px;
+  transition: height 0.5s ease;
+}
+
+/* Light theme */
+[data-theme="light"] .climate-current,
+[data-theme="light"] .climate-gdd {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .climate-stat {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .climate-gdd-base {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .climate-gdd-bar-container {
+  background: #e2e8f0;
+}
+
+[data-theme="light"] .climate-forecast {
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .climate-forecast-bar-bg {
+  background: #e2e8f0;
+}
+
+[data-theme="light"] .climate-spinner {
+  border-color: #e2e8f0;
+  border-top-color: #06b6d4;
+}
+
+/* ===== Landing Page ===== */

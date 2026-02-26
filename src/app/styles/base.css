@@ -1,0 +1,20 @@
+﻿   APP LAYOUT
+   ======================================== */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  direction: rtl;
+}
+
+.main-content {
+  flex: 1;
+  margin-right: 260px;
+  padding: 0;
+  min-height: 100vh;
+  transition: margin-right var(--transition-base);
+  background:
+    radial-gradient(ellipse at 80% 0%, rgba(16, 185, 129, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 100%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+    var(--bg-primary);
+}
+

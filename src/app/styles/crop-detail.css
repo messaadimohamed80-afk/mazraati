@@ -1,0 +1,227 @@
+﻿.crop-detail-nav {
+  padding: 0 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.crop-detail-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  background: rgba(16, 185, 129, 0.08);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.crop-detail-back-btn:hover {
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.crop-detail-hero {
+  padding: 1.5rem;
+  margin: 0 1.5rem 1.5rem;
+}
+
+.crop-detail-hero-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.crop-detail-hero-icon {
+  font-size: 2rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crop-detail-hero-info {
+  flex: 1;
+}
+
+.crop-detail-hero-title {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.crop-detail-hero-variety {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-top: 0.2rem;
+}
+
+.crop-detail-status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid;
+}
+
+.crop-detail-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.crop-detail-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+}
+
+.crop-detail-info-label {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.crop-detail-info-value {
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.crop-detail-notes {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+  padding: 0.8rem;
+  background: rgba(245, 158, 11, 0.06);
+  border-radius: 10px;
+  border-right: 3px solid #f59e0b;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.crop-detail-notes-icon {
+  font-size: 1.1rem;
+}
+
+.crop-detail-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  padding: 0 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 900px) {
+  .crop-detail-two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.crop-detail-map-card,
+.crop-detail-tasks-card {
+  padding: 1.5rem;
+}
+
+.crop-detail-section-title {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.crop-detail-map-container {
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.2);
+  min-height: 350px;
+}
+
+.crop-detail-map-coords {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.crop-detail-map-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.crop-detail-map-link:hover {
+  text-decoration: underline;
+}
+
+.crop-detail-tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.crop-detail-task-item {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border-right: 3px solid var(--accent);
+}
+
+.crop-detail-task-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.crop-detail-task-title {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.crop-detail-task-badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.crop-detail-task-desc {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin: 0.4rem 0;
+}
+
+.crop-detail-task-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+.crop-card.glass-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.crop-card.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== SEARCH COMMAND PALETTE ===== */
