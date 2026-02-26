@@ -76,7 +76,6 @@ export const metadata: Metadata = {
 };
 
 import { ToastProvider } from "@/components/Toast";
-import InstallPrompt from "@/components/InstallPrompt";
 import QueryProvider from "@/components/QueryProvider";
 
 export default function RootLayout({
@@ -96,7 +95,6 @@ export default function RootLayout({
             <ToastProvider>{children}</ToastProvider>
           </ThemeProvider>
         </QueryProvider>
-        <InstallPrompt />
         <Analytics />
         <SpeedInsights />
         <Script id="sw-register" strategy="afterInteractive">

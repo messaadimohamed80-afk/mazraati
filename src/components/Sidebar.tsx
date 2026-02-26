@@ -56,7 +56,7 @@ export default function Sidebar() {
                 </div>
 
                 {/* Navigation */}
-                <nav className="sidebar-nav">
+                <nav className="sidebar-nav" aria-label="التنقل الرئيسي">
                     {navItems.map((item) => {
                         const isActive =
                             pathname === item.href ||
@@ -68,6 +68,7 @@ export default function Sidebar() {
                                 prefetch={false}
                                 className={`sidebar-link ${isActive ? "sidebar-link-active" : ""}`}
                                 title={item.label}
+                                aria-current={isActive ? "page" : undefined}
                             >
                                 <span className="sidebar-link-icon">{item.icon}</span>
                                 <span className="sidebar-link-text">{item.label}</span>
