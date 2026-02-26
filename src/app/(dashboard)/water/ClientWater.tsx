@@ -12,7 +12,7 @@ import {
 } from "@/lib/mock-water-data";
 import { formatCurrency } from "@/lib/utils";
 import { Well, WaterTank, IrrigationNetwork } from "@/lib/types";
-import { getWells, getTanks, getIrrigation } from "@/lib/actions/water";
+import { useWater } from "@/hooks/useWater";
 
 type WaterTab = "wells" | "tanks" | "irrigation";
 
@@ -25,11 +25,9 @@ export default function ClientWater({
     initialTanks: WaterTank[];
     initialIrrigation: IrrigationNetwork[];
 }) {
+    const { wells, tanks, irrigation } = useWater(initialWells, initialTanks, initialIrrigation);
     const [activeTab, setActiveTab] = useState<WaterTab>("wells");
     const [selectedWellId, setSelectedWellId] = useState<string | null>(null);
-    const [wells, setWells] = useState<Well[]>(initialWells);
-    const [tanks, setTanks] = useState<WaterTank[]>(initialTanks);
-    const [irrigation, setIrrigation] = useState<IrrigationNetwork[]>(initialIrrigation);
 
 
 

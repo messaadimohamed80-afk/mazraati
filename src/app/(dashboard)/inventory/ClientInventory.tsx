@@ -8,7 +8,7 @@ import {
 } from "@/lib/mock-inventory-data";
 import { formatCurrency } from "@/lib/utils";
 import { InventoryItem } from "@/lib/types";
-import { getInventory } from "@/lib/actions/inventory";
+import { useInventory } from "@/hooks/useInventory";
 
 type CategoryFilter = "all" | "equipment" | "chemicals" | "seeds" | "tools" | "supplies" | "spare_parts";
 type ViewMode = "items" | "maintenance";
@@ -18,11 +18,11 @@ export default function ClientInventory({
 }: {
     initialInventory: InventoryItem[];
 }) {
+    const { inventory, createItem } = useInventory(initialInventory);
     const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
     const [view, setView] = useState<ViewMode>("items");
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [inventory, setInventory] = useState<InventoryItem[]>(initialInventory);
 
     const totalItems = inventory.length;
     const totalValue = inventory.reduce((s, i) => s + i.purchase_price, 0);

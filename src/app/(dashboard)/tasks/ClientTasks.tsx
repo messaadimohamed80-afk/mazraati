@@ -8,7 +8,7 @@ import {
     getDaysUntil,
 } from "@/lib/mock-crops-tasks-data";
 import { Task } from "@/lib/types";
-import { getTasks } from "@/lib/actions/crops";
+import { useTasks } from "@/hooks/useTasks";
 
 type TaskFilter = "all" | "pending" | "in_progress" | "done" | "overdue";
 
@@ -17,9 +17,9 @@ export default function ClientTasks({
 }: {
     initialTasks: Task[];
 }) {
+    const { tasks } = useTasks(initialTasks);
     const [filter, setFilter] = useState<TaskFilter>("all");
     const [search, setSearch] = useState("");
-    const [tasks, setTasks] = useState<Task[]>(initialTasks);
 
     const overdueTasks = tasks.filter((t) => t.status !== "done" && isOverdue(t.due_date));
 

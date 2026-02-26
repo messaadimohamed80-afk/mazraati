@@ -10,7 +10,7 @@ import {
     getDaysUntil,
 } from "@/lib/mock-crops-tasks-data";
 import { Crop } from "@/lib/types";
-import { getCrops, createCrop } from "@/lib/actions/crops";
+import { useCrops } from "@/hooks/useCrops";
 
 type CropFilter = "all" | "planned" | "planted" | "growing" | "harvested";
 
@@ -19,9 +19,9 @@ export default function ClientCrops({
 }: {
     initialCrops: Crop[];
 }) {
+    const { crops, createCrop, updateCrop } = useCrops(initialCrops);
     const [filter, setFilter] = useState<CropFilter>("all");
     const [search, setSearch] = useState("");
-    const [crops, setCrops] = useState<Crop[]>(initialCrops);
     const [showModal, setShowModal] = useState(false);
 
     const filtered = useMemo(() => {
@@ -221,20 +221,17 @@ export default function ClientCrops({
                 )}
             </div>
 
-            {showModal && <CropModal onClose={() => setShowModal(false)} onSave={async (data) => {
-                try {
-                    const newCrop = await createCrop({
-                        crop_type: data.crop_type,
-                        variety: data.variety || undefined,
-                        field_name: data.field_name || undefined,
-                        area_hectares: data.area_hectares ? parseFloat(data.area_hectares) : undefined,
-                        planting_date: data.planting_date || undefined,
-                        expected_harvest: data.expected_harvest || undefined,
-                        status: data.status || undefined,
-                        notes: data.notes || undefined,
-                    });
-                    setCrops((prev) => [...prev, newCrop]);
-                } catch (e) { console.error(e); }
+            {showModal && <CropModal onClose={() => setShowModal(false)} onSave={(data) => {
+                createCrop({
+                    crop_type: data.crop_type,
+                    variety: data.variety || undefined,
+                    field_name: data.field_name || undefined,
+                    area_hectares: data.area_hectares ? parseFloat(data.area_hectares) : undefined,
+                    planting_date: data.planting_date || undefined,
+                    expected_harvest: data.expected_harvest || undefined,
+                    status: data.status || undefined,
+                    notes: data.notes || undefined,
+                });
                 setShowModal(false);
             }} />}
         </>

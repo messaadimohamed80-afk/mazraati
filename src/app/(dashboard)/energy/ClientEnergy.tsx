@@ -10,7 +10,7 @@ import {
 } from "@/lib/mock-energy-data";
 import { formatCurrency } from "@/lib/utils";
 import { SolarPanel, ElectricityMeter, Generator } from "@/lib/types";
-import { getSolarPanels, getElectricityMeters, getGenerators } from "@/lib/actions/energy";
+import { useEnergy } from "@/hooks/useEnergy";
 
 type EnergyTab = "solar" | "electricity" | "generators";
 
@@ -23,10 +23,8 @@ export default function ClientEnergy({
     initialElectricity: ElectricityMeter[];
     initialGenerators: Generator[];
 }) {
+    const { solarPanels: solar, meters: electricity, generators, createSolarPanel, createMeter, createGenerator } = useEnergy(initialSolar, initialElectricity, initialGenerators);
     const [activeTab, setActiveTab] = useState<EnergyTab>("solar");
-    const [solar, setSolar] = useState<SolarPanel[]>(initialSolar);
-    const [electricity, setElectricity] = useState<ElectricityMeter[]>(initialElectricity);
-    const [generators, setGenerators] = useState<Generator[]>(initialGenerators);
 
     /* ===== Stats ===== */
     const totalSolarKw = solar.filter((s) => s.status === "active").reduce((sum, s) => sum + s.capacity_kw, 0);

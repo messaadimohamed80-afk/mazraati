@@ -9,7 +9,7 @@ import {
 } from "@/lib/mock-livestock-data";
 import { formatCurrency } from "@/lib/utils";
 import { Animal, VaccinationRecord, FeedRecord } from "@/lib/types";
-import { getAnimals, getVaccinations, getFeedRecords } from "@/lib/actions/livestock";
+import { useLivestock } from "@/hooks/useLivestock";
 
 type TabKey = "all" | "sheep" | "cattle" | "poultry" | "goat";
 type ViewMode = "animals" | "vaccinations" | "feed";
@@ -23,13 +23,11 @@ export default function ClientLivestock({
     initialVaccinations: VaccinationRecord[];
     initialFeed: FeedRecord[];
 }) {
+    const { animals, vaccinations, feedRecords: feed, createAnimal } = useLivestock(initialAnimals, initialVaccinations, initialFeed);
     const [tab, setTab] = useState<TabKey>("all");
     const [view, setView] = useState<ViewMode>("animals");
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [animals, setAnimals] = useState<Animal[]>(initialAnimals);
-    const [vaccinations, setVaccinations] = useState<VaccinationRecord[]>(initialVaccinations);
-    const [feed, setFeed] = useState<FeedRecord[]>(initialFeed);
 
     const activeAnimals = animals.filter((a) => a.status !== "sold" && a.status !== "deceased");
     const sheepCount = activeAnimals.filter((a) => a.type === "sheep").length;
