@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { fetchClimateData, ClimateData } from "@/lib/climate-service";
-import { getCropPhenologyStages } from "@/lib/mock-crops-tasks-data";
+import { getCropPhenologyStages } from "@/lib/mock/mock-crops-tasks-data";
 
 interface ClimatePanelProps {
     lat: number;

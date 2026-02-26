@@ -1,7 +1,6 @@
 "use server";
 
 import { useMock, getDb, getCurrentFarmId, getCurrentUserId } from "@/lib/db";
-import { MOCK_CATEGORIES, MOCK_EXPENSES } from "@/lib/mock-data";
 import type { Category, Expense } from "@/lib/types";
 
 // ============================================================
@@ -9,7 +8,10 @@ import type { Category, Expense } from "@/lib/types";
 // ============================================================
 
 export async function getCategories(): Promise<Category[]> {
-    if (useMock()) return MOCK_CATEGORIES;
+    if (useMock()) {
+        const { MOCK_CATEGORIES } = await import("@/lib/mock/mock-data");
+        return MOCK_CATEGORIES;
+    }
 
     const supabase = await getDb();
     const farmId = await getCurrentFarmId();
@@ -27,6 +29,7 @@ export async function getCategories(): Promise<Category[]> {
 
 export async function getExpenses(): Promise<Expense[]> {
     if (useMock()) {
+        const { MOCK_CATEGORIES, MOCK_EXPENSES } = await import("@/lib/mock/mock-data");
         return MOCK_EXPENSES.map((e) => ({
             ...e,
             category: MOCK_CATEGORIES.find((c) => c.id === e.category_id),
@@ -41,7 +44,8 @@ export async function getExpenses(): Promise<Expense[]> {
         .from("expenses")
         .select("*, category:categories(*)")
         .eq("farm_id", farmId)
-        .order("date", { ascending: false });
+        .order("date", { ascending: false })
+        .limit(100);
 
     if (error) throw new Error(`Failed to fetch expenses: ${error.message}`);
     return data as Expense[];
@@ -51,6 +55,8 @@ export async function getExpenses(): Promise<Expense[]> {
 // CREATE
 // ============================================================
 
+import { createExpenseSchema } from "@/lib/validations";
+
 export async function createExpense(expense: {
     category_id: string;
     amount: number;
@@ -58,7 +64,9 @@ export async function createExpense(expense: {
     notes?: string;
     date: string;
 }): Promise<Expense> {
+    const parsed = createExpenseSchema.parse(expense);
     if (useMock()) {
+        const { MOCK_CATEGORIES, MOCK_EXPENSES } = await import("@/lib/mock/mock-data");
         const newExpense: Expense = {
             id: `exp-${Date.now()}`,
             farm_id: "farm-1",
@@ -82,8 +90,7 @@ export async function createExpense(expense: {
         .insert({
             farm_id: farmId,
             created_by: userId,
-            currency: "TND",
-            ...expense,
+            ...parsed,
         })
         .select("*, category:categories(*)")
         .single();
@@ -99,6 +106,7 @@ export async function createCategory(category: {
     budget_planned?: number;
 }): Promise<Category> {
     if (useMock()) {
+        const { MOCK_CATEGORIES } = await import("@/lib/mock/mock-data");
         const newCat: Category = {
             id: `cat-${Date.now()}`,
             farm_id: "farm-1",
@@ -132,6 +140,7 @@ export async function updateExpense(
     updates: Partial<Pick<Expense, "amount" | "description" | "notes" | "date" | "category_id">>
 ): Promise<Expense> {
     if (useMock()) {
+        const { MOCK_EXPENSES } = await import("@/lib/mock/mock-data");
         const idx = MOCK_EXPENSES.findIndex((e) => e.id === id);
         if (idx === -1) throw new Error("Expense not found");
         Object.assign(MOCK_EXPENSES[idx], updates);
@@ -156,6 +165,7 @@ export async function updateExpense(
 
 export async function deleteExpense(id: string): Promise<void> {
     if (useMock()) {
+        const { MOCK_EXPENSES } = await import("@/lib/mock/mock-data");
         const idx = MOCK_EXPENSES.findIndex((e) => e.id === id);
         if (idx !== -1) MOCK_EXPENSES.splice(idx, 1);
         return;

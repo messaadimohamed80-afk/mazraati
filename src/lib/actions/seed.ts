@@ -1,12 +1,6 @@
 "use server";
 
 import { createServiceRoleClient } from "@/lib/supabase/server";
-import { MOCK_CATEGORIES, MOCK_EXPENSES } from "@/lib/mock-data";
-import { MOCK_CROPS, MOCK_TASKS } from "@/lib/mock-crops-tasks-data";
-import { MOCK_ANIMALS, MOCK_FEED } from "@/lib/mock-livestock-data";
-import { MOCK_INVENTORY } from "@/lib/mock-inventory-data";
-import { MOCK_WELLS, MOCK_WELL_LAYERS, MOCK_TANKS, MOCK_IRRIGATION } from "@/lib/mock-water-data";
-import { MOCK_SOLAR, MOCK_ELECTRICITY, MOCK_GENERATORS } from "@/lib/mock-energy-data";
 
 /**
  * Seed demo data for a new farm.
@@ -17,6 +11,13 @@ export async function seedDemoData(farmId: string, userId: string): Promise<void
     const supabase = createServiceRoleClient();
 
     try {
+        const { MOCK_CATEGORIES, MOCK_EXPENSES } = await import("@/lib/mock/mock-data");
+        const { MOCK_CROPS, MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
+        const { MOCK_ANIMALS, MOCK_FEED } = await import("@/lib/mock/mock-livestock-data");
+        const { MOCK_INVENTORY } = await import("@/lib/mock/mock-inventory-data");
+        const { MOCK_WELLS, MOCK_WELL_LAYERS, MOCK_TANKS, MOCK_IRRIGATION } = await import("@/lib/mock/mock-water-data");
+        const { MOCK_SOLAR, MOCK_ELECTRICITY, MOCK_GENERATORS } = await import("@/lib/mock/mock-energy-data");
+
         // ── 1. Categories ──────────────────────────────────
         const catInserts = MOCK_CATEGORIES.map((c) => ({
             farm_id: farmId,

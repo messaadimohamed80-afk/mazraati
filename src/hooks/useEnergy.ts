@@ -4,7 +4,7 @@ import {
     getElectricityMeters, createElectricityMeter,
     getGenerators, createGenerator
 } from "@/lib/actions/energy";
-import { SolarPanel, ElectricityMeter, Generator } from "@/lib/mock-energy-data";
+import { SolarPanel, ElectricityMeter, Generator } from "@/lib/mock/mock-energy-data";
 import { useToast } from "@/components/Toast";
 
 export function useEnergy(

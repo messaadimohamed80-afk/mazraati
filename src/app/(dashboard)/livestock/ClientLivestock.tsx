@@ -6,7 +6,7 @@ import {
     ANIMAL_TYPE_MAP,
     ANIMAL_STATUS_MAP,
     GENDER_MAP,
-} from "@/lib/mock-livestock-data";
+} from "@/lib/mock/mock-livestock-data";
 import { formatCurrency } from "@/lib/utils";
 import { Animal, VaccinationRecord, FeedRecord } from "@/lib/types";
 import { useLivestock } from "@/hooks/useLivestock";

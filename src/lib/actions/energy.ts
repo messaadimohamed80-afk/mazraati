@@ -1,19 +1,17 @@
 "use server";
 
 import { useMock, getDb, getCurrentFarmId } from "@/lib/db";
-import {
-    MOCK_SOLAR,
-    MOCK_ELECTRICITY,
-    MOCK_GENERATORS,
-} from "@/lib/mock-energy-data";
-import type { SolarPanel, ElectricityMeter, Generator } from "@/lib/mock-energy-data";
+import type { SolarPanel, ElectricityMeter, Generator } from "@/lib/mock/mock-energy-data";
 
 // ============================================================
 // SOLAR PANELS
 // ============================================================
 
 export async function getSolarPanels(): Promise<SolarPanel[]> {
-    if (useMock()) return MOCK_SOLAR;
+    if (useMock()) {
+        const { MOCK_SOLAR } = await import("@/lib/mock/mock-energy-data");
+        return MOCK_SOLAR;
+    }
 
     const supabase = await getDb();
     const farmId = await getCurrentFarmId();
@@ -42,6 +40,7 @@ export async function createSolarPanel(panel: {
     notes?: string;
 }): Promise<SolarPanel> {
     if (useMock()) {
+        const { MOCK_SOLAR } = await import("@/lib/mock/mock-energy-data");
         const newPanel: SolarPanel = {
             id: `solar-${Date.now()}`,
             farm_id: "farm-1",
@@ -80,7 +79,10 @@ export async function createSolarPanel(panel: {
 // ============================================================
 
 export async function getElectricityMeters(): Promise<ElectricityMeter[]> {
-    if (useMock()) return MOCK_ELECTRICITY;
+    if (useMock()) {
+        const { MOCK_ELECTRICITY } = await import("@/lib/mock/mock-energy-data");
+        return MOCK_ELECTRICITY;
+    }
 
     const supabase = await getDb();
     const farmId = await getCurrentFarmId();
@@ -108,6 +110,7 @@ export async function createElectricityMeter(meter: {
     notes?: string;
 }): Promise<ElectricityMeter> {
     if (useMock()) {
+        const { MOCK_ELECTRICITY } = await import("@/lib/mock/mock-energy-data");
         const newMeter: ElectricityMeter = {
             id: `elec-${Date.now()}`,
             farm_id: "farm-1",
@@ -146,7 +149,10 @@ export async function createElectricityMeter(meter: {
 // ============================================================
 
 export async function getGenerators(): Promise<Generator[]> {
-    if (useMock()) return MOCK_GENERATORS;
+    if (useMock()) {
+        const { MOCK_GENERATORS } = await import("@/lib/mock/mock-energy-data");
+        return MOCK_GENERATORS;
+    }
 
     const supabase = await getDb();
     const farmId = await getCurrentFarmId();
@@ -175,6 +181,7 @@ export async function createGenerator(gen: {
     notes?: string;
 }): Promise<Generator> {
     if (useMock()) {
+        const { MOCK_GENERATORS } = await import("@/lib/mock/mock-energy-data");
         const newGen: Generator = {
             id: `gen-${Date.now()}`,
             farm_id: "farm-1",

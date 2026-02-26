@@ -6,7 +6,7 @@ import {
     TASK_STATUS_MAP,
     isOverdue,
     getDaysUntil,
-} from "@/lib/mock-crops-tasks-data";
+} from "@/lib/mock/mock-crops-tasks-data";
 import { Task } from "@/lib/types";
 import { useTasks } from "@/hooks/useTasks";
 

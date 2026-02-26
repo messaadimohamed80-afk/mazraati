@@ -8,7 +8,7 @@ import {
     getCropIcon,
     getCropColor,
     getDaysUntil,
-} from "@/lib/mock-crops-tasks-data";
+} from "@/lib/mock/mock-crops-tasks-data";
 import { Crop } from "@/lib/types";
 import { useCrops } from "@/hooks/useCrops";
 

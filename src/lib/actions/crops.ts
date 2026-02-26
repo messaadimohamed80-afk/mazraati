@@ -1,7 +1,6 @@
 "use server";
 
 import { useMock, getDb, getCurrentFarmId } from "@/lib/db";
-import { MOCK_CROPS, MOCK_TASKS } from "@/lib/mock-crops-tasks-data";
 import type { Crop, Task } from "@/lib/types";
 
 // ============================================================
@@ -9,7 +8,10 @@ import type { Crop, Task } from "@/lib/types";
 // ============================================================
 
 export async function getCrops(): Promise<Crop[]> {
-    if (useMock()) return MOCK_CROPS;
+    if (useMock()) {
+        const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
+        return MOCK_CROPS;
+    }
 
     const supabase = await getDb();
     const farmId = await getCurrentFarmId();
@@ -19,14 +21,18 @@ export async function getCrops(): Promise<Crop[]> {
         .from("crops")
         .select("*")
         .eq("farm_id", farmId)
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .limit(100);
 
     if (error) throw new Error(`Failed to fetch crops: ${error.message}`);
     return data as Crop[];
 }
 
 export async function getCrop(id: string): Promise<Crop | null> {
-    if (useMock()) return MOCK_CROPS.find((c) => c.id === id) ?? null;
+    if (useMock()) {
+        const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
+        return MOCK_CROPS.find((c) => c.id === id) ?? null;
+    }
 
     const supabase = await getDb();
     const { data, error } = await supabase
@@ -43,6 +49,8 @@ export async function getCrop(id: string): Promise<Crop | null> {
 // CROPS — CREATE / UPDATE
 // ============================================================
 
+import { createCropSchema } from "@/lib/validations";
+
 export async function createCrop(crop: {
     crop_type: string;
     variety?: string;
@@ -55,7 +63,9 @@ export async function createCrop(crop: {
     longitude?: number;
     notes?: string;
 }): Promise<Crop> {
+    const parsed = createCropSchema.parse(crop);
     if (useMock()) {
+        const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
         const newCrop: Crop = {
             id: `crop-${Date.now()}`,
             farm_id: "farm-1",
@@ -81,7 +91,7 @@ export async function createCrop(crop: {
 
     const { data, error } = await supabase
         .from("crops")
-        .insert({ farm_id: farmId, ...crop })
+        .insert({ farm_id: farmId, ...parsed })
         .select()
         .single();
 
@@ -94,6 +104,7 @@ export async function updateCrop(
     updates: Partial<Crop>
 ): Promise<Crop> {
     if (useMock()) {
+        const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
         const idx = MOCK_CROPS.findIndex((c) => c.id === id);
         if (idx === -1) throw new Error("Crop not found");
         Object.assign(MOCK_CROPS[idx], updates);
@@ -117,7 +128,10 @@ export async function updateCrop(
 // ============================================================
 
 export async function getTasks(): Promise<Task[]> {
-    if (useMock()) return MOCK_TASKS;
+    if (useMock()) {
+        const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
+        return MOCK_TASKS;
+    }
 
     const supabase = await getDb();
     const farmId = await getCurrentFarmId();
@@ -127,21 +141,26 @@ export async function getTasks(): Promise<Task[]> {
         .from("tasks")
         .select("*")
         .eq("farm_id", farmId)
-        .order("due_date", { ascending: true });
+        .order("due_date", { ascending: true })
+        .limit(100);
 
     if (error) throw new Error(`Failed to fetch tasks: ${error.message}`);
     return data as Task[];
 }
 
 export async function getTasksForCrop(cropId: string): Promise<Task[]> {
-    if (useMock()) return MOCK_TASKS.filter((t) => t.id.includes("task")); // Mock: return all tasks
+    if (useMock()) {
+        const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
+        return MOCK_TASKS.filter((t) => t.id.includes("task")); // Mock: return all tasks
+    }
     // In real mode, we'd filter by crop_id
     const supabase = await getDb();
     const { data, error } = await supabase
         .from("tasks")
         .select("*")
         .eq("crop_id", cropId)
-        .order("due_date", { ascending: true });
+        .order("due_date", { ascending: true })
+        .limit(100);
 
     if (error) throw new Error(`Failed to fetch tasks for crop: ${error.message}`);
     return data as Task[];
@@ -161,6 +180,7 @@ export async function createTask(task: {
     recurring?: boolean;
 }): Promise<Task> {
     if (useMock()) {
+        const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
         const newTask: Task = {
             id: `task-${Date.now()}`,
             farm_id: "farm-1",
@@ -197,6 +217,7 @@ export async function updateTask(
     updates: Partial<Task>
 ): Promise<Task> {
     if (useMock()) {
+        const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
         const idx = MOCK_TASKS.findIndex((t) => t.id === id);
         if (idx === -1) throw new Error("Task not found");
         Object.assign(MOCK_TASKS[idx], updates);
@@ -217,6 +238,7 @@ export async function updateTask(
 
 export async function deleteTask(id: string): Promise<void> {
     if (useMock()) {
+        const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
         const idx = MOCK_TASKS.findIndex((t) => t.id === id);
         if (idx !== -1) MOCK_TASKS.splice(idx, 1);
         return;

@@ -1,4 +1,4 @@
-import { Expense, Category } from "./types";
+import { Expense, Category } from "../types";
 
 /* ===== Categories ===== */
 export const MOCK_CATEGORIES: Category[] = [

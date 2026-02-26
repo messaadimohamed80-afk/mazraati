@@ -9,7 +9,7 @@ import {
     TANK_STATUS_MAP,
     IRRIGATION_TYPE_MAP,
     IRRIGATION_STATUS_MAP,
-} from "@/lib/mock-water-data";
+} from "@/lib/mock/mock-water-data";
 import { formatCurrency } from "@/lib/utils";
 import { Well, WaterTank, IrrigationNetwork } from "@/lib/types";
 import { useWater } from "@/hooks/useWater";

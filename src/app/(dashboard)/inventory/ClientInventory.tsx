@@ -5,7 +5,7 @@ import InventoryModal from "@/components/InventoryModal";
 import {
     INVENTORY_CATEGORY_MAP,
     INVENTORY_CONDITION_MAP,
-} from "@/lib/mock-inventory-data";
+} from "@/lib/mock/mock-inventory-data";
 import { formatCurrency } from "@/lib/utils";
 import { InventoryItem } from "@/lib/types";
 import { useInventory } from "@/hooks/useInventory";

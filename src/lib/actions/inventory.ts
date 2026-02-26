@@ -1,15 +1,17 @@
 "use server";
 
 import { useMock, getDb, getCurrentFarmId } from "@/lib/db";
-import { MOCK_INVENTORY } from "@/lib/mock-inventory-data";
-import type { InventoryItem } from "@/lib/mock-inventory-data";
+import type { InventoryItem } from "@/lib/mock/mock-inventory-data";
 
 // ============================================================
 // READ
 // ============================================================
 
 export async function getInventory(): Promise<InventoryItem[]> {
-    if (useMock()) return MOCK_INVENTORY;
+    if (useMock()) {
+        const { MOCK_INVENTORY } = await import("@/lib/mock/mock-inventory-data");
+        return MOCK_INVENTORY;
+    }
 
     const supabase = await getDb();
     const farmId = await getCurrentFarmId();
@@ -19,7 +21,8 @@ export async function getInventory(): Promise<InventoryItem[]> {
         .from("inventory_items")
         .select("*")
         .eq("farm_id", farmId)
-        .order("name");
+        .order("name")
+        .limit(100);
 
     if (error) throw new Error(`Failed to fetch inventory: ${error.message}`);
     return data as InventoryItem[];
@@ -28,6 +31,8 @@ export async function getInventory(): Promise<InventoryItem[]> {
 // ============================================================
 // CREATE
 // ============================================================
+
+import { createInventoryItemSchema } from "@/lib/validations";
 
 export async function createInventoryItem(item: {
     name: string;
@@ -41,7 +46,9 @@ export async function createInventoryItem(item: {
     condition?: string;
     notes?: string;
 }): Promise<InventoryItem> {
+    const parsed = createInventoryItemSchema.parse(item);
     if (useMock()) {
+        const { MOCK_INVENTORY } = await import("@/lib/mock/mock-inventory-data");
         const newItem: InventoryItem = {
             id: `inv-${Date.now()}`,
             farm_id: "farm-1",
@@ -67,7 +74,7 @@ export async function createInventoryItem(item: {
 
     const { data, error } = await supabase
         .from("inventory_items")
-        .insert({ farm_id: farmId, ...item })
+        .insert({ farm_id: farmId, ...parsed })
         .select()
         .single();
 
@@ -84,6 +91,7 @@ export async function updateInventoryItem(
     updates: Partial<InventoryItem>
 ): Promise<InventoryItem> {
     if (useMock()) {
+        const { MOCK_INVENTORY } = await import("@/lib/mock/mock-inventory-data");
         const idx = MOCK_INVENTORY.findIndex((i) => i.id === id);
         if (idx === -1) throw new Error("Item not found");
         Object.assign(MOCK_INVENTORY[idx], updates);
@@ -108,6 +116,7 @@ export async function updateInventoryItem(
 
 export async function deleteInventoryItem(id: string): Promise<void> {
     if (useMock()) {
+        const { MOCK_INVENTORY } = await import("@/lib/mock/mock-inventory-data");
         const idx = MOCK_INVENTORY.findIndex((i) => i.id === id);
         if (idx !== -1) MOCK_INVENTORY.splice(idx, 1);
         return;

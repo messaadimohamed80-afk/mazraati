@@ -9,7 +9,7 @@ import {
     getFeedRecords,
     createFeedRecord
 } from "@/lib/actions/livestock";
-import { Animal, VaccinationRecord, FeedRecord } from "@/lib/mock-livestock-data";
+import { Animal, VaccinationRecord, FeedRecord } from "@/lib/mock/mock-livestock-data";
 import { useToast } from "@/components/Toast";
 
 export function useLivestock(

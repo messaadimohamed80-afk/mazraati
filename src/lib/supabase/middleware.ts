@@ -2,8 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-    // If mock mode, pass through all requests (no auth required)
-    if (process.env.USE_MOCK === "true") {
+    // If mock mode or local development, pass through all requests (no auth required for UI testing)
+    if (process.env.USE_MOCK === "true" || process.env.NODE_ENV === "development") {
         return NextResponse.next({ request });
     }
 
@@ -40,7 +40,7 @@ export async function updateSession(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     // Redirect unauthenticated users to login
-    const publicRoutes = ["/auth/login", "/auth/register", "/auth/callback", "/", "/landing"];
+    const publicRoutes = ["/auth/login", "/auth/register", "/auth/callback", "/landing"];
     const isPublicRoute = publicRoutes.some((route) =>
         request.nextUrl.pathname === route || request.nextUrl.pathname.startsWith("/auth/")
     );

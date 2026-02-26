@@ -1,12 +1,6 @@
 "use server";
 
 import { useMock, getDb, getCurrentFarmId } from "@/lib/db";
-import {
-    MOCK_WELLS,
-    MOCK_WELL_LAYERS,
-    MOCK_TANKS,
-    MOCK_IRRIGATION,
-} from "@/lib/mock-water-data";
 import type { Well, WellLayer, WaterTank, IrrigationNetwork } from "@/lib/types";
 
 // ============================================================
@@ -14,7 +8,10 @@ import type { Well, WellLayer, WaterTank, IrrigationNetwork } from "@/lib/types"
 // ============================================================
 
 export async function getWells(): Promise<Well[]> {
-    if (useMock()) return MOCK_WELLS;
+    if (useMock()) {
+        const { MOCK_WELLS } = await import("@/lib/mock/mock-water-data");
+        return MOCK_WELLS;
+    }
 
     const supabase = await getDb();
     const farmId = await getCurrentFarmId();
@@ -24,25 +21,32 @@ export async function getWells(): Promise<Well[]> {
         .from("wells")
         .select("*")
         .eq("farm_id", farmId)
-        .order("name");
+        .order("name")
+        .limit(100);
 
     if (error) throw new Error(`Failed to fetch wells: ${error.message}`);
     return data as Well[];
 }
 
 export async function getWellLayers(wellId: string): Promise<WellLayer[]> {
-    if (useMock()) return MOCK_WELL_LAYERS.filter((l) => l.well_id === wellId);
+    if (useMock()) {
+        const { MOCK_WELL_LAYERS } = await import("@/lib/mock/mock-water-data");
+        return MOCK_WELL_LAYERS.filter((l) => l.well_id === wellId);
+    }
 
     const supabase = await getDb();
     const { data, error } = await supabase
         .from("well_layers")
         .select("*")
         .eq("well_id", wellId)
-        .order("depth_from");
+        .order("depth_from")
+        .limit(100);
 
     if (error) throw new Error(`Failed to fetch well layers: ${error.message}`);
     return data as WellLayer[];
 }
+
+import { createWellSchema } from "@/lib/validations";
 
 export async function createWell(well: {
     name: string;
@@ -55,7 +59,9 @@ export async function createWell(well: {
     latitude?: number;
     longitude?: number;
 }): Promise<Well> {
+    const parsed = createWellSchema.parse(well);
     if (useMock()) {
+        const { MOCK_WELLS } = await import("@/lib/mock/mock-water-data");
         const newWell: Well = {
             id: `well-${Date.now()}`,
             farm_id: "farm-1",
@@ -80,7 +86,7 @@ export async function createWell(well: {
 
     const { data, error } = await supabase
         .from("wells")
-        .insert({ farm_id: farmId, ...well })
+        .insert({ farm_id: farmId, ...parsed })
         .select()
         .single();
 
@@ -93,7 +99,10 @@ export async function createWell(well: {
 // ============================================================
 
 export async function getTanks(): Promise<WaterTank[]> {
-    if (useMock()) return MOCK_TANKS;
+    if (useMock()) {
+        const { MOCK_TANKS } = await import("@/lib/mock/mock-water-data");
+        return MOCK_TANKS;
+    }
 
     const supabase = await getDb();
     const farmId = await getCurrentFarmId();
@@ -119,6 +128,7 @@ export async function createTank(tank: {
     notes?: string;
 }): Promise<WaterTank> {
     if (useMock()) {
+        const { MOCK_TANKS } = await import("@/lib/mock/mock-water-data");
         const newTank: WaterTank = {
             id: `tank-${Date.now()}`,
             farm_id: "farm-1",
@@ -154,7 +164,10 @@ export async function createTank(tank: {
 // ============================================================
 
 export async function getIrrigation(): Promise<IrrigationNetwork[]> {
-    if (useMock()) return MOCK_IRRIGATION;
+    if (useMock()) {
+        const { MOCK_IRRIGATION } = await import("@/lib/mock/mock-water-data");
+        return MOCK_IRRIGATION;
+    }
 
     const supabase = await getDb();
     const farmId = await getCurrentFarmId();
@@ -181,6 +194,7 @@ export async function createIrrigation(network: {
     notes?: string;
 }): Promise<IrrigationNetwork> {
     if (useMock()) {
+        const { MOCK_IRRIGATION } = await import("@/lib/mock/mock-water-data");
         const newNet: IrrigationNetwork = {
             id: `irr-${Date.now()}`,
             farm_id: "farm-1",

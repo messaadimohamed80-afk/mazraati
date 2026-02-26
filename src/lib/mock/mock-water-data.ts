@@ -1,4 +1,4 @@
-import { Well, WellLayer, WaterTank, IrrigationNetwork } from "./types";
+import { Well, WellLayer, WaterTank, IrrigationNetwork } from "../types";
 
 /* ===== Wells ===== */
 export const MOCK_WELLS: Well[] = [

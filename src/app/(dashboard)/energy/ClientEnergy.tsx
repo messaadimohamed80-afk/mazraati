@@ -7,7 +7,7 @@ import {
     ELEC_TARIFF_MAP,
     GEN_STATUS_MAP,
     FUEL_TYPE_MAP,
-} from "@/lib/mock-energy-data";
+} from "@/lib/mock/mock-energy-data";
 import { formatCurrency } from "@/lib/utils";
 import { SolarPanel, ElectricityMeter, Generator } from "@/lib/types";
 import { useEnergy } from "@/hooks/useEnergy";

@@ -1,15 +1,17 @@
 "use server";
 
 import { useMock, getDb, getCurrentFarmId } from "@/lib/db";
-import { MOCK_ANIMALS, MOCK_VACCINATIONS, MOCK_FEED } from "@/lib/mock-livestock-data";
-import type { Animal, VaccinationRecord, FeedRecord } from "@/lib/mock-livestock-data";
+import type { Animal, VaccinationRecord, FeedRecord } from "@/lib/mock/mock-livestock-data";
 
 // ============================================================
 // ANIMALS — READ
 // ============================================================
 
 export async function getAnimals(): Promise<Animal[]> {
-    if (useMock()) return MOCK_ANIMALS;
+    if (useMock()) {
+        const { MOCK_ANIMALS } = await import("@/lib/mock/mock-livestock-data");
+        return MOCK_ANIMALS;
+    }
 
     const supabase = await getDb();
     const farmId = await getCurrentFarmId();
@@ -19,7 +21,8 @@ export async function getAnimals(): Promise<Animal[]> {
         .from("animals")
         .select("*")
         .eq("farm_id", farmId)
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .limit(100);
 
     if (error) throw new Error(`Failed to fetch animals: ${error.message}`);
     return data as Animal[];
@@ -28,6 +31,8 @@ export async function getAnimals(): Promise<Animal[]> {
 // ============================================================
 // ANIMALS — CREATE / UPDATE / DELETE
 // ============================================================
+
+import { createAnimalSchema } from "@/lib/validations";
 
 export async function createAnimal(animal: {
     name: string;
@@ -42,7 +47,9 @@ export async function createAnimal(animal: {
     purchase_price?: number;
     notes?: string;
 }): Promise<Animal> {
+    const parsed = createAnimalSchema.parse(animal);
     if (useMock()) {
+        const { MOCK_ANIMALS } = await import("@/lib/mock/mock-livestock-data");
         const newAnimal: Animal = {
             id: `animal-${Date.now()}`,
             farm_id: "farm-1",
@@ -70,7 +77,7 @@ export async function createAnimal(animal: {
 
     const { data, error } = await supabase
         .from("animals")
-        .insert({ farm_id: farmId, status: "healthy", ...animal })
+        .insert({ farm_id: farmId, ...parsed })
         .select()
         .single();
 
@@ -83,6 +90,7 @@ export async function updateAnimal(
     updates: Partial<Animal>
 ): Promise<Animal> {
     if (useMock()) {
+        const { MOCK_ANIMALS } = await import("@/lib/mock/mock-livestock-data");
         const idx = MOCK_ANIMALS.findIndex((a) => a.id === id);
         if (idx === -1) throw new Error("Animal not found");
         Object.assign(MOCK_ANIMALS[idx], updates);
@@ -103,6 +111,7 @@ export async function updateAnimal(
 
 export async function deleteAnimal(id: string): Promise<void> {
     if (useMock()) {
+        const { MOCK_ANIMALS } = await import("@/lib/mock/mock-livestock-data");
         const idx = MOCK_ANIMALS.findIndex((a) => a.id === id);
         if (idx !== -1) MOCK_ANIMALS.splice(idx, 1);
         return;
@@ -119,6 +128,7 @@ export async function deleteAnimal(id: string): Promise<void> {
 
 export async function getVaccinations(animalId?: string): Promise<VaccinationRecord[]> {
     if (useMock()) {
+        const { MOCK_VACCINATIONS } = await import("@/lib/mock/mock-livestock-data");
         return animalId
             ? MOCK_VACCINATIONS.filter((v) => v.animal_id === animalId)
             : MOCK_VACCINATIONS;
@@ -146,6 +156,7 @@ export async function createVaccination(record: {
     notes?: string;
 }): Promise<VaccinationRecord> {
     if (useMock()) {
+        const { MOCK_VACCINATIONS } = await import("@/lib/mock/mock-livestock-data");
         const newRec: VaccinationRecord = {
             id: `vax-${Date.now()}`,
             created_at: new Date().toISOString(),
@@ -171,7 +182,10 @@ export async function createVaccination(record: {
 // ============================================================
 
 export async function getFeedRecords(): Promise<FeedRecord[]> {
-    if (useMock()) return MOCK_FEED;
+    if (useMock()) {
+        const { MOCK_FEED } = await import("@/lib/mock/mock-livestock-data");
+        return MOCK_FEED;
+    }
 
     const supabase = await getDb();
     const farmId = await getCurrentFarmId();
@@ -196,6 +210,7 @@ export async function createFeedRecord(record: {
     notes?: string;
 }): Promise<FeedRecord> {
     if (useMock()) {
+        const { MOCK_FEED } = await import("@/lib/mock/mock-livestock-data");
         const newRec: FeedRecord = {
             id: `feed-${Date.now()}`,
             farm_id: "farm-1",
