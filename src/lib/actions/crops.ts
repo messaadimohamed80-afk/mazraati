@@ -49,7 +49,7 @@ export async function getCrop(id: string): Promise<Crop | null> {
 // CROPS — CREATE / UPDATE
 // ============================================================
 
-import { createCropSchema } from "@/lib/validations";
+import { createCropSchema, updateCropSchema, createTaskSchema, updateTaskSchema } from "@/lib/validations";
 
 export async function createCrop(crop: {
     crop_type: string;
@@ -103,6 +103,7 @@ export async function updateCrop(
     id: string,
     updates: Partial<Crop>
 ): Promise<Crop> {
+    updateCropSchema.parse({ id, ...updates });
     if (useMock()) {
         const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
         const idx = MOCK_CROPS.findIndex((c) => c.id === id);
@@ -179,6 +180,7 @@ export async function createTask(task: {
     crop_id?: string;
     recurring?: boolean;
 }): Promise<Task> {
+    createTaskSchema.parse(task);
     if (useMock()) {
         const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
         const newTask: Task = {
@@ -216,6 +218,7 @@ export async function updateTask(
     id: string,
     updates: Partial<Task>
 ): Promise<Task> {
+    updateTaskSchema.parse({ id, ...updates });
     if (useMock()) {
         const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
         const idx = MOCK_TASKS.findIndex((t) => t.id === id);

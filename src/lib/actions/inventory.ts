@@ -1,7 +1,7 @@
 "use server";
 
 import { useMock, getDb, getCurrentFarmId } from "@/lib/db";
-import type { InventoryItem } from "@/lib/mock/mock-inventory-data";
+import type { InventoryItem } from "@/lib/types";
 
 // ============================================================
 // READ
@@ -32,7 +32,7 @@ export async function getInventory(): Promise<InventoryItem[]> {
 // CREATE
 // ============================================================
 
-import { createInventoryItemSchema } from "@/lib/validations";
+import { createInventoryItemSchema, updateInventoryItemSchema } from "@/lib/validations";
 
 export async function createInventoryItem(item: {
     name: string;
@@ -90,6 +90,7 @@ export async function updateInventoryItem(
     id: string,
     updates: Partial<InventoryItem>
 ): Promise<InventoryItem> {
+    updateInventoryItemSchema.parse({ id, ...updates });
     if (useMock()) {
         const { MOCK_INVENTORY } = await import("@/lib/mock/mock-inventory-data");
         const idx = MOCK_INVENTORY.findIndex((i) => i.id === id);

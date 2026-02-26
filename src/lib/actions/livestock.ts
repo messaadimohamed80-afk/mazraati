@@ -1,7 +1,7 @@
 "use server";
 
 import { useMock, getDb, getCurrentFarmId } from "@/lib/db";
-import type { Animal, VaccinationRecord, FeedRecord } from "@/lib/mock/mock-livestock-data";
+import type { Animal, VaccinationRecord, FeedRecord } from "@/lib/types";
 
 // ============================================================
 // ANIMALS — READ
@@ -32,7 +32,7 @@ export async function getAnimals(): Promise<Animal[]> {
 // ANIMALS — CREATE / UPDATE / DELETE
 // ============================================================
 
-import { createAnimalSchema } from "@/lib/validations";
+import { createAnimalSchema, updateAnimalSchema } from "@/lib/validations";
 
 export async function createAnimal(animal: {
     name: string;
@@ -89,6 +89,7 @@ export async function updateAnimal(
     id: string,
     updates: Partial<Animal>
 ): Promise<Animal> {
+    updateAnimalSchema.parse({ id, ...updates });
     if (useMock()) {
         const { MOCK_ANIMALS } = await import("@/lib/mock/mock-livestock-data");
         const idx = MOCK_ANIMALS.findIndex((a) => a.id === id);

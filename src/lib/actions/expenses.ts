@@ -55,7 +55,7 @@ export async function getExpenses(): Promise<Expense[]> {
 // CREATE
 // ============================================================
 
-import { createExpenseSchema } from "@/lib/validations";
+import { createExpenseSchema, updateExpenseSchema } from "@/lib/validations";
 
 export async function createExpense(expense: {
     category_id: string;
@@ -139,6 +139,7 @@ export async function updateExpense(
     id: string,
     updates: Partial<Pick<Expense, "amount" | "description" | "notes" | "date" | "category_id">>
 ): Promise<Expense> {
+    const parsed = updateExpenseSchema.parse({ id, ...updates });
     if (useMock()) {
         const { MOCK_EXPENSES } = await import("@/lib/mock/mock-data");
         const idx = MOCK_EXPENSES.findIndex((e) => e.id === id);
