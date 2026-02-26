@@ -77,6 +77,7 @@ export const metadata: Metadata = {
 
 import { ToastProvider } from "@/components/Toast";
 import InstallPrompt from "@/components/InstallPrompt";
+import QueryProvider from "@/components/QueryProvider";
 
 export default function RootLayout({
   children,
@@ -90,9 +91,11 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body className={`${ibmPlexArabic.variable} font-arabic antialiased`}>
-        <ThemeProvider>
-          <ToastProvider>{children}</ToastProvider>
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </ThemeProvider>
+        </QueryProvider>
         <InstallPrompt />
         <Analytics />
         <SpeedInsights />

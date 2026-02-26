@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import ExpenseModal from "@/components/ExpenseModal";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Expense, Category } from "@/lib/types";
+import { useExpenses } from "@/hooks/useExpenses";
 
 type SortKey = "date" | "amount" | "category";
 type SortDir = "asc" | "desc";
@@ -15,8 +16,8 @@ export default function ClientExpenses({
     initialExpenses: Expense[];
     initialCategories: Category[];
 }) {
-    const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
-    const [categories, setCategories] = useState<Category[]>(initialCategories);
+    const [categories] = useState<Category[]>(initialCategories);
+    const { expenses, createExpense, updateExpense, deleteExpense } = useExpenses(initialExpenses, categories);
 
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
@@ -103,37 +104,19 @@ export default function ClientExpenses({
     };
 
     const handleAddExpense = (expense: Omit<Expense, "id" | "created_at" | "created_by" | "farm_id">) => {
-        const newExpense: Expense = {
-            ...expense,
-            id: `exp-${Date.now()}`,
-            farm_id: "farm-1",
-            created_by: "user-1",
-            created_at: new Date().toISOString(),
-            category: categories.find((c) => c.id === expense.category_id),
-        };
-        setExpenses((prev) => [newExpense, ...prev]);
+        createExpense(expense as any);
         setShowModal(false);
     };
 
     const handleEditExpense = (expense: Omit<Expense, "id" | "created_at" | "created_by" | "farm_id">) => {
         if (!editingExpense) return;
-        setExpenses((prev) =>
-            prev.map((e) =>
-                e.id === editingExpense.id
-                    ? {
-                        ...e,
-                        ...expense,
-                        category: categories.find((c) => c.id === expense.category_id),
-                    }
-                    : e
-            )
-        );
+        updateExpense({ id: editingExpense.id, updates: expense as any });
         setEditingExpense(null);
         setShowModal(false);
     };
 
     const handleDeleteExpense = (id: string) => {
-        setExpenses((prev) => prev.filter((e) => e.id !== id));
+        deleteExpense(id);
     };
 
     const openEdit = (expense: Expense) => {
