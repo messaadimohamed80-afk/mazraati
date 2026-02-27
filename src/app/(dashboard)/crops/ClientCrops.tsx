@@ -15,11 +15,13 @@ import { useCrops } from "@/hooks/useCrops";
 type CropFilter = "all" | "planned" | "planted" | "growing" | "harvested";
 
 export default function ClientCrops({
-    initialCrops
+    initialCrops,
+    serverNow
 }: {
     initialCrops: Crop[];
+    serverNow: number;
 }) {
-    const { crops, createCrop, updateCrop } = useCrops(initialCrops);
+    const { crops, createCrop } = useCrops(initialCrops);
     const [filter, setFilter] = useState<CropFilter>("all");
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
@@ -124,10 +126,9 @@ export default function ClientCrops({
                     const icon = getCropIcon(crop.crop_type);
                     const color = getCropColor(crop.crop_type);
                     const daysToHarvest = crop.expected_harvest ? getDaysUntil(crop.expected_harvest) : null;
-                    const now = Date.now();
                     const growthPercent = crop.planting_date && crop.expected_harvest
                         ? Math.min(Math.max(
-                            Math.round(((now - new Date(crop.planting_date).getTime()) / (new Date(crop.expected_harvest).getTime() - new Date(crop.planting_date).getTime())) * 100),
+                            Math.round(((serverNow - new Date(crop.planting_date).getTime()) / (new Date(crop.expected_harvest).getTime() - new Date(crop.planting_date).getTime())) * 100),
                             0), 100)
                         : 0;
 

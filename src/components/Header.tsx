@@ -26,13 +26,12 @@ export default function Header() {
     const pathname = usePathname();
     const page = PAGE_TITLES[pathname] || PAGE_TITLES["/"];
     const [searchOpen, setSearchOpen] = useState(false);
-    const [formattedDate, setFormattedDate] = useState("");
-
-    useEffect(() => {
-        setFormattedDate(new Date().toLocaleDateString("ar-TN", {
+    const [formattedDate] = useState(() => {
+        if (typeof window === "undefined") return "";
+        return new Date().toLocaleDateString("ar-TN", {
             day: "numeric", month: "long", year: "numeric",
-        }));
-    }, []);
+        });
+    });
 
     // Keyboard shortcut
     useEffect(() => {

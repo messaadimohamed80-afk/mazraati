@@ -200,9 +200,32 @@ export async function fetchClimateData(
         daily: "temperature_2m_max,temperature_2m_min,precipitation_sum,et0_fao_evapotranspiration",
     });
 
+    /* ===== Open-Meteo API Response Types ===== */
+    interface OpenMeteoCurrentResponse {
+        temperature_2m: number;
+        relative_humidity_2m: number;
+        rain: number;
+        wind_speed_10m: number;
+        weather_code: number;
+        time: string;
+    }
+
+    interface OpenMeteoDailyResponse {
+        time: string[];
+        temperature_2m_max: number[];
+        temperature_2m_min: number[];
+        precipitation_sum: number[];
+        et0_fao_evapotranspiration: number[];
+    }
+
+    interface OpenMeteoResponse {
+        current: OpenMeteoCurrentResponse;
+        daily: OpenMeteoDailyResponse;
+    }
+
     const response = await fetch(`${API_BASE}?${params}`);
     if (!response.ok) throw new Error(`Open-Meteo API error: ${response.status}`);
-    const data: Record<string, Record<string, number | number[] | string | string[]>> = await response.json();
+    const data: OpenMeteoResponse = await response.json();
 
     // Parse current weather
     const weather = decodeWeatherCode(data.current.weather_code);

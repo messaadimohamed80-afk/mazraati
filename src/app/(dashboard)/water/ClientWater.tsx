@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import {
     MOCK_WELL_LAYERS,
     WELL_STATUS_MAP,
@@ -34,7 +34,6 @@ export default function ClientWater({
     /* ===== Stats ===== */
     const totalWaterSources = wells.length + tanks.length;
     const activeWells = wells.filter((w) => w.status === "active").length;
-    const totalTankCapacity = tanks.reduce((s, t) => s + t.capacity_liters, 0);
     const avgTankLevel = Math.round(
         tanks.filter((t) => t.status === "active").reduce((s, t) => s + t.current_level_percent, 0) /
         Math.max(tanks.filter((t) => t.status === "active").length, 1)

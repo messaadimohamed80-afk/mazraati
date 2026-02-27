@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTheme } from "@/components/ThemeProvider";
 
 const navItems = [
@@ -23,13 +23,10 @@ const bottomItems = [
 
 export default function Sidebar() {
     const pathname = usePathname();
-    const [collapsed, setCollapsed] = useState(false);
-
-    // Persist collapsed state to localStorage
-    useEffect(() => {
-        const saved = localStorage.getItem("sidebar-collapsed");
-        if (saved === "true") setCollapsed(true);
-    }, []);
+    const [collapsed, setCollapsed] = useState(() => {
+        if (typeof window === "undefined") return false;
+        return localStorage.getItem("sidebar-collapsed") === "true";
+    });
 
     const toggleCollapsed = () => {
         const next = !collapsed;

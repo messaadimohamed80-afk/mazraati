@@ -23,17 +23,14 @@ export default function ClientLivestock({
     initialVaccinations: VaccinationRecord[];
     initialFeed: FeedRecord[];
 }) {
-    const { animals, vaccinations, feedRecords: feed, createAnimal: _createAnimal } = useLivestock(initialAnimals, initialVaccinations, initialFeed);
+    const { animals, vaccinations, feedRecords: feed } = useLivestock(initialAnimals, initialVaccinations, initialFeed);
     const [tab, setTab] = useState<TabKey>("all");
     const [view, setView] = useState<ViewMode>("animals");
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
 
     const activeAnimals = animals.filter((a) => a.status !== "sold" && a.status !== "deceased");
-    const _sheepCount = activeAnimals.filter((a) => a.type === "sheep").length;
     const cattleCount = activeAnimals.filter((a) => a.type === "cattle").length;
-    const _poultryCount = activeAnimals.filter((a) => a.type === "poultry").length;
-    const _goatCount = activeAnimals.filter((a) => a.type === "goat").length;
     const sickCount = activeAnimals.filter((a) => a.status === "sick").length;
     const pregnantCount = activeAnimals.filter((a) => a.status === "pregnant").length;
 

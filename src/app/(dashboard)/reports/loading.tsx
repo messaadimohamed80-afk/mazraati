@@ -1,4 +1,4 @@
-import { CardGridSkeleton } from "@/components/Skeleton";
+/* Loading skeleton for reports page */
 
 export default function ReportsLoading() {
     return (

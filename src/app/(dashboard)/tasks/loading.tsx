@@ -1,4 +1,4 @@
-import { CardGridSkeleton } from "@/components/Skeleton";
+/* Loading skeleton for tasks page */
 
 export default function TasksLoading() {
     return (

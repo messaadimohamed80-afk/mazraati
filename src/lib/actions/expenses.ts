@@ -148,8 +148,9 @@ export async function updateExpense(
         return MOCK_EXPENSES[idx];
     }
 
+    const { id: _parsedId, ...validatedUpdates } = parsed;
+    void _parsedId; // validated but not used directly
     const supabase = await getDb();
-    const { id: _id, ...validatedUpdates } = parsed;
     const { data, error } = await supabase
         .from("expenses")
         .update(validatedUpdates)

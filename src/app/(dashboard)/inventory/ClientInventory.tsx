@@ -18,7 +18,7 @@ export default function ClientInventory({
 }: {
     initialInventory: InventoryItem[];
 }) {
-    const { inventory, createItem: _createItem } = useInventory(initialInventory);
+    const { inventory } = useInventory(initialInventory);
     const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
     const [view, setView] = useState<ViewMode>("items");
     const [search, setSearch] = useState("");

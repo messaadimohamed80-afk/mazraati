@@ -12,11 +12,11 @@ interface FieldMapProps {
 
 export default function FieldMap({ center, existingArea, onAreaCalculated }: FieldMapProps) {
     const mapContainerRef = useRef<HTMLDivElement>(null);
-    const mapRef = useRef<any>(null);
-    const drawnItemsRef = useRef<any>(null);
+    const mapRef = useRef<L.Map | null>(null);
+    const drawnItemsRef = useRef<L.FeatureGroup | null>(null);
     const [calculatedArea, setCalculatedArea] = useState<number | null>(null);
     const [isDrawing, setIsDrawing] = useState(false);
-    const [ready, setReady] = useState(false);
+    const [, setReady] = useState(false);
 
     const initMap = useCallback(async () => {
         if (!mapContainerRef.current || mapRef.current) return;
@@ -28,7 +28,7 @@ export default function FieldMap({ center, existingArea, onAreaCalculated }: Fie
         await import("leaflet-draw/dist/leaflet.draw.css");
 
         // Fix default marker icons
-        delete (L.Icon.Default.prototype as any)._getIconUrl;
+        delete L.Icon.Default.prototype._getIconUrl;
         L.Icon.Default.mergeOptions({
             iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
             iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
@@ -67,7 +67,7 @@ export default function FieldMap({ center, existingArea, onAreaCalculated }: Fie
             .openPopup();
 
         // Draw controls
-        const drawControl = new (L.Control as any).Draw({
+        const drawControl = new L.Control.Draw({
             draw: {
                 polygon: {
                     allowIntersection: false,
@@ -99,14 +99,14 @@ export default function FieldMap({ center, existingArea, onAreaCalculated }: Fie
         map.addControl(drawControl);
 
         // Handle draw events
-        map.on((L as any).Draw.Event.CREATED, (e: any) => {
+        map.on(L.Draw.Event.CREATED, (e: L.DrawEventCreated) => {
             drawnItems.clearLayers();
             const layer = e.layer;
             drawnItems.addLayer(layer);
 
             // Calculate area
             const latlngs = layer.getLatLngs()[0]; // Polygon ring
-            const coords: [number, number][] = latlngs.map((ll: any) => [ll.lng, ll.lat]); // GeoJSON is [lng, lat]
+            const coords: [number, number][] = latlngs.map((ll: L.LatLng) => [ll.lng, ll.lat]); // GeoJSON is [lng, lat]
             coords.push(coords[0]); // Close the ring
 
             const poly = turfPolygon([coords]);
@@ -117,11 +117,11 @@ export default function FieldMap({ center, existingArea, onAreaCalculated }: Fie
             setIsDrawing(false);
 
             if (onAreaCalculated) {
-                onAreaCalculated(hectares, latlngs.map((ll: any) => [ll.lat, ll.lng]));
+                onAreaCalculated(hectares, latlngs.map((ll: L.LatLng) => [ll.lat, ll.lng]));
             }
         });
 
-        map.on((L as any).Draw.Event.DELETED, () => {
+        map.on(L.Draw.Event.DELETED, () => {
             setCalculatedArea(null);
         });
 

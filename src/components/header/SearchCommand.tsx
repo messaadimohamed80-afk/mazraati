@@ -44,7 +44,7 @@ export default function SearchCommand({ open, onClose }: { open: boolean; onClos
     const router = useRouter();
     const searchRef = useRef<HTMLInputElement>(null);
     const [searchQuery, setSearchQuery] = useState("");
-    const [dataLoaded, setDataLoaded] = useState(false);
+    const dataLoadedRef = useRef(false);
 
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
@@ -54,8 +54,8 @@ export default function SearchCommand({ open, onClose }: { open: boolean; onClos
     const [inventory, setInventory] = useState<InventoryItem[]>([]);
 
     const loadData = useCallback(() => {
-        if (dataLoaded) return;
-        setDataLoaded(true);
+        if (dataLoadedRef.current) return;
+        dataLoadedRef.current = true;
         Promise.all([
             getExpenses().then(setExpenses).catch(() => { }),
             getCategories().then(setCategories).catch(() => { }),
@@ -64,12 +64,16 @@ export default function SearchCommand({ open, onClose }: { open: boolean; onClos
             getAnimals().then(setAnimals).catch(() => { }),
             getInventory().then(setInventory).catch(() => { }),
         ]);
-    }, [dataLoaded]);
+    }, []);
 
+    // Focus on open — no setState, just DOM interaction + data trigger
     useEffect(() => {
         if (open) {
             loadData();
-            searchRef.current?.focus();
+            // Use requestAnimationFrame to defer focus after render
+            requestAnimationFrame(() => {
+                searchRef.current?.focus();
+            });
         }
     }, [open, loadData]);
 

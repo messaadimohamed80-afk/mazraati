@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useReducer } from "react";
 import { fetchClimateData, ClimateData } from "@/lib/climate-service";
 import { getCropPhenologyStages } from "@/lib/mock/mock-crops-tasks-data";
 
@@ -12,15 +12,30 @@ interface ClimatePanelProps {
     cropColor: string;
 }
 
+type ClimateState =
+    | { status: "loading" }
+    | { status: "error"; message: string }
+    | { status: "loaded"; data: ClimateData };
+
+type ClimateAction =
+    | { type: "loading" }
+    | { type: "error"; message: string }
+    | { type: "loaded"; data: ClimateData };
+
+function climateReducer(_state: ClimateState, action: ClimateAction): ClimateState {
+    switch (action.type) {
+        case "loading": return { status: "loading" };
+        case "error": return { status: "error", message: action.message };
+        case "loaded": return { status: "loaded", data: action.data };
+    }
+}
+
 export default function ClimatePanel({ lat, lng, cropType, plantingDate, cropColor }: ClimatePanelProps) {
-    const [data, setData] = useState<ClimateData | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [state, dispatch] = useReducer(climateReducer, { status: "loading" });
 
     useEffect(() => {
         let cancelled = false;
-        setLoading(true);
-        setError(null);
+        dispatch({ type: "loading" });
 
         fetchClimateData(lat, lng, cropType, plantingDate)
             .then((result) => {
@@ -31,21 +46,19 @@ export default function ClimatePanel({ lat, lng, cropType, plantingDate, cropCol
                         const stage = stages.find((s) => s.key === result.gdd.predictedStage);
                         if (stage) result.gdd.predictedStageLabel = stage.label;
                     }
-                    setData(result);
-                    setLoading(false);
+                    dispatch({ type: "loaded", data: result });
                 }
             })
             .catch((err) => {
                 if (!cancelled) {
-                    setError(err.message);
-                    setLoading(false);
+                    dispatch({ type: "error", message: err.message });
                 }
             });
 
         return () => { cancelled = true; };
     }, [lat, lng, cropType, plantingDate]);
 
-    if (loading) {
+    if (state.status === "loading") {
         return (
             <div className="climate-panel glass-card climate-loading">
                 <div className="climate-spinner" />
@@ -54,16 +67,16 @@ export default function ClimatePanel({ lat, lng, cropType, plantingDate, cropCol
         );
     }
 
-    if (error || !data) {
+    if (state.status === "error") {
         return (
             <div className="climate-panel glass-card climate-error">
                 <span>⚠️ تعذر تحميل بيانات المناخ</span>
-                <span className="climate-error-detail">{error}</span>
+                <span className="climate-error-detail">{state.message}</span>
             </div>
         );
     }
 
-    const { current, forecast, gdd } = data;
+    const { current, forecast, gdd } = state.data;
 
     // Day name helper
     const dayName = (dateStr: string) => {

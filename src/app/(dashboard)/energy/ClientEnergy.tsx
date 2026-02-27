@@ -23,7 +23,7 @@ export default function ClientEnergy({
     initialElectricity: ElectricityMeter[];
     initialGenerators: Generator[];
 }) {
-    const { solarPanels: solar, meters: electricity, generators, createSolarPanel: _createSolarPanel, createMeter: _createMeter, createGenerator: _createGenerator } = useEnergy(initialSolar, initialElectricity, initialGenerators);
+    const { solarPanels: solar, meters: electricity, generators } = useEnergy(initialSolar, initialElectricity, initialGenerators);
     const [activeTab, setActiveTab] = useState<EnergyTab>("solar");
 
     /* ===== Stats ===== */
