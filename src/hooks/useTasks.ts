@@ -8,7 +8,6 @@ export function useTasks(initialData: Task[]) {
     const { addToast } = useToast();
 
     // Query
-    // Query
     const query = useQuery({
         queryKey: ["tasks"],
         queryFn: async () => {
@@ -31,14 +30,19 @@ export function useTasks(initialData: Task[]) {
             const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]);
 
             queryClient.setQueryData<Task[]>(["tasks"], (old) => {
-                const optimisticTask = {
+                const optimisticTask: Task = {
                     id: `temp-${Date.now()}`,
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
+                    title: newTask.title,
+                    description: newTask.description,
+                    crop_id: newTask.crop_id,
+                    assigned_to: newTask.assigned_to,
+                    due_date: newTask.due_date,
+                    priority: (newTask.priority as Task["priority"]) || "medium",
                     status: "pending",
-                    recurring: false,
-                    ...newTask,
-                } as Task;
+                    recurring: newTask.recurring ?? false,
+                };
 
                 return old ? [optimisticTask, ...old] : [optimisticTask];
             });
@@ -72,7 +76,7 @@ export function useTasks(initialData: Task[]) {
                 if (!old) return old;
                 return old.map(t => {
                     if (t.id === id) {
-                        return { ...t, ...updates } as Task;
+                        return { ...t, ...updates };
                     }
                     return t;
                 });

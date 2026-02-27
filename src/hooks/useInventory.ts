@@ -30,13 +30,21 @@ export function useInventory(initialData: InventoryItem[]) {
             const previousItems = queryClient.getQueryData<InventoryItem[]>(["inventory"]);
 
             queryClient.setQueryData<InventoryItem[]>(["inventory"], (old) => {
-                const optimisticItem = {
+                const optimisticItem: InventoryItem = {
                     id: `temp-${Date.now()}`,
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
-                    condition: "new",
-                    ...newItem,
-                } as InventoryItem;
+                    name: newItem.name,
+                    category: newItem.category as InventoryItem["category"],
+                    quantity: newItem.quantity,
+                    unit: newItem.unit,
+                    min_stock: 0,
+                    purchase_price: newItem.purchase_price ?? 0,
+                    purchase_date: newItem.purchase_date ?? "",
+                    condition: (newItem.condition as InventoryItem["condition"]) || "new",
+                    location: newItem.location ?? "",
+                    notes: newItem.notes,
+                };
 
                 return old ? [optimisticItem, ...old] : [optimisticItem];
             });
@@ -70,7 +78,7 @@ export function useInventory(initialData: InventoryItem[]) {
                 if (!old) return old;
                 return old.map(item => {
                     if (item.id === id) {
-                        return { ...item, ...updates } as InventoryItem;
+                        return { ...item, ...updates };
                     }
                     return item;
                 });

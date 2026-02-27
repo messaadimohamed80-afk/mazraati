@@ -59,12 +59,12 @@ export default function RegisterPage() {
                 currency,
             });
 
-            if (!result.success) {
-                setError(result.error || "حدث خطأ أثناء إنشاء الحساب");
+            if (!result.ok) {
+                setError(result.error.message || "حدث خطأ أثناء إنشاء الحساب");
                 return;
             }
 
-            if (result.needsConfirmation) {
+            if (result.data.needsConfirmation) {
                 setSuccess(true);
                 return;
             }

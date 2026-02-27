@@ -58,13 +58,21 @@ export function useEnergy(
             const previousSolar = queryClient.getQueryData<SolarPanel[]>(["solar"]);
 
             queryClient.setQueryData<SolarPanel[]>(["solar"], (old) => {
-                const optimisticPanel = {
+                const optimisticPanel: SolarPanel = {
                     id: `temp-${Date.now()}`,
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
-                    status: "active",
-                    ...newPanel,
-                } as SolarPanel;
+                    name: newPanel.name,
+                    capacity_kw: newPanel.capacity_kw,
+                    panel_count: newPanel.panel_count,
+                    daily_production_kwh: newPanel.daily_production_kwh ?? 0,
+                    efficiency_percent: newPanel.efficiency_percent ?? 0,
+                    installation_date: newPanel.installation_date ?? "",
+                    inverter_type: newPanel.inverter_type ?? "",
+                    status: (newPanel.status as SolarPanel["status"]) || "active",
+                    total_cost: newPanel.total_cost ?? 0,
+                    notes: newPanel.notes,
+                };
                 return old ? [optimisticPanel, ...old] : [optimisticPanel];
             });
 
@@ -93,13 +101,21 @@ export function useEnergy(
             const previousMeters = queryClient.getQueryData<ElectricityMeter[]>(["meters"]);
 
             queryClient.setQueryData<ElectricityMeter[]>(["meters"], (old) => {
-                const optimisticMeter = {
+                const optimisticMeter: ElectricityMeter = {
                     id: `temp-${Date.now()}`,
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
-                    status: "active",
-                    ...newMeter,
-                } as ElectricityMeter;
+                    name: newMeter.name,
+                    meter_number: newMeter.meter_number,
+                    provider: newMeter.provider ?? "",
+                    monthly_consumption_kwh: newMeter.monthly_consumption_kwh ?? 0,
+                    monthly_cost: newMeter.monthly_cost ?? 0,
+                    currency: newMeter.currency ?? "TND",
+                    tariff_type: (newMeter.tariff_type as ElectricityMeter["tariff_type"]) || "agricultural",
+                    status: (newMeter.status as ElectricityMeter["status"]) || "active",
+                    last_reading_date: "",
+                    notes: newMeter.notes,
+                };
                 return old ? [optimisticMeter, ...old] : [optimisticMeter];
             });
 
@@ -128,13 +144,21 @@ export function useEnergy(
             const previousGenerators = queryClient.getQueryData<Generator[]>(["generators"]);
 
             queryClient.setQueryData<Generator[]>(["generators"], (old) => {
-                const optimisticGen = {
+                const optimisticGen: Generator = {
                     id: `temp-${Date.now()}`,
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
-                    status: "standby",
-                    ...newGen,
-                } as Generator;
+                    name: newGen.name,
+                    capacity_kva: newGen.capacity_kva ?? 0,
+                    fuel_type: newGen.fuel_type as Generator["fuel_type"],
+                    fuel_consumption_lph: newGen.fuel_consumption_lph ?? 0,
+                    runtime_hours: newGen.runtime_hours ?? 0,
+                    last_maintenance: newGen.last_maintenance ?? "",
+                    next_maintenance_hours: newGen.next_maintenance_hours ?? 0,
+                    status: (newGen.status as Generator["status"]) || "standby",
+                    total_cost: newGen.total_cost ?? 0,
+                    notes: newGen.notes,
+                };
                 return old ? [optimisticGen, ...old] : [optimisticGen];
             });
 

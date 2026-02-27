@@ -27,7 +27,8 @@ export default function ClientReports({
     initialAnimals,
     initialFeed,
     initialInventory,
-    initialWells
+    initialWells,
+    initialBudget = 0
 }: {
     initialExpenses: Expense[];
     initialCategories: Category[];
@@ -37,6 +38,7 @@ export default function ClientReports({
     initialFeed: FeedRecord[];
     initialInventory: InventoryItem[];
     initialWells: Well[];
+    initialBudget?: number;
 }) {
     const [expenses] = useState<Expense[]>(initialExpenses);
     const [categories] = useState<Category[]>(initialCategories);
@@ -49,7 +51,7 @@ export default function ClientReports({
 
     /* ===== Computed data ===== */
     const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0);
-    const budget = 99000;
+    const budget = initialBudget || 0;
     const remaining = budget - totalExpenses;
 
     /* Category breakdown */
@@ -150,7 +152,7 @@ export default function ClientReports({
         a.download = `mazraati_report_${new Date().toISOString().slice(0, 10)}.json`;
         a.click();
         URL.revokeObjectURL(url);
-    }, [totalExpenses, remaining, expenses, crops, animals, inventory, tasks]);
+    }, [budget, totalExpenses, remaining, expenses, crops, animals, inventory, tasks]);
 
 
 

@@ -22,13 +22,18 @@ export default function SettingsPage() {
 
     // Load settings from server
     useEffect(() => {
-        getFarmSettings().then((s) => {
-            if (s.farmName) setFarmName(s.farmName);
-            if (s.ownerName) setOwnerName(s.ownerName);
-            if (s.phone) setPhone(s.phone);
-            if (s.email) setEmail(s.email);
-            if (s.location) setLocation(s.location);
-            if (s.currency) setCurrency(s.currency);
+        getFarmSettings().then((res) => {
+            if (res.ok) {
+                const s = res.data;
+                if (s.farmName) setFarmName(s.farmName);
+                if (s.ownerName) setOwnerName(s.ownerName);
+                if (s.phone) setPhone(s.phone);
+                if (s.email) setEmail(s.email);
+                if (s.location) setLocation(s.location);
+                if (s.currency) setCurrency(s.currency);
+            } else {
+                setError("تعذر تحميل الإعدادات");
+            }
         }).catch(() => setError("تعذر تحميل الإعدادات"));
     }, []);
 
@@ -36,11 +41,11 @@ export default function SettingsPage() {
         setError("");
         try {
             const result = await updateFarmSettings({ farmName, ownerName, phone, email, location, currency });
-            if (result.success) {
+            if (result.ok) {
                 setSaved(true);
                 setTimeout(() => setSaved(false), 2500);
             } else {
-                setError(result.error || "فشل في حفظ الإعدادات");
+                setError(result.error.message || "فشل في حفظ الإعدادات");
             }
         } catch {
             setError("حدث خطأ أثناء الحفظ");

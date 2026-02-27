@@ -3,6 +3,7 @@ import { getCrops, getTasks } from "@/lib/actions/crops";
 import { getAnimals, getFeedRecords } from "@/lib/actions/livestock";
 import { getInventory } from "@/lib/actions/inventory";
 import { getWells } from "@/lib/actions/water";
+import { getFarmSettings } from "@/lib/actions/settings";
 import ClientReports from "./ClientReports";
 
 export default async function ReportsPage() {
@@ -15,7 +16,8 @@ export default async function ReportsPage() {
         animalsR,
         feedR,
         inventoryR,
-        wellsR
+        wellsR,
+        settingsR
     ] = await Promise.all([
         getExpenses(),
         getCategories(),
@@ -25,6 +27,7 @@ export default async function ReportsPage() {
         getFeedRecords(),
         getInventory(),
         getWells(),
+        getFarmSettings(),
     ]);
 
     const expenses = expensesR.ok ? expensesR.data : [];
@@ -35,6 +38,7 @@ export default async function ReportsPage() {
     const feed = feedR.ok ? feedR.data : [];
     const inventory = inventoryR.ok ? inventoryR.data : [];
     const wells = wellsR.ok ? wellsR.data : [];
+    const budget = settingsR.ok ? (settingsR.data.budget || 0) : 0;
 
     return (
         <ClientReports
@@ -46,6 +50,7 @@ export default async function ReportsPage() {
             initialFeed={feed}
             initialInventory={inventory}
             initialWells={wells}
+            initialBudget={budget}
         />
     );
 }

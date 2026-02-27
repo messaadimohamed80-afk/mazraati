@@ -27,15 +27,19 @@ export function useExpenses(initialData: Expense[], categories: Category[]) {
 
             queryClient.setQueryData<Expense[]>(["expenses"], (old) => {
                 const category = categories.find((c) => c.id === newExpense.category_id);
-                const optimisticExpense = {
+                const optimisticExpense: Expense = {
                     id: `temp-${Date.now()}`,
                     farm_id: "temp",
                     currency: "TND",
                     created_by: "temp",
                     created_at: new Date().toISOString(),
+                    description: newExpense.description,
+                    amount: newExpense.amount,
+                    date: newExpense.date,
+                    category_id: newExpense.category_id,
                     category,
-                    ...newExpense,
-                } as Expense;
+                    notes: newExpense.notes,
+                };
 
                 return old ? [optimisticExpense, ...old] : [optimisticExpense];
             });
@@ -71,7 +75,7 @@ export function useExpenses(initialData: Expense[], categories: Category[]) {
                     if (exp.id === id) {
                         const newCatId = updates.category_id || exp.category_id;
                         const category = categories.find((c) => c.id === newCatId) || exp.category;
-                        return { ...exp, ...updates, category } as Expense;
+                        return { ...exp, ...updates, category };
                     }
                     return exp;
                 });

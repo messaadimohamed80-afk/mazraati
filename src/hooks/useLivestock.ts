@@ -9,7 +9,7 @@ import {
     getFeedRecords,
     createFeedRecord
 } from "@/lib/actions/livestock";
-import { Animal, VaccinationRecord, FeedRecord } from "@/lib/mock/mock-livestock-data";
+import { Animal, VaccinationRecord, FeedRecord } from "@/lib/types";
 import { useToast } from "@/components/Toast";
 
 export function useLivestock(
@@ -63,13 +63,23 @@ export function useLivestock(
             const previousAnimals = queryClient.getQueryData<Animal[]>(["animals"]);
 
             queryClient.setQueryData<Animal[]>(["animals"], (old) => {
-                const optimisticAnimal = {
+                const optimisticAnimal: Animal = {
                     id: `temp-${Date.now()}`,
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
+                    name: newAnimal.name,
+                    type: newAnimal.type as Animal["type"],
+                    breed: newAnimal.breed ?? "",
+                    gender: newAnimal.gender as Animal["gender"],
+                    birth_date: newAnimal.birth_date,
+                    tag_number: newAnimal.tag_number ?? "",
+                    weight_kg: newAnimal.weight_kg,
+                    acquisition_type: newAnimal.acquisition_type as Animal["acquisition_type"],
+                    acquisition_date: new Date().toISOString(),
+                    purchase_price: newAnimal.purchase_price,
                     status: "healthy",
-                    ...newAnimal,
-                } as Animal;
+                    notes: newAnimal.notes,
+                };
                 return old ? [optimisticAnimal, ...old] : [optimisticAnimal];
             });
 
@@ -99,7 +109,7 @@ export function useLivestock(
 
             queryClient.setQueryData<Animal[]>(["animals"], (old) => {
                 if (!old) return old;
-                return old.map(a => a.id === id ? { ...a, ...updates } as Animal : a);
+                return old.map(a => a.id === id ? { ...a, ...updates } : a);
             });
 
             return { previousAnimals };
@@ -156,11 +166,16 @@ export function useLivestock(
             const prevVax = queryClient.getQueryData<VaccinationRecord[]>(["vaccinations"]);
 
             queryClient.setQueryData<VaccinationRecord[]>(["vaccinations"], (old) => {
-                const optimisticVax = {
+                const optimisticVax: VaccinationRecord = {
                     id: `temp-${Date.now()}`,
+                    animal_id: newVax.animal_id,
+                    vaccine_name: newVax.vaccine_name,
+                    date: newVax.date ?? new Date().toISOString(),
+                    next_due: newVax.next_due,
+                    administered_by: newVax.administered_by,
+                    notes: newVax.notes,
                     created_at: new Date().toISOString(),
-                    ...newVax,
-                } as VaccinationRecord;
+                };
                 return old ? [optimisticVax, ...old] : [optimisticVax];
             });
 
@@ -190,12 +205,17 @@ export function useLivestock(
             const prevFeed = queryClient.getQueryData<FeedRecord[]>(["feed"]);
 
             queryClient.setQueryData<FeedRecord[]>(["feed"], (old) => {
-                const optimisticFeed = {
+                const optimisticFeed: FeedRecord = {
                     id: `temp-${Date.now()}`,
                     farm_id: "temp",
+                    feed_type: newFeed.feed_type,
+                    quantity_kg: newFeed.quantity_kg,
+                    cost_per_kg: newFeed.cost_per_kg,
+                    purchase_date: newFeed.purchase_date,
+                    remaining_kg: newFeed.remaining_kg ?? newFeed.quantity_kg,
+                    notes: newFeed.notes,
                     created_at: new Date().toISOString(),
-                    ...newFeed,
-                } as FeedRecord;
+                };
                 return old ? [optimisticFeed, ...old] : [optimisticFeed];
             });
 

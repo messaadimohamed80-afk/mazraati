@@ -54,14 +54,20 @@ export function useWater(
             const previousWells = queryClient.getQueryData<Well[]>(["wells"]);
 
             queryClient.setQueryData<Well[]>(["wells"], (old) => {
-                const optimisticWell = {
+                const optimisticWell: Well = {
                     id: `temp-${Date.now()}`,
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
-                    water_quality: "fresh",
-                    status: "drilling",
-                    ...newWell,
-                } as Well;
+                    name: newWell.name,
+                    depth_meters: newWell.depth_meters,
+                    water_level_meters: newWell.water_level_meters,
+                    water_quality: (newWell.water_quality as Well["water_quality"]) || "fresh",
+                    status: (newWell.status as Well["status"]) || "drilling",
+                    total_cost: newWell.total_cost ?? 0,
+                    salinity_ppm: newWell.salinity_ppm,
+                    latitude: newWell.latitude,
+                    longitude: newWell.longitude,
+                };
                 return old ? [optimisticWell, ...old] : [optimisticWell];
             });
 
@@ -90,14 +96,18 @@ export function useWater(
             const previousTanks = queryClient.getQueryData<WaterTank[]>(["tanks"]);
 
             queryClient.setQueryData<WaterTank[]>(["tanks"], (old) => {
-                const optimisticTank = {
+                const optimisticTank: WaterTank = {
                     id: `temp-${Date.now()}`,
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
+                    name: newTank.name,
+                    type: newTank.type as WaterTank["type"],
+                    capacity_liters: newTank.capacity_liters,
                     current_level_percent: 0,
-                    status: "active",
-                    ...newTank,
-                } as WaterTank;
+                    source: newTank.source,
+                    status: (newTank.status as WaterTank["status"]) || "active",
+                    notes: newTank.notes,
+                };
                 return old ? [optimisticTank, ...old] : [optimisticTank];
             });
 
@@ -126,13 +136,19 @@ export function useWater(
             const previousIrr = queryClient.getQueryData<IrrigationNetwork[]>(["irrigation"]);
 
             queryClient.setQueryData<IrrigationNetwork[]>(["irrigation"], (old) => {
-                const optimisticIrr = {
+                const optimisticIrr: IrrigationNetwork = {
                     id: `temp-${Date.now()}`,
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
-                    status: "planned",
-                    ...newIrr,
-                } as IrrigationNetwork;
+                    name: newIrr.name,
+                    type: newIrr.type as IrrigationNetwork["type"],
+                    coverage_hectares: newIrr.coverage_hectares,
+                    source_id: newIrr.source_id,
+                    source_name: newIrr.source_name ?? "",
+                    status: (newIrr.status as IrrigationNetwork["status"]) || "planned",
+                    flow_rate_lph: newIrr.flow_rate_lph,
+                    notes: newIrr.notes,
+                };
                 return old ? [optimisticIrr, ...old] : [optimisticIrr];
             });
 

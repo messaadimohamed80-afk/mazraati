@@ -3,6 +3,12 @@
 import { createServerSupabaseClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { isMockMode } from "@/lib/db";
 import { seedDemoData } from "@/lib/actions/seed";
+import { ActionResult, ok, err } from "@/lib/action-result";
+
+/** Data returned on successful registration */
+export interface RegisterResult {
+    needsConfirmation: boolean;
+}
 
 /**
  * Register a new user and create their farm + farm membership.
@@ -17,9 +23,9 @@ export async function registerUser(input: {
     fullName: string;
     farmName: string;
     currency: string;
-}): Promise<{ success: boolean; error?: string; needsConfirmation?: boolean }> {
+}): Promise<ActionResult<RegisterResult>> {
     if (isMockMode()) {
-        return { success: true };
+        return ok({ needsConfirmation: false });
     }
 
     // Use the cookie-based client for auth.signUp (sets session cookies)
@@ -39,13 +45,13 @@ export async function registerUser(input: {
     });
 
     if (authError) {
-        return { success: false, error: authError.message };
+        return err(authError.message, "VALIDATION_ERROR");
     }
 
     const userId = authData.user?.id;
     if (!userId) {
-        // Email confirmation is required â€” user needs to check inbox
-        return { success: true, needsConfirmation: true };
+        // Email confirmation is required — user needs to check inbox
+        return ok({ needsConfirmation: true });
     }
 
     // 2. Use service-role client for admin operations (bypasses RLS)
@@ -64,8 +70,7 @@ export async function registerUser(input: {
         .single();
 
     if (farmError) {
-        console.error("Farm creation failed:", farmError.message);
-        return { success: true };
+        return err(`Farm creation failed: ${farmError.message}`, "DB_ERROR");
     }
 
     // 4. Add user as farm owner
@@ -78,7 +83,7 @@ export async function registerUser(input: {
         });
 
     if (memberError) {
-        console.error("Farm member creation failed:", memberError.message);
+        return err(`Farm member creation failed: ${memberError.message}`, "DB_ERROR");
     }
 
     // 5. Seed demo data for the first 3 users
@@ -90,5 +95,5 @@ export async function registerUser(input: {
         await seedDemoData(farm.id, userId);
     }
 
-    return { success: true };
+    return ok({ needsConfirmation: false });
 }

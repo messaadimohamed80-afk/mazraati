@@ -3,6 +3,25 @@ import { getCrops, createCrop, updateCrop } from "@/lib/actions/crops";
 import { Crop } from "@/lib/types";
 import { useToast } from "@/components/Toast";
 
+/** Build an optimistic Crop with required defaults */
+function buildOptimisticCrop(input: Parameters<typeof createCrop>[0]): Crop {
+    return {
+        id: `temp-${Date.now()}`,
+        farm_id: "temp",
+        created_at: new Date().toISOString(),
+        crop_type: input.crop_type,
+        variety: input.variety,
+        field_name: input.field_name,
+        area_hectares: input.area_hectares,
+        planting_date: input.planting_date,
+        expected_harvest: input.expected_harvest,
+        status: (input.status as Crop["status"]) || "planned",
+        latitude: input.latitude,
+        longitude: input.longitude,
+        notes: input.notes,
+    };
+}
+
 export function useCrops(initialData: Crop[]) {
     const queryClient = useQueryClient();
     const { addToast } = useToast();
@@ -30,15 +49,8 @@ export function useCrops(initialData: Crop[]) {
             const previousCrops = queryClient.getQueryData<Crop[]>(["crops"]);
 
             queryClient.setQueryData<Crop[]>(["crops"], (old) => {
-                const optimisticCrop = {
-                    id: `temp-${Date.now()}`,
-                    farm_id: "temp",
-                    created_at: new Date().toISOString(),
-                    status: "planned", // Default if not provided
-                    ...newCrop,
-                } as Crop;
-
-                return old ? [optimisticCrop, ...old] : [optimisticCrop];
+                const optimistic = buildOptimisticCrop(newCrop);
+                return old ? [optimistic, ...old] : [optimistic];
             });
 
             return { previousCrops };
@@ -68,12 +80,7 @@ export function useCrops(initialData: Crop[]) {
 
             queryClient.setQueryData<Crop[]>(["crops"], (old) => {
                 if (!old) return old;
-                return old.map(crop => {
-                    if (crop.id === id) {
-                        return { ...crop, ...updates } as Crop;
-                    }
-                    return crop;
-                });
+                return old.map(crop => crop.id === id ? { ...crop, ...updates } : crop);
             });
             return { previousCrops };
         },
