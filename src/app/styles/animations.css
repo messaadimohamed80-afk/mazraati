@@ -180,3 +180,24 @@
 .dashboard-section:nth-child(5) {
   animation-delay: 0.4s;
 }
+
+/* ===== Reduced Motion Preference ===== */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-fade-in-up,
+  .animate-fade-in,
+  .stagger-children>*,
+  .dashboard-section {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}

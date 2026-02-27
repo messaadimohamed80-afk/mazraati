@@ -1,53 +1,10 @@
-/* ===== Livestock Types ===== */
-
-export interface Animal {
-    id: string;
-    farm_id: string;
-    name: string;
-    type: "sheep" | "cattle" | "poultry" | "goat";
-    breed: string;
-    gender: "male" | "female";
-    birth_date?: string;
-    weight_kg?: number;
-    tag_number: string;
-    status: "healthy" | "sick" | "pregnant" | "sold" | "deceased";
-    mother_id?: string;
-    acquisition_date: string;
-    acquisition_type: "born" | "purchased";
-    purchase_price?: number;
-    notes?: string;
-    created_at: string;
-}
-
-export interface VaccinationRecord {
-    id: string;
-    animal_id: string;
-    vaccine_name: string;
-    date: string;
-    next_due?: string;
-    administered_by?: string;
-    cost?: number;
-    notes?: string;
-    created_at: string;
-}
-
-export interface FeedRecord {
-    id: string;
-    farm_id: string;
-    feed_type: string;
-    quantity_kg: number;
-    cost_per_kg: number;
-    purchase_date: string;
-    remaining_kg: number;
-    notes?: string;
-    created_at: string;
-}
+import type { Animal, VaccinationRecord, FeedRecord } from "../types";
 
 /* ===== Mock Data ===== */
 
 export const MOCK_ANIMALS: Animal[] = [
     {
-        id: "animal-1",
+        id: "00000000-0000-4000-8000-000000001001",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "ÙƒØ¨Ø´ SH-001",
         type: "sheep",
@@ -63,7 +20,7 @@ export const MOCK_ANIMALS: Animal[] = [
         created_at: "2022-03-15T10:00:00Z",
     },
     {
-        id: "animal-2",
+        id: "00000000-0000-4000-8000-000000001002",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ù†Ø¹Ø¬Ø© SH-002",
         type: "sheep",
@@ -80,7 +37,7 @@ export const MOCK_ANIMALS: Animal[] = [
         created_at: "2023-01-20T09:00:00Z",
     },
     {
-        id: "animal-3",
+        id: "00000000-0000-4000-8000-000000001003",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ù†Ø¹Ø¬Ø© SH-003",
         type: "sheep",
@@ -95,7 +52,7 @@ export const MOCK_ANIMALS: Animal[] = [
         created_at: "2022-06-01T08:00:00Z",
     },
     {
-        id: "animal-4",
+        id: "00000000-0000-4000-8000-000000001004",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø­Ù…Ù„ SH-004",
         type: "sheep",
@@ -105,14 +62,14 @@ export const MOCK_ANIMALS: Animal[] = [
         weight_kg: 18,
         tag_number: "SH-004",
         status: "healthy",
-        mother_id: "animal-3",
+        mother_id: "00000000-0000-4000-8000-000000001003",
         acquisition_date: "2025-11-05",
         acquisition_type: "born",
         notes: "Ø®Ø±ÙˆÙ â€” Ù†Ù…Ùˆ Ø¬ÙŠØ¯",
         created_at: "2025-11-05T07:00:00Z",
     },
     {
-        id: "animal-5",
+        id: "00000000-0000-4000-8000-000000001005",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø¨Ù‚Ø±Ø© CT-001",
         type: "cattle",
@@ -129,7 +86,7 @@ export const MOCK_ANIMALS: Animal[] = [
         created_at: "2023-06-15T10:00:00Z",
     },
     {
-        id: "animal-6",
+        id: "00000000-0000-4000-8000-000000001006",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø¹Ø¬Ù„ CT-002",
         type: "cattle",
@@ -139,14 +96,14 @@ export const MOCK_ANIMALS: Animal[] = [
         weight_kg: 180,
         tag_number: "CT-002",
         status: "healthy",
-        mother_id: "animal-5",
+        mother_id: "00000000-0000-4000-8000-000000001005",
         acquisition_date: "2025-08-12",
         acquisition_type: "born",
         notes: "Ø¹Ø¬Ù„ â€” Ù„Ù„ØªØ³Ù…ÙŠÙ†",
         created_at: "2025-08-12T06:00:00Z",
     },
     {
-        id: "animal-7",
+        id: "00000000-0000-4000-8000-000000001007",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø¯Ø¬Ø§Ø¬ PL-LOT1",
         type: "poultry",
@@ -162,7 +119,7 @@ export const MOCK_ANIMALS: Animal[] = [
         created_at: "2024-09-01T08:00:00Z",
     },
     {
-        id: "animal-8",
+        id: "00000000-0000-4000-8000-000000001008",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "ØªÙŠØ³ GT-001",
         type: "goat",
@@ -178,7 +135,7 @@ export const MOCK_ANIMALS: Animal[] = [
         created_at: "2024-03-20T09:00:00Z",
     },
     {
-        id: "animal-9",
+        id: "00000000-0000-4000-8000-000000001009",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ù†Ø¹Ø¬Ø© SH-005",
         type: "sheep",
@@ -194,7 +151,7 @@ export const MOCK_ANIMALS: Animal[] = [
         created_at: "2023-01-15T08:00:00Z",
     },
     {
-        id: "animal-10",
+        id: "00000000-0000-4000-8000-000000001010",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "ÙƒØ¨Ø´ SH-006",
         type: "sheep",
@@ -213,8 +170,8 @@ export const MOCK_ANIMALS: Animal[] = [
 
 export const MOCK_VACCINATIONS: VaccinationRecord[] = [
     {
-        id: "vax-1",
-        animal_id: "animal-1",
+        id: "00000000-0000-4000-8000-000000001101",
+        animal_id: "00000000-0000-4000-8000-000000001001",
         vaccine_name: "Ù„Ù‚Ø§Ø­ Ø§Ù„Ø­Ù…Ù‰ Ø§Ù„Ù‚Ù„Ø§Ø¹ÙŠØ©",
         date: "2025-09-15",
         next_due: "2026-03-15",
@@ -223,8 +180,8 @@ export const MOCK_VACCINATIONS: VaccinationRecord[] = [
         created_at: "2025-09-15T10:00:00Z",
     },
     {
-        id: "vax-2",
-        animal_id: "animal-2",
+        id: "00000000-0000-4000-8000-000000001102",
+        animal_id: "00000000-0000-4000-8000-000000001002",
         vaccine_name: "Ù„Ù‚Ø§Ø­ Ø§Ù„Ø¬Ø¯Ø±ÙŠ",
         date: "2025-10-01",
         next_due: "2026-04-01",
@@ -233,8 +190,8 @@ export const MOCK_VACCINATIONS: VaccinationRecord[] = [
         created_at: "2025-10-01T10:00:00Z",
     },
     {
-        id: "vax-3",
-        animal_id: "animal-5",
+        id: "00000000-0000-4000-8000-000000001103",
+        animal_id: "00000000-0000-4000-8000-000000001005",
         vaccine_name: "Ù„Ù‚Ø§Ø­ Ø§Ù„Ø¨Ø±ÙˆØ³ÙŠÙ„Ø§",
         date: "2025-07-20",
         next_due: "2026-01-20",
@@ -244,8 +201,8 @@ export const MOCK_VACCINATIONS: VaccinationRecord[] = [
         created_at: "2025-07-20T10:00:00Z",
     },
     {
-        id: "vax-4",
-        animal_id: "animal-3",
+        id: "00000000-0000-4000-8000-000000001104",
+        animal_id: "00000000-0000-4000-8000-000000001003",
         vaccine_name: "Ù„Ù‚Ø§Ø­ Ø§Ù„ØªØ³Ù…Ù… Ø§Ù„Ù…Ø¹ÙˆÙŠ",
         date: "2025-11-10",
         next_due: "2026-05-10",
@@ -254,8 +211,8 @@ export const MOCK_VACCINATIONS: VaccinationRecord[] = [
         created_at: "2025-11-10T10:00:00Z",
     },
     {
-        id: "vax-5",
-        animal_id: "animal-7",
+        id: "00000000-0000-4000-8000-000000001105",
+        animal_id: "00000000-0000-4000-8000-000000001007",
         vaccine_name: "Ù„Ù‚Ø§Ø­ Ù†ÙŠÙˆÙƒØ§Ø³Ù„",
         date: "2025-12-01",
         next_due: "2026-03-01",
@@ -268,7 +225,7 @@ export const MOCK_VACCINATIONS: VaccinationRecord[] = [
 
 export const MOCK_FEED: FeedRecord[] = [
     {
-        id: "feed-1",
+        id: "00000000-0000-4000-8000-000000001201",
         farm_id: "00000000-0000-4000-8000-000000000010",
         feed_type: "Ø´Ø¹ÙŠØ±",
         quantity_kg: 500,
@@ -279,7 +236,7 @@ export const MOCK_FEED: FeedRecord[] = [
         created_at: "2025-01-10T10:00:00Z",
     },
     {
-        id: "feed-2",
+        id: "00000000-0000-4000-8000-000000001202",
         farm_id: "00000000-0000-4000-8000-000000000010",
         feed_type: "Ù†Ø®Ø§Ù„Ø© Ø§Ù„Ù‚Ù…Ø­",
         quantity_kg: 200,
@@ -289,7 +246,7 @@ export const MOCK_FEED: FeedRecord[] = [
         created_at: "2025-01-20T10:00:00Z",
     },
     {
-        id: "feed-3",
+        id: "00000000-0000-4000-8000-000000001203",
         farm_id: "00000000-0000-4000-8000-000000000010",
         feed_type: "Ø¹Ù„Ù Ù…Ø±ÙƒÙ‘Ø² Ù„Ù„Ø£Ø¨Ù‚Ø§Ø±",
         quantity_kg: 300,
@@ -300,7 +257,7 @@ export const MOCK_FEED: FeedRecord[] = [
         created_at: "2025-02-01T10:00:00Z",
     },
     {
-        id: "feed-4",
+        id: "00000000-0000-4000-8000-000000001204",
         farm_id: "00000000-0000-4000-8000-000000000010",
         feed_type: "Ø°Ø±Ø© Ù…Ø·Ø­ÙˆÙ†Ø©",
         quantity_kg: 150,
@@ -311,7 +268,7 @@ export const MOCK_FEED: FeedRecord[] = [
         created_at: "2025-01-25T10:00:00Z",
     },
     {
-        id: "feed-5",
+        id: "00000000-0000-4000-8000-000000001205",
         farm_id: "00000000-0000-4000-8000-000000000010",
         feed_type: "Ø¹Ù„Ù Ø¯ÙˆØ§Ø¬Ù†",
         quantity_kg: 100,

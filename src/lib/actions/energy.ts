@@ -247,3 +247,156 @@ export async function createGenerator(gen: {
         return err(e instanceof Error ? e.message : String(e), (e instanceof Error && e.name === "ZodError") ? "VALIDATION_ERROR" : "UNKNOWN");
     }
 }
+
+// ============================================================
+// UPDATE / DELETE — SOLAR PANELS
+// ============================================================
+
+export async function updateSolarPanel(
+    id: string,
+    updates: Partial<Omit<SolarPanel, "id" | "farm_id" | "created_at">>
+): Promise<ActionResult<SolarPanel>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_SOLAR } = await import("@/lib/mock/mock-energy-data");
+            const idx = MOCK_SOLAR.findIndex((p) => p.id === id);
+            if (idx === -1) return err("Solar panel not found", "NOT_FOUND");
+            Object.assign(MOCK_SOLAR[idx], updates);
+            return ok(solarPanelRowSchema.parse(MOCK_SOLAR[idx]));
+        }
+
+        const supabase = await getDb();
+        const { data, error } = await supabase
+            .from("solar_panels")
+            .update(updates)
+            .eq("id", id)
+            .select()
+            .single();
+
+        if (error) return err(`Failed to update solar panel: ${error.message}`, "DB_ERROR");
+        return ok(solarPanelRowSchema.parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
+}
+
+export async function deleteSolarPanel(id: string): Promise<ActionResult<void>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_SOLAR } = await import("@/lib/mock/mock-energy-data");
+            const idx = MOCK_SOLAR.findIndex((p) => p.id === id);
+            if (idx === -1) return err("Solar panel not found", "NOT_FOUND");
+            MOCK_SOLAR.splice(idx, 1);
+            return ok(undefined as void);
+        }
+
+        const supabase = await getDb();
+        const { error } = await supabase.from("solar_panels").delete().eq("id", id);
+        if (error) return err(`Failed to delete solar panel: ${error.message}`, "DB_ERROR");
+        return ok(undefined as void);
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
+}
+
+// ============================================================
+// UPDATE / DELETE — ELECTRICITY METERS
+// ============================================================
+
+export async function updateElectricityMeter(
+    id: string,
+    updates: Partial<Omit<ElectricityMeter, "id" | "farm_id" | "created_at">>
+): Promise<ActionResult<ElectricityMeter>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_ELECTRICITY } = await import("@/lib/mock/mock-energy-data");
+            const idx = MOCK_ELECTRICITY.findIndex((m) => m.id === id);
+            if (idx === -1) return err("Meter not found", "NOT_FOUND");
+            Object.assign(MOCK_ELECTRICITY[idx], updates);
+            return ok(electricityMeterRowSchema.parse(MOCK_ELECTRICITY[idx]));
+        }
+
+        const supabase = await getDb();
+        const { data, error } = await supabase
+            .from("electricity_meters")
+            .update(updates)
+            .eq("id", id)
+            .select()
+            .single();
+
+        if (error) return err(`Failed to update meter: ${error.message}`, "DB_ERROR");
+        return ok(electricityMeterRowSchema.parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
+}
+
+export async function deleteElectricityMeter(id: string): Promise<ActionResult<void>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_ELECTRICITY } = await import("@/lib/mock/mock-energy-data");
+            const idx = MOCK_ELECTRICITY.findIndex((m) => m.id === id);
+            if (idx === -1) return err("Meter not found", "NOT_FOUND");
+            MOCK_ELECTRICITY.splice(idx, 1);
+            return ok(undefined as void);
+        }
+
+        const supabase = await getDb();
+        const { error } = await supabase.from("electricity_meters").delete().eq("id", id);
+        if (error) return err(`Failed to delete meter: ${error.message}`, "DB_ERROR");
+        return ok(undefined as void);
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
+}
+
+// ============================================================
+// UPDATE / DELETE — GENERATORS
+// ============================================================
+
+export async function updateGenerator(
+    id: string,
+    updates: Partial<Omit<Generator, "id" | "farm_id" | "created_at">>
+): Promise<ActionResult<Generator>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_GENERATORS } = await import("@/lib/mock/mock-energy-data");
+            const idx = MOCK_GENERATORS.findIndex((g) => g.id === id);
+            if (idx === -1) return err("Generator not found", "NOT_FOUND");
+            Object.assign(MOCK_GENERATORS[idx], updates);
+            return ok(generatorRowSchema.parse(MOCK_GENERATORS[idx]));
+        }
+
+        const supabase = await getDb();
+        const { data, error } = await supabase
+            .from("generators")
+            .update(updates)
+            .eq("id", id)
+            .select()
+            .single();
+
+        if (error) return err(`Failed to update generator: ${error.message}`, "DB_ERROR");
+        return ok(generatorRowSchema.parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
+}
+
+export async function deleteGenerator(id: string): Promise<ActionResult<void>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_GENERATORS } = await import("@/lib/mock/mock-energy-data");
+            const idx = MOCK_GENERATORS.findIndex((g) => g.id === id);
+            if (idx === -1) return err("Generator not found", "NOT_FOUND");
+            MOCK_GENERATORS.splice(idx, 1);
+            return ok(undefined as void);
+        }
+
+        const supabase = await getDb();
+        const { error } = await supabase.from("generators").delete().eq("id", id);
+        if (error) return err(`Failed to delete generator: ${error.message}`, "DB_ERROR");
+        return ok(undefined as void);
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
+}

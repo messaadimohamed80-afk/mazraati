@@ -256,3 +256,156 @@ export async function createIrrigation(network: {
         return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
     }
 }
+
+// ============================================================
+// UPDATE / DELETE — WELLS
+// ============================================================
+
+export async function updateWell(
+    id: string,
+    updates: Partial<Omit<Well, "id" | "farm_id" | "created_at">>
+): Promise<ActionResult<Well>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_WELLS } = await import("@/lib/mock/mock-water-data");
+            const idx = MOCK_WELLS.findIndex((w) => w.id === id);
+            if (idx === -1) return err("Well not found", "NOT_FOUND");
+            Object.assign(MOCK_WELLS[idx], updates);
+            return ok(wellRowSchema.parse(MOCK_WELLS[idx]));
+        }
+
+        const supabase = await getDb();
+        const { data, error } = await supabase
+            .from("wells")
+            .update(updates)
+            .eq("id", id)
+            .select()
+            .single();
+
+        if (error) return err(`Failed to update well: ${error.message}`, "DB_ERROR");
+        return ok(wellRowSchema.parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
+}
+
+export async function deleteWell(id: string): Promise<ActionResult<void>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_WELLS } = await import("@/lib/mock/mock-water-data");
+            const idx = MOCK_WELLS.findIndex((w) => w.id === id);
+            if (idx === -1) return err("Well not found", "NOT_FOUND");
+            MOCK_WELLS.splice(idx, 1);
+            return ok(undefined as void);
+        }
+
+        const supabase = await getDb();
+        const { error } = await supabase.from("wells").delete().eq("id", id);
+        if (error) return err(`Failed to delete well: ${error.message}`, "DB_ERROR");
+        return ok(undefined as void);
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
+}
+
+// ============================================================
+// UPDATE / DELETE — WATER TANKS
+// ============================================================
+
+export async function updateTank(
+    id: string,
+    updates: Partial<Omit<WaterTank, "id" | "farm_id" | "created_at">>
+): Promise<ActionResult<WaterTank>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_TANKS } = await import("@/lib/mock/mock-water-data");
+            const idx = MOCK_TANKS.findIndex((t) => t.id === id);
+            if (idx === -1) return err("Tank not found", "NOT_FOUND");
+            Object.assign(MOCK_TANKS[idx], updates);
+            return ok(tankRowSchema.parse(MOCK_TANKS[idx]));
+        }
+
+        const supabase = await getDb();
+        const { data, error } = await supabase
+            .from("water_tanks")
+            .update(updates)
+            .eq("id", id)
+            .select()
+            .single();
+
+        if (error) return err(`Failed to update tank: ${error.message}`, "DB_ERROR");
+        return ok(tankRowSchema.parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
+}
+
+export async function deleteTank(id: string): Promise<ActionResult<void>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_TANKS } = await import("@/lib/mock/mock-water-data");
+            const idx = MOCK_TANKS.findIndex((t) => t.id === id);
+            if (idx === -1) return err("Tank not found", "NOT_FOUND");
+            MOCK_TANKS.splice(idx, 1);
+            return ok(undefined as void);
+        }
+
+        const supabase = await getDb();
+        const { error } = await supabase.from("water_tanks").delete().eq("id", id);
+        if (error) return err(`Failed to delete tank: ${error.message}`, "DB_ERROR");
+        return ok(undefined as void);
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
+}
+
+// ============================================================
+// UPDATE / DELETE — IRRIGATION NETWORKS
+// ============================================================
+
+export async function updateIrrigation(
+    id: string,
+    updates: Partial<Omit<IrrigationNetwork, "id" | "farm_id" | "created_at">>
+): Promise<ActionResult<IrrigationNetwork>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_IRRIGATION } = await import("@/lib/mock/mock-water-data");
+            const idx = MOCK_IRRIGATION.findIndex((n) => n.id === id);
+            if (idx === -1) return err("Irrigation network not found", "NOT_FOUND");
+            Object.assign(MOCK_IRRIGATION[idx], updates);
+            return ok(irrigationRowSchema.parse(MOCK_IRRIGATION[idx]));
+        }
+
+        const supabase = await getDb();
+        const { data, error } = await supabase
+            .from("irrigation_networks")
+            .update(updates)
+            .eq("id", id)
+            .select()
+            .single();
+
+        if (error) return err(`Failed to update irrigation: ${error.message}`, "DB_ERROR");
+        return ok(irrigationRowSchema.parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
+}
+
+export async function deleteIrrigation(id: string): Promise<ActionResult<void>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_IRRIGATION } = await import("@/lib/mock/mock-water-data");
+            const idx = MOCK_IRRIGATION.findIndex((n) => n.id === id);
+            if (idx === -1) return err("Irrigation network not found", "NOT_FOUND");
+            MOCK_IRRIGATION.splice(idx, 1);
+            return ok(undefined as void);
+        }
+
+        const supabase = await getDb();
+        const { error } = await supabase.from("irrigation_networks").delete().eq("id", id);
+        if (error) return err(`Failed to delete irrigation: ${error.message}`, "DB_ERROR");
+        return ok(undefined as void);
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
+}

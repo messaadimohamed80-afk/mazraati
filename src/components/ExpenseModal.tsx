@@ -25,7 +25,7 @@ export default function ExpenseModal({
     const [date, setDate] = useState(expense?.date || new Date().toISOString().split("T")[0]);
     const [error, setError] = useState("");
 
-    // Close on Escape
+    // Close on Escape + focus trap
     useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
             if (e.key === "Escape") onClose();
@@ -33,6 +33,39 @@ export default function ExpenseModal({
         window.addEventListener("keydown", handleKey);
         return () => window.removeEventListener("keydown", handleKey);
     }, [onClose]);
+
+    // Focus trap: keep focus within modal
+    useEffect(() => {
+        const modal = document.querySelector(".modal-container") as HTMLElement | null;
+        if (!modal) return;
+
+        const focusable = modal.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        first.focus();
+
+        const trap = (e: KeyboardEvent) => {
+            if (e.key !== "Tab") return;
+            if (e.shiftKey) {
+                if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        };
+
+        modal.addEventListener("keydown", trap);
+        return () => modal.removeEventListener("keydown", trap);
+    }, []);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

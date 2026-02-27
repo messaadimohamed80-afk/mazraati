@@ -101,7 +101,7 @@ export default function Sidebar() {
                     <button
                         onClick={toggleCollapsed}
                         className="sidebar-toggle"
-                        aria-label="Toggle sidebar"
+                        aria-label="القائمة الجانبية"
                     >
                         <span>{collapsed ? "◀" : "▶"}</span>
                     </button>
