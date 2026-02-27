@@ -51,7 +51,7 @@ export async function createInventoryItem(item: {
         const { MOCK_INVENTORY } = await import("@/lib/mock/mock-inventory-data");
         const newItem: InventoryItem = {
             id: `inv-${Date.now()}`,
-            farm_id: "farm-1",
+            farm_id: "00000000-0000-0000-0000-000000000010",
             created_at: new Date().toISOString(),
             name: item.name,
             quantity: item.quantity,

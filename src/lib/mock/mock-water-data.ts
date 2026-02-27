@@ -1,11 +1,11 @@
-import { Well, WellLayer, WaterTank, IrrigationNetwork } from "../types";
+﻿import { Well, WellLayer, WaterTank, IrrigationNetwork } from "../types";
 
 /* ===== Wells ===== */
 export const MOCK_WELLS: Well[] = [
     {
         id: "well-1",
-        farm_id: "farm-1",
-        name: "البئر الرئيسي",
+        farm_id: "00000000-0000-0000-0000-000000000010",
+        name: "Ø§Ù„Ø¨Ø¦Ø± Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ",
         depth_meters: 120,
         water_level_meters: 45,
         water_quality: "fresh",
@@ -18,8 +18,8 @@ export const MOCK_WELLS: Well[] = [
     },
     {
         id: "well-2",
-        farm_id: "farm-1",
-        name: "بئر القطعة الجنوبية",
+        farm_id: "00000000-0000-0000-0000-000000000010",
+        name: "Ø¨Ø¦Ø± Ø§Ù„Ù‚Ø·Ø¹Ø© Ø§Ù„Ø¬Ù†ÙˆØ¨ÙŠØ©",
         depth_meters: 85,
         water_level_meters: 32,
         water_quality: "fresh",
@@ -32,8 +32,8 @@ export const MOCK_WELLS: Well[] = [
     },
     {
         id: "well-3",
-        farm_id: "farm-1",
-        name: "بئر القطعة الشمالية",
+        farm_id: "00000000-0000-0000-0000-000000000010",
+        name: "Ø¨Ø¦Ø± Ø§Ù„Ù‚Ø·Ø¹Ø© Ø§Ù„Ø´Ù…Ø§Ù„ÙŠØ©",
         depth_meters: 150,
         water_level_meters: 68,
         water_quality: "brackish",
@@ -46,8 +46,8 @@ export const MOCK_WELLS: Well[] = [
     },
     {
         id: "well-4",
-        farm_id: "farm-1",
-        name: "البئر القديم",
+        farm_id: "00000000-0000-0000-0000-000000000010",
+        name: "Ø§Ù„Ø¨Ø¦Ø± Ø§Ù„Ù‚Ø¯ÙŠÙ…",
         depth_meters: 60,
         water_level_meters: 55,
         water_quality: "saline",
@@ -60,66 +60,66 @@ export const MOCK_WELLS: Well[] = [
 
 /* ===== Well Layers (for well-1) ===== */
 export const MOCK_WELL_LAYERS: WellLayer[] = [
-    { id: "wl-1", well_id: "well-1", depth_from: 0, depth_to: 8, layer_type: "soil", notes: "تربة زراعية" },
-    { id: "wl-2", well_id: "well-1", depth_from: 8, depth_to: 25, layer_type: "clay", notes: "طين أحمر" },
-    { id: "wl-3", well_id: "well-1", depth_from: 25, depth_to: 45, layer_type: "rock", notes: "صخر كلسي" },
+    { id: "wl-1", well_id: "well-1", depth_from: 0, depth_to: 8, layer_type: "soil", notes: "ØªØ±Ø¨Ø© Ø²Ø±Ø§Ø¹ÙŠØ©" },
+    { id: "wl-2", well_id: "well-1", depth_from: 8, depth_to: 25, layer_type: "clay", notes: "Ø·ÙŠÙ† Ø£Ø­Ù…Ø±" },
+    { id: "wl-3", well_id: "well-1", depth_from: 25, depth_to: 45, layer_type: "rock", notes: "ØµØ®Ø± ÙƒÙ„Ø³ÙŠ" },
     { id: "wl-4", well_id: "well-1", depth_from: 45, depth_to: 52, layer_type: "sand" },
-    { id: "wl-5", well_id: "well-1", depth_from: 52, depth_to: 78, layer_type: "water", notes: "طبقة مائية رئيسية" },
+    { id: "wl-5", well_id: "well-1", depth_from: 52, depth_to: 78, layer_type: "water", notes: "Ø·Ø¨Ù‚Ø© Ù…Ø§Ø¦ÙŠØ© Ø±Ø¦ÙŠØ³ÙŠØ©" },
     { id: "wl-6", well_id: "well-1", depth_from: 78, depth_to: 95, layer_type: "gravel" },
-    { id: "wl-7", well_id: "well-1", depth_from: 95, depth_to: 120, layer_type: "rock", notes: "صخر صلب" },
+    { id: "wl-7", well_id: "well-1", depth_from: 95, depth_to: 120, layer_type: "rock", notes: "ØµØ®Ø± ØµÙ„Ø¨" },
 ];
 
 /* ===== Water Tanks ===== */
 export const MOCK_TANKS: WaterTank[] = [
     {
         id: "tank-1",
-        farm_id: "farm-1",
-        name: "الخزان الرئيسي",
+        farm_id: "00000000-0000-0000-0000-000000000010",
+        name: "Ø§Ù„Ø®Ø²Ø§Ù† Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ",
         type: "elevated",
         capacity_liters: 10000,
         current_level_percent: 72,
-        source: "البئر الرئيسي",
+        source: "Ø§Ù„Ø¨Ø¦Ø± Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ",
         status: "active",
         last_filled: "2025-02-09",
-        notes: "خزان بلاستيكي 10 م³",
+        notes: "Ø®Ø²Ø§Ù† Ø¨Ù„Ø§Ø³ØªÙŠÙƒÙŠ 10 Ù…Â³",
         created_at: "2024-07-01T10:00:00Z",
     },
     {
         id: "tank-2",
-        farm_id: "farm-1",
-        name: "خزان الري",
+        farm_id: "00000000-0000-0000-0000-000000000010",
+        name: "Ø®Ø²Ø§Ù† Ø§Ù„Ø±ÙŠ",
         type: "ground",
         capacity_liters: 25000,
         current_level_percent: 45,
-        source: "بئر القطعة الجنوبية",
+        source: "Ø¨Ø¦Ø± Ø§Ù„Ù‚Ø·Ø¹Ø© Ø§Ù„Ø¬Ù†ÙˆØ¨ÙŠØ©",
         status: "active",
         last_filled: "2025-02-07",
-        notes: "حوض خرساني",
+        notes: "Ø­ÙˆØ¶ Ø®Ø±Ø³Ø§Ù†ÙŠ",
         created_at: "2024-08-15T12:00:00Z",
     },
     {
         id: "tank-3",
-        farm_id: "farm-1",
-        name: "خزان مياه الأمطار",
+        farm_id: "00000000-0000-0000-0000-000000000010",
+        name: "Ø®Ø²Ø§Ù† Ù…ÙŠØ§Ù‡ Ø§Ù„Ø£Ù…Ø·Ø§Ø±",
         type: "underground",
         capacity_liters: 50000,
         current_level_percent: 88,
-        source: "مياه أمطار",
+        source: "Ù…ÙŠØ§Ù‡ Ø£Ù…Ø·Ø§Ø±",
         status: "active",
         last_filled: "2025-01-28",
-        notes: "ماجل تحت أرضي",
+        notes: "Ù…Ø§Ø¬Ù„ ØªØ­Øª Ø£Ø±Ø¶ÙŠ",
         created_at: "2024-05-20T09:00:00Z",
     },
     {
         id: "tank-4",
-        farm_id: "farm-1",
-        name: "خزان احتياطي",
+        farm_id: "00000000-0000-0000-0000-000000000010",
+        name: "Ø®Ø²Ø§Ù† Ø§Ø­ØªÙŠØ§Ø·ÙŠ",
         type: "ground",
         capacity_liters: 5000,
         current_level_percent: 0,
-        source: "—",
+        source: "â€”",
         status: "empty",
-        notes: "معطّل مؤقتاً",
+        notes: "Ù…Ø¹Ø·Ù‘Ù„ Ù…Ø¤Ù‚ØªØ§Ù‹",
         created_at: "2024-11-01T08:00:00Z",
     },
 ];
@@ -128,26 +128,26 @@ export const MOCK_TANKS: WaterTank[] = [
 export const MOCK_IRRIGATION: IrrigationNetwork[] = [
     {
         id: "irr-1",
-        farm_id: "farm-1",
-        name: "شبكة الري بالتنقيط — الزيتون",
+        farm_id: "00000000-0000-0000-0000-000000000010",
+        name: "Ø´Ø¨ÙƒØ© Ø§Ù„Ø±ÙŠ Ø¨Ø§Ù„ØªÙ†Ù‚ÙŠØ· â€” Ø§Ù„Ø²ÙŠØªÙˆÙ†",
         type: "drip",
         coverage_hectares: 2.5,
         source_id: "tank-2",
-        source_name: "خزان الري",
+        source_name: "Ø®Ø²Ø§Ù† Ø§Ù„Ø±ÙŠ",
         status: "active",
         flow_rate_lph: 800,
         last_maintenance: "2025-01-15",
-        notes: "خراطيم 16mm مع نقاطات كل 60 سم",
+        notes: "Ø®Ø±Ø§Ø·ÙŠÙ… 16mm Ù…Ø¹ Ù†Ù‚Ø§Ø·Ø§Øª ÙƒÙ„ 60 Ø³Ù…",
         created_at: "2024-09-01T10:00:00Z",
     },
     {
         id: "irr-2",
-        farm_id: "farm-1",
-        name: "رشاشات الحديقة",
+        farm_id: "00000000-0000-0000-0000-000000000010",
+        name: "Ø±Ø´Ø§Ø´Ø§Øª Ø§Ù„Ø­Ø¯ÙŠÙ‚Ø©",
         type: "sprinkler",
         coverage_hectares: 0.5,
         source_id: "tank-1",
-        source_name: "الخزان الرئيسي",
+        source_name: "Ø§Ù„Ø®Ø²Ø§Ù† Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ",
         status: "active",
         flow_rate_lph: 1200,
         last_maintenance: "2025-02-01",
@@ -155,68 +155,68 @@ export const MOCK_IRRIGATION: IrrigationNetwork[] = [
     },
     {
         id: "irr-3",
-        farm_id: "farm-1",
-        name: "ري القطعة الجنوبية",
+        farm_id: "00000000-0000-0000-0000-000000000010",
+        name: "Ø±ÙŠ Ø§Ù„Ù‚Ø·Ø¹Ø© Ø§Ù„Ø¬Ù†ÙˆØ¨ÙŠØ©",
         type: "flood",
         coverage_hectares: 1.0,
         source_id: "well-1",
-        source_name: "البئر الرئيسي",
+        source_name: "Ø§Ù„Ø¨Ø¦Ø± Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ",
         status: "maintenance",
         flow_rate_lph: 3000,
         last_maintenance: "2024-12-20",
-        notes: "يحتاج إصلاح القنوات",
+        notes: "ÙŠØ­ØªØ§Ø¬ Ø¥ØµÙ„Ø§Ø­ Ø§Ù„Ù‚Ù†ÙˆØ§Øª",
         created_at: "2024-07-20T08:00:00Z",
     },
     {
         id: "irr-4",
-        farm_id: "farm-1",
-        name: "شبكة التنقيط — الخضروات",
+        farm_id: "00000000-0000-0000-0000-000000000010",
+        name: "Ø´Ø¨ÙƒØ© Ø§Ù„ØªÙ†Ù‚ÙŠØ· â€” Ø§Ù„Ø®Ø¶Ø±ÙˆØ§Øª",
         type: "drip",
         coverage_hectares: 0.8,
-        source_name: "خزان مياه الأمطار",
+        source_name: "Ø®Ø²Ø§Ù† Ù…ÙŠØ§Ù‡ Ø§Ù„Ø£Ù…Ø·Ø§Ø±",
         status: "planned",
-        notes: "مخطط للموسم القادم",
+        notes: "Ù…Ø®Ø·Ø· Ù„Ù„Ù…ÙˆØ³Ù… Ø§Ù„Ù‚Ø§Ø¯Ù…",
         created_at: "2025-02-05T11:00:00Z",
     },
 ];
 
 /* ===== Helper Maps ===== */
 export const WELL_STATUS_MAP: Record<string, { label: string; color: string; icon: string }> = {
-    drilling: { label: "قيد الحفر", color: "#f59e0b", icon: "⛏️" },
-    testing: { label: "قيد الاختبار", color: "#3b82f6", icon: "🔬" },
-    active: { label: "نشط", color: "#10b981", icon: "✅" },
-    inactive: { label: "معطّل", color: "#64748b", icon: "⏸️" },
+    drilling: { label: "Ù‚ÙŠØ¯ Ø§Ù„Ø­ÙØ±", color: "#f59e0b", icon: "â›ï¸" },
+    testing: { label: "Ù‚ÙŠØ¯ Ø§Ù„Ø§Ø®ØªØ¨Ø§Ø±", color: "#3b82f6", icon: "ðŸ”¬" },
+    active: { label: "Ù†Ø´Ø·", color: "#10b981", icon: "âœ…" },
+    inactive: { label: "Ù…Ø¹Ø·Ù‘Ù„", color: "#64748b", icon: "â¸ï¸" },
 };
 
 export const WATER_QUALITY_MAP: Record<string, { label: string; color: string }> = {
-    fresh: { label: "عذبة", color: "#10b981" },
-    brackish: { label: "مالحة قليلاً", color: "#f59e0b" },
-    saline: { label: "مالحة", color: "#ef4444" },
+    fresh: { label: "Ø¹Ø°Ø¨Ø©", color: "#10b981" },
+    brackish: { label: "Ù…Ø§Ù„Ø­Ø© Ù‚Ù„ÙŠÙ„Ø§Ù‹", color: "#f59e0b" },
+    saline: { label: "Ù…Ø§Ù„Ø­Ø©", color: "#ef4444" },
 };
 
 export const TANK_TYPE_MAP: Record<string, { label: string; icon: string }> = {
-    ground: { label: "أرضي", icon: "🏗️" },
-    elevated: { label: "مرتفع", icon: "🗼" },
-    underground: { label: "تحت أرضي", icon: "🕳️" },
+    ground: { label: "Ø£Ø±Ø¶ÙŠ", icon: "ðŸ—ï¸" },
+    elevated: { label: "Ù…Ø±ØªÙØ¹", icon: "ðŸ—¼" },
+    underground: { label: "ØªØ­Øª Ø£Ø±Ø¶ÙŠ", icon: "ðŸ•³ï¸" },
 };
 
 export const TANK_STATUS_MAP: Record<string, { label: string; color: string }> = {
-    active: { label: "نشط", color: "#10b981" },
-    maintenance: { label: "صيانة", color: "#f59e0b" },
-    empty: { label: "فارغ", color: "#ef4444" },
-    inactive: { label: "معطّل", color: "#64748b" },
+    active: { label: "Ù†Ø´Ø·", color: "#10b981" },
+    maintenance: { label: "ØµÙŠØ§Ù†Ø©", color: "#f59e0b" },
+    empty: { label: "ÙØ§Ø±Øº", color: "#ef4444" },
+    inactive: { label: "Ù…Ø¹Ø·Ù‘Ù„", color: "#64748b" },
 };
 
 export const IRRIGATION_TYPE_MAP: Record<string, { label: string; icon: string }> = {
-    drip: { label: "تنقيط", icon: "💧" },
-    sprinkler: { label: "رشاشات", icon: "🌧️" },
-    flood: { label: "غمر", icon: "🌊" },
-    pivot: { label: "محوري", icon: "🔄" },
+    drip: { label: "ØªÙ†Ù‚ÙŠØ·", icon: "ðŸ’§" },
+    sprinkler: { label: "Ø±Ø´Ø§Ø´Ø§Øª", icon: "ðŸŒ§ï¸" },
+    flood: { label: "ØºÙ…Ø±", icon: "ðŸŒŠ" },
+    pivot: { label: "Ù…Ø­ÙˆØ±ÙŠ", icon: "ðŸ”„" },
 };
 
 export const IRRIGATION_STATUS_MAP: Record<string, { label: string; color: string }> = {
-    active: { label: "نشط", color: "#10b981" },
-    maintenance: { label: "صيانة", color: "#f59e0b" },
-    inactive: { label: "معطّل", color: "#64748b" },
-    planned: { label: "مخطط", color: "#3b82f6" },
+    active: { label: "Ù†Ø´Ø·", color: "#10b981" },
+    maintenance: { label: "ØµÙŠØ§Ù†Ø©", color: "#f59e0b" },
+    inactive: { label: "Ù…Ø¹Ø·Ù‘Ù„", color: "#64748b" },
+    planned: { label: "Ù…Ø®Ø·Ø·", color: "#3b82f6" },
 };
