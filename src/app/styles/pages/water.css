@@ -1,5 +1,4 @@
-﻿   RESPONSIVE ΓÇö EXPENSES
-   ======================================== */
+﻿/* --- Responsive — Expenses --- */
 @media (max-width: 1024px) {
   .expense-stats-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -50,9 +49,7 @@
   }
 }
 
-/* ========================================
-   WATER MODULE
-   ======================================== */
+/* --- WATER MODULE --- */
 
 /* Stats grid */
 .water-stats-grid {
@@ -574,5 +571,3 @@
     height: 220px;
   }
 }
-
-/* ========================================

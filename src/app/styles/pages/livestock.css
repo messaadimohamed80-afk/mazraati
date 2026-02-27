@@ -1,5 +1,4 @@
 ﻿   SIDEBAR ΓÇö COMING SOON BADGE
-   ======================================== */
 
 .sidebar-link-soon {
   opacity: 0.5;
@@ -16,9 +15,7 @@
   white-space: nowrap;
 }
 
-/* ========================================
-   COMING SOON PAGES
-   ======================================== */
+/* --- COMING SOON PAGES --- */
 
 .coming-soon-container {
   display: flex;
@@ -272,9 +269,7 @@
   border-color: rgba(16, 185, 129, 0.15);
 }
 
-/* ========================================
-   LIVESTOCK MODULE
-   ======================================== */
+/* --- LIVESTOCK MODULE --- */
 
 .livestock-grid {
   display: grid;
@@ -545,5 +540,3 @@
   padding-top: 0.5rem;
   border-top: 1px solid rgba(148, 163, 184, 0.06);
 }
-
-/* ========================================

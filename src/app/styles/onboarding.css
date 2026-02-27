@@ -1,5 +1,4 @@
 ﻿   PWA INSTALL PROMPT
-   ======================================== */
 
 .install-prompt {
   position: fixed;
@@ -159,9 +158,7 @@
   }
 }
 
-/* ========================================
-   ONBOARDING MODAL
-   ======================================== */
+/* --- ONBOARDING MODAL --- */
 
 .onboarding-overlay {
   position: fixed;
@@ -438,5 +435,3 @@
     text-align: center;
   }
 }
-
-/* ========================================

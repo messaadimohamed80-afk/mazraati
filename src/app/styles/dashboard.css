@@ -1,5 +1,4 @@
 ﻿   WELCOME BANNER
-   ======================================== */
 .welcome-banner {
   margin: 1.5rem 2rem 0;
   padding: 2rem 2.5rem;
@@ -106,9 +105,7 @@
   animation: float 10s ease-in-out infinite 2s;
 }
 
-/* ========================================
-   DASHBOARD SECTIONS
-   ======================================== */
+/* --- DASHBOARD SECTIONS --- */
 .dashboard-section {
   padding: 0 2rem;
   margin-top: 2rem;
@@ -135,9 +132,7 @@
   flex-shrink: 0;
 }
 
-/* ========================================
-   KPI CARDS
-   ======================================== */
+/* --- KPI CARDS --- */
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -228,9 +223,7 @@
   font-size: 0.8rem;
 }
 
-/* ========================================
-   QUICK ACTIONS
-   ======================================== */
+/* --- QUICK ACTIONS --- */
 .quick-actions-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -290,9 +283,7 @@
   color: var(--text-primary);
 }
 
-/* ========================================
-   MODULE CARDS
-   ======================================== */
+/* --- MODULE CARDS --- */
 .modules-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -410,5 +401,3 @@
 .module-coming-soon:hover {
   opacity: 0.8;
 }
-
-/* ========================================

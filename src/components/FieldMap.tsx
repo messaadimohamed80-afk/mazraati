@@ -12,11 +12,12 @@ interface FieldMapProps {
 
 export default function FieldMap({ center, existingArea, onAreaCalculated }: FieldMapProps) {
     const mapContainerRef = useRef<HTMLDivElement>(null);
-    const mapRef = useRef<L.Map | null>(null);
-    const drawnItemsRef = useRef<L.FeatureGroup | null>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mapRef = useRef<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const drawnItemsRef = useRef<any>(null);
     const [calculatedArea, setCalculatedArea] = useState<number | null>(null);
     const [isDrawing, setIsDrawing] = useState(false);
-    const [, setReady] = useState(false);
 
     const initMap = useCallback(async () => {
         if (!mapContainerRef.current || mapRef.current) return;
@@ -27,8 +28,9 @@ export default function FieldMap({ center, existingArea, onAreaCalculated }: Fie
         await import("leaflet/dist/leaflet.css");
         await import("leaflet-draw/dist/leaflet.draw.css");
 
-        // Fix default marker icons
-        delete L.Icon.Default.prototype._getIconUrl;
+        // Fix default marker icons (known Leaflet workaround)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        delete (L.Icon.Default.prototype as any)._getIconUrl;
         L.Icon.Default.mergeOptions({
             iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
             iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
@@ -67,7 +69,8 @@ export default function FieldMap({ center, existingArea, onAreaCalculated }: Fie
             .openPopup();
 
         // Draw controls
-        const drawControl = new L.Control.Draw({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const drawControl = new (L.Control as any).Draw({
             draw: {
                 polygon: {
                     allowIntersection: false,
@@ -99,7 +102,8 @@ export default function FieldMap({ center, existingArea, onAreaCalculated }: Fie
         map.addControl(drawControl);
 
         // Handle draw events
-        map.on(L.Draw.Event.CREATED, (e: L.DrawEventCreated) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        map.on((L as any).Draw.Event.CREATED, (e: any) => {
             drawnItems.clearLayers();
             const layer = e.layer;
             drawnItems.addLayer(layer);
@@ -121,7 +125,8 @@ export default function FieldMap({ center, existingArea, onAreaCalculated }: Fie
             }
         });
 
-        map.on(L.Draw.Event.DELETED, () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        map.on((L as any).Draw.Event.DELETED, () => {
             setCalculatedArea(null);
         });
 
@@ -129,7 +134,6 @@ export default function FieldMap({ center, existingArea, onAreaCalculated }: Fie
         map.on("draw:drawstop", () => setIsDrawing(false));
 
         mapRef.current = map;
-        setReady(true);
 
         // Invalidate size after render
         setTimeout(() => map.invalidateSize(), 200);

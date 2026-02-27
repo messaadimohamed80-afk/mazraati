@@ -1,5 +1,4 @@
 ﻿   REPORTS MODULE
-   ======================================== */
 
 .reports-grid {
   display: grid;
@@ -179,5 +178,3 @@
   flex-wrap: wrap;
   margin-top: 1rem;
 }
-
-/* ===== CROP DETAIL PAGE ===== */

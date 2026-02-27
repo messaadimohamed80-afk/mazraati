@@ -1,5 +1,4 @@
 ﻿   SHARED PAGE COMPONENTS
-   ======================================== */
 .page-header {
   display: flex;
   align-items: center;
@@ -65,9 +64,7 @@
   font-size: 0.78rem;
 }
 
-/* ========================================
-   EXPENSE STATS GRID
-   ======================================== */
+/* --- EXPENSE STATS GRID --- */
 .expense-stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -104,9 +101,7 @@
   color: var(--text-muted);
 }
 
-/* ========================================
-   CATEGORY BREAKDOWN BAR
-   ======================================== */
+/* --- CATEGORY BREAKDOWN BAR --- */
 .category-bar-container {
   padding: 1.25rem !important;
 }
@@ -170,9 +165,7 @@
   font-size: 0.68rem;
 }
 
-/* ========================================
-   EXPENSE TABLE
-   ======================================== */
+/* --- EXPENSE TABLE --- */
 .expense-table-container {
   padding: 0 !important;
   overflow: hidden;
@@ -391,9 +384,7 @@
   color: var(--text-primary);
 }
 
-/* ========================================
-   MODAL
-   ======================================== */
+/* --- MODAL --- */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -563,5 +554,3 @@
 .modal-actions .auth-btn {
   flex: 1;
 }
-
-/* ========================================

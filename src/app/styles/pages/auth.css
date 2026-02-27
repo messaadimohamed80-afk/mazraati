@@ -1,6 +1,4 @@
-﻿/* ========================================
-   RESPONSIVE
-   ======================================== */
+﻿/* --- RESPONSIVE --- */
 @media (max-width: 1200px) {
   .kpi-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -100,9 +98,7 @@
   }
 }
 
-/* ========================================
-   AUTH PAGES
-   ======================================== */
+/* --- AUTH PAGES --- */
 .auth-page {
   min-height: 100vh;
   display: flex;
@@ -485,5 +481,3 @@
 .auth-back-link:hover {
   color: var(--text-secondary);
 }
-
-/* ========================================

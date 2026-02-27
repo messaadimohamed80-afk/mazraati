@@ -1,5 +1,4 @@
 ﻿   WHATSAPP SHARE BUTTON
-   ======================================== */
 
 .reports-whatsapp-btn {
   background: linear-gradient(135deg, #25d366, #128c7e) !important;
@@ -14,9 +13,7 @@
   box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
 }
 
-/* ========================================
-   PAGE LOADING SPINNER
-   ======================================== */
+/* --- PAGE LOADING SPINNER --- */
 
 .page-loading {
   display: flex;
@@ -44,4 +41,3 @@
     transform: rotate(360deg);
   }
 }
-

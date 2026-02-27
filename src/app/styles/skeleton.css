@@ -1,5 +1,4 @@
 ﻿   TOAST NOTIFICATIONS
-   ======================================== */
 .toast-container {
   position: fixed;
   bottom: 1.5rem;
@@ -96,5 +95,3 @@
 .toast-dismiss:hover {
   color: var(--text-primary);
 }
-
-/* ========================================
