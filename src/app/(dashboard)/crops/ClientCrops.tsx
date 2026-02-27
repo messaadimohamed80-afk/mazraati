@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import CropModal from "@/components/CropModal";
 import {
@@ -124,9 +124,10 @@ export default function ClientCrops({
                     const icon = getCropIcon(crop.crop_type);
                     const color = getCropColor(crop.crop_type);
                     const daysToHarvest = crop.expected_harvest ? getDaysUntil(crop.expected_harvest) : null;
+                    const now = Date.now();
                     const growthPercent = crop.planting_date && crop.expected_harvest
                         ? Math.min(Math.max(
-                            Math.round(((Date.now() - new Date(crop.planting_date).getTime()) / (new Date(crop.expected_harvest).getTime() - new Date(crop.planting_date).getTime())) * 100),
+                            Math.round(((now - new Date(crop.planting_date).getTime()) / (new Date(crop.expected_harvest).getTime() - new Date(crop.planting_date).getTime())) * 100),
                             0), 100)
                         : 0;
 

@@ -1,14 +1,14 @@
-"use server";
+﻿"use server";
 
-import { useMock, getDb, getCurrentFarmId } from "@/lib/db";
+import { isMockMode, getDb, getCurrentFarmId } from "@/lib/db";
 import type { Crop, Task } from "@/lib/types";
 
 // ============================================================
-// CROPS — READ
+// CROPS â€” READ
 // ============================================================
 
 export async function getCrops(): Promise<Crop[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
         return MOCK_CROPS;
     }
@@ -29,7 +29,7 @@ export async function getCrops(): Promise<Crop[]> {
 }
 
 export async function getCrop(id: string): Promise<Crop | null> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
         return MOCK_CROPS.find((c) => c.id === id) ?? null;
     }
@@ -46,7 +46,7 @@ export async function getCrop(id: string): Promise<Crop | null> {
 }
 
 // ============================================================
-// CROPS — CREATE / UPDATE
+// CROPS â€” CREATE / UPDATE
 // ============================================================
 
 import { createCropSchema, updateCropSchema, createTaskSchema, updateTaskSchema } from "@/lib/validations";
@@ -64,7 +64,7 @@ export async function createCrop(crop: {
     notes?: string;
 }): Promise<Crop> {
     const parsed = createCropSchema.parse(crop);
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
         const newCrop: Crop = {
             id: `crop-${Date.now()}`,
@@ -104,7 +104,7 @@ export async function updateCrop(
     updates: Partial<Crop>
 ): Promise<Crop> {
     updateCropSchema.parse({ id, ...updates });
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
         const idx = MOCK_CROPS.findIndex((c) => c.id === id);
         if (idx === -1) throw new Error("Crop not found");
@@ -125,11 +125,11 @@ export async function updateCrop(
 }
 
 // ============================================================
-// TASKS — READ
+// TASKS â€” READ
 // ============================================================
 
 export async function getTasks(): Promise<Task[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
         return MOCK_TASKS;
     }
@@ -150,7 +150,7 @@ export async function getTasks(): Promise<Task[]> {
 }
 
 export async function getTasksForCrop(cropId: string): Promise<Task[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
         return MOCK_TASKS.filter((t) => t.id.includes("task")); // Mock: return all tasks
     }
@@ -168,7 +168,7 @@ export async function getTasksForCrop(cropId: string): Promise<Task[]> {
 }
 
 // ============================================================
-// TASKS — CREATE / UPDATE
+// TASKS â€” CREATE / UPDATE
 // ============================================================
 
 export async function createTask(task: {
@@ -181,7 +181,7 @@ export async function createTask(task: {
     recurring?: boolean;
 }): Promise<Task> {
     createTaskSchema.parse(task);
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
         const newTask: Task = {
             id: `task-${Date.now()}`,
@@ -219,7 +219,7 @@ export async function updateTask(
     updates: Partial<Task>
 ): Promise<Task> {
     updateTaskSchema.parse({ id, ...updates });
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
         const idx = MOCK_TASKS.findIndex((t) => t.id === id);
         if (idx === -1) throw new Error("Task not found");
@@ -240,7 +240,7 @@ export async function updateTask(
 }
 
 export async function deleteTask(id: string): Promise<void> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
         const idx = MOCK_TASKS.findIndex((t) => t.id === id);
         if (idx !== -1) MOCK_TASKS.splice(idx, 1);

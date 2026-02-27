@@ -1,6 +1,6 @@
-"use server";
+﻿"use server";
 
-import { useMock, getDb, getCurrentFarmId } from "@/lib/db";
+import { isMockMode, getDb, getCurrentFarmId } from "@/lib/db";
 import type { InventoryItem } from "@/lib/types";
 
 // ============================================================
@@ -8,7 +8,7 @@ import type { InventoryItem } from "@/lib/types";
 // ============================================================
 
 export async function getInventory(): Promise<InventoryItem[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_INVENTORY } = await import("@/lib/mock/mock-inventory-data");
         return MOCK_INVENTORY;
     }
@@ -47,7 +47,7 @@ export async function createInventoryItem(item: {
     notes?: string;
 }): Promise<InventoryItem> {
     const parsed = createInventoryItemSchema.parse(item);
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_INVENTORY } = await import("@/lib/mock/mock-inventory-data");
         const newItem: InventoryItem = {
             id: `inv-${Date.now()}`,
@@ -91,7 +91,7 @@ export async function updateInventoryItem(
     updates: Partial<InventoryItem>
 ): Promise<InventoryItem> {
     updateInventoryItemSchema.parse({ id, ...updates });
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_INVENTORY } = await import("@/lib/mock/mock-inventory-data");
         const idx = MOCK_INVENTORY.findIndex((i) => i.id === id);
         if (idx === -1) throw new Error("Item not found");
@@ -116,7 +116,7 @@ export async function updateInventoryItem(
 // ============================================================
 
 export async function deleteInventoryItem(id: string): Promise<void> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_INVENTORY } = await import("@/lib/mock/mock-inventory-data");
         const idx = MOCK_INVENTORY.findIndex((i) => i.id === id);
         if (idx !== -1) MOCK_INVENTORY.splice(idx, 1);

@@ -20,13 +20,15 @@ function getWeather(): { temp: number; icon: string; desc: string; humidity: num
 }
 
 export default function WeatherWidget() {
-    const [weather, setWeather] = useState<{ temp: number; icon: string; desc: string; humidity: number } | null>(null);
+    const [weather, setWeather] = useState(() => getWeather());
 
+    // Refresh weather data every hour
     useEffect(() => {
-        setWeather(getWeather());
+        const timer = setInterval(() => {
+            setWeather(getWeather());
+        }, 3600000);
+        return () => clearInterval(timer);
     }, []);
-
-    if (!weather) return null;
 
     return (
         <div className="header-badge" title={`${weather.desc} — رطوبة ${weather.humidity}%`} aria-label={`الطقس: ${weather.desc} ${weather.temp} درجة`}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
     SOLAR_STATUS_MAP,
     ELEC_STATUS_MAP,
@@ -23,7 +23,7 @@ export default function ClientEnergy({
     initialElectricity: ElectricityMeter[];
     initialGenerators: Generator[];
 }) {
-    const { solarPanels: solar, meters: electricity, generators, createSolarPanel, createMeter, createGenerator } = useEnergy(initialSolar, initialElectricity, initialGenerators);
+    const { solarPanels: solar, meters: electricity, generators, createSolarPanel: _createSolarPanel, createMeter: _createMeter, createGenerator: _createGenerator } = useEnergy(initialSolar, initialElectricity, initialGenerators);
     const [activeTab, setActiveTab] = useState<EnergyTab>("solar");
 
     /* ===== Stats ===== */

@@ -202,7 +202,7 @@ export async function fetchClimateData(
 
     const response = await fetch(`${API_BASE}?${params}`);
     if (!response.ok) throw new Error(`Open-Meteo API error: ${response.status}`);
-    const data = await response.json();
+    const data: Record<string, Record<string, number | number[] | string | string[]>> = await response.json();
 
     // Parse current weather
     const weather = decodeWeatherCode(data.current.weather_code);
@@ -255,7 +255,7 @@ export async function fetchClimateData(
     // Predict stage from accumulated GDD
     const thresholds = config?.thresholds ?? [];
     let predictedStage: string | null = null;
-    let predictedStageLabel: string | null = null;
+    const predictedStageLabel: string | null = null;
     let nextStageGDD: number | null = null;
     let progressPercent = 0;
 

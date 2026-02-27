@@ -37,7 +37,7 @@ export default function CropDetailPage({ params }: { params: Promise<{ id: strin
         return <div style={{ minHeight: "60vh" }} />;
     }
 
-    const cropData = crop;
+
 
     if (!crop) {
         return (

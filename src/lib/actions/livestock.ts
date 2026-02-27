@@ -1,14 +1,14 @@
-"use server";
+﻿"use server";
 
-import { useMock, getDb, getCurrentFarmId } from "@/lib/db";
+import { isMockMode, getDb, getCurrentFarmId } from "@/lib/db";
 import type { Animal, VaccinationRecord, FeedRecord } from "@/lib/types";
 
 // ============================================================
-// ANIMALS — READ
+// ANIMALS â€” READ
 // ============================================================
 
 export async function getAnimals(): Promise<Animal[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_ANIMALS } = await import("@/lib/mock/mock-livestock-data");
         return MOCK_ANIMALS;
     }
@@ -29,7 +29,7 @@ export async function getAnimals(): Promise<Animal[]> {
 }
 
 // ============================================================
-// ANIMALS — CREATE / UPDATE / DELETE
+// ANIMALS â€” CREATE / UPDATE / DELETE
 // ============================================================
 
 import { createAnimalSchema, updateAnimalSchema } from "@/lib/validations";
@@ -48,7 +48,7 @@ export async function createAnimal(animal: {
     notes?: string;
 }): Promise<Animal> {
     const parsed = createAnimalSchema.parse(animal);
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_ANIMALS } = await import("@/lib/mock/mock-livestock-data");
         const newAnimal: Animal = {
             id: `animal-${Date.now()}`,
@@ -90,7 +90,7 @@ export async function updateAnimal(
     updates: Partial<Animal>
 ): Promise<Animal> {
     updateAnimalSchema.parse({ id, ...updates });
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_ANIMALS } = await import("@/lib/mock/mock-livestock-data");
         const idx = MOCK_ANIMALS.findIndex((a) => a.id === id);
         if (idx === -1) throw new Error("Animal not found");
@@ -111,7 +111,7 @@ export async function updateAnimal(
 }
 
 export async function deleteAnimal(id: string): Promise<void> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_ANIMALS } = await import("@/lib/mock/mock-livestock-data");
         const idx = MOCK_ANIMALS.findIndex((a) => a.id === id);
         if (idx !== -1) MOCK_ANIMALS.splice(idx, 1);
@@ -128,7 +128,7 @@ export async function deleteAnimal(id: string): Promise<void> {
 // ============================================================
 
 export async function getVaccinations(animalId?: string): Promise<VaccinationRecord[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_VACCINATIONS } = await import("@/lib/mock/mock-livestock-data");
         return animalId
             ? MOCK_VACCINATIONS.filter((v) => v.animal_id === animalId)
@@ -156,7 +156,7 @@ export async function createVaccination(record: {
     cost?: number;
     notes?: string;
 }): Promise<VaccinationRecord> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_VACCINATIONS } = await import("@/lib/mock/mock-livestock-data");
         const newRec: VaccinationRecord = {
             id: `vax-${Date.now()}`,
@@ -183,7 +183,7 @@ export async function createVaccination(record: {
 // ============================================================
 
 export async function getFeedRecords(): Promise<FeedRecord[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_FEED } = await import("@/lib/mock/mock-livestock-data");
         return MOCK_FEED;
     }
@@ -210,7 +210,7 @@ export async function createFeedRecord(record: {
     remaining_kg: number;
     notes?: string;
 }): Promise<FeedRecord> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_FEED } = await import("@/lib/mock/mock-livestock-data");
         const newRec: FeedRecord = {
             id: `feed-${Date.now()}`,

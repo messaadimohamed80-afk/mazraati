@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import InventoryModal from "@/components/InventoryModal";
 import {
     INVENTORY_CATEGORY_MAP,
@@ -18,7 +18,7 @@ export default function ClientInventory({
 }: {
     initialInventory: InventoryItem[];
 }) {
-    const { inventory, createItem } = useInventory(initialInventory);
+    const { inventory, createItem: _createItem } = useInventory(initialInventory);
     const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
     const [view, setView] = useState<ViewMode>("items");
     const [search, setSearch] = useState("");

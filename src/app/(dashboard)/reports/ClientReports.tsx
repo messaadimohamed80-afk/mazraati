@@ -1,14 +1,9 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { formatCurrency } from "@/lib/utils";
 import { Expense, Category, Crop, Task, Well, Animal, FeedRecord, InventoryItem } from "@/lib/types";
-import { getExpenses, getCategories } from "@/lib/actions/expenses";
-import { getCrops, getTasks } from "@/lib/actions/crops";
-import { getAnimals, getFeedRecords } from "@/lib/actions/livestock";
-import { getInventory } from "@/lib/actions/inventory";
-import { getWells } from "@/lib/actions/water";
 
 /* Recharts loaded client-side only */
 const ResponsiveContainer = dynamic(() => import("recharts").then((m) => m.ResponsiveContainer), { ssr: false });
@@ -43,14 +38,14 @@ export default function ClientReports({
     initialInventory: InventoryItem[];
     initialWells: Well[];
 }) {
-    const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
-    const [categories, setCategories] = useState<Category[]>(initialCategories);
-    const [crops, setCrops] = useState<Crop[]>(initialCrops);
-    const [tasks, setTasks] = useState<Task[]>(initialTasks);
-    const [animals, setAnimals] = useState<Animal[]>(initialAnimals);
-    const [feed, setFeed] = useState<FeedRecord[]>(initialFeed);
-    const [inventory, setInventory] = useState<InventoryItem[]>(initialInventory);
-    const [wells, setWells] = useState<Well[]>(initialWells);
+    const [expenses] = useState<Expense[]>(initialExpenses);
+    const [categories] = useState<Category[]>(initialCategories);
+    const [crops] = useState<Crop[]>(initialCrops);
+    const [tasks] = useState<Task[]>(initialTasks);
+    const [animals] = useState<Animal[]>(initialAnimals);
+    const [feed] = useState<FeedRecord[]>(initialFeed);
+    const [inventory] = useState<InventoryItem[]>(initialInventory);
+    const [wells] = useState<Well[]>(initialWells);
 
     /* ===== Computed data ===== */
     const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0);

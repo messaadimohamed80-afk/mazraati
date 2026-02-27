@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import LivestockModal from "@/components/LivestockModal";
 import {
     ANIMAL_TYPE_MAP,
@@ -23,17 +23,17 @@ export default function ClientLivestock({
     initialVaccinations: VaccinationRecord[];
     initialFeed: FeedRecord[];
 }) {
-    const { animals, vaccinations, feedRecords: feed, createAnimal } = useLivestock(initialAnimals, initialVaccinations, initialFeed);
+    const { animals, vaccinations, feedRecords: feed, createAnimal: _createAnimal } = useLivestock(initialAnimals, initialVaccinations, initialFeed);
     const [tab, setTab] = useState<TabKey>("all");
     const [view, setView] = useState<ViewMode>("animals");
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
 
     const activeAnimals = animals.filter((a) => a.status !== "sold" && a.status !== "deceased");
-    const sheepCount = activeAnimals.filter((a) => a.type === "sheep").length;
+    const _sheepCount = activeAnimals.filter((a) => a.type === "sheep").length;
     const cattleCount = activeAnimals.filter((a) => a.type === "cattle").length;
-    const poultryCount = activeAnimals.filter((a) => a.type === "poultry").length;
-    const goatCount = activeAnimals.filter((a) => a.type === "goat").length;
+    const _poultryCount = activeAnimals.filter((a) => a.type === "poultry").length;
+    const _goatCount = activeAnimals.filter((a) => a.type === "goat").length;
     const sickCount = activeAnimals.filter((a) => a.status === "sick").length;
     const pregnantCount = activeAnimals.filter((a) => a.status === "pregnant").length;
 

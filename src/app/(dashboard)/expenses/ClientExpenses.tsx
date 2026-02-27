@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import ExpenseModal from "@/components/ExpenseModal";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Expense, Category } from "@/lib/types";
@@ -104,13 +104,13 @@ export default function ClientExpenses({
     };
 
     const handleAddExpense = (expense: Omit<Expense, "id" | "created_at" | "created_by" | "farm_id">) => {
-        createExpense(expense as any);
+        createExpense(expense as Pick<Expense, "category_id" | "amount" | "description" | "date"> & { notes?: string });
         setShowModal(false);
     };
 
     const handleEditExpense = (expense: Omit<Expense, "id" | "created_at" | "created_by" | "farm_id">) => {
         if (!editingExpense) return;
-        updateExpense({ id: editingExpense.id, updates: expense as any });
+        updateExpense({ id: editingExpense.id, updates: expense as Partial<Pick<Expense, "amount" | "description" | "notes" | "date" | "category_id">> });
         setEditingExpense(null);
         setShowModal(false);
     };

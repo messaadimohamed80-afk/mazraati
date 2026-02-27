@@ -1,9 +1,9 @@
-"use server";
+﻿"use server";
 
-import { useMock, getCurrentFarmId, getCurrentUserId } from "@/lib/db";
+import { isMockMode, getCurrentFarmId, getCurrentUserId } from "@/lib/db";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
-// ── Types ──────────────────────────────────────────────────────
+// â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export interface FarmSettings {
     farmName: string;
@@ -14,19 +14,19 @@ export interface FarmSettings {
     currency: string;
 }
 
-// ── Read ───────────────────────────────────────────────────────
+// â”€â”€ Read â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /**
  * Get the current farm's settings (name, owner, currency, etc.)
  */
 export async function getFarmSettings(): Promise<FarmSettings> {
-    if (useMock()) {
+    if (isMockMode()) {
         return {
-            farmName: "مزرعة الأمل",
-            ownerName: "محمد بن علي",
+            farmName: "Ù…Ø²Ø±Ø¹Ø© Ø§Ù„Ø£Ù…Ù„",
+            ownerName: "Ù…Ø­Ù…Ø¯ Ø¨Ù† Ø¹Ù„ÙŠ",
             phone: "+216 71 123 456",
             email: "farm@example.com",
-            location: "باجة، تونس",
+            location: "Ø¨Ø§Ø¬Ø©ØŒ ØªÙˆÙ†Ø³",
             currency: "TND",
         };
     }
@@ -74,13 +74,13 @@ export async function getFarmSettings(): Promise<FarmSettings> {
     };
 }
 
-// ── Write ──────────────────────────────────────────────────────
+// â”€â”€ Write â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /**
  * Update farm settings (name, location, currency) and profile (name, phone).
  */
 export async function updateFarmSettings(settings: FarmSettings): Promise<{ success: boolean; error?: string }> {
-    if (useMock()) {
+    if (isMockMode()) {
         return { success: true };
     }
 

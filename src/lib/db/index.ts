@@ -5,7 +5,7 @@ import { cache } from "react";
  * Check whether the app should use mock data.
  * Returns true if USE_MOCK=true or Supabase is not configured.
  */
-export function useMock(): boolean {
+export function isMockMode(): boolean {
     if (process.env.USE_MOCK === "true") return true;
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     if (!url || url === "your-supabase-url-here") return true;
@@ -17,7 +17,7 @@ export function useMock(): boolean {
  * Cached per-request via React.cache() to avoid creating multiple clients.
  */
 export const getDb = cache(async () => {
-    if (useMock()) {
+    if (isMockMode()) {
         throw new Error("Cannot get DB client in mock mode. Check USE_MOCK env var.");
     }
     return createServerSupabaseClient();
@@ -38,7 +38,7 @@ const getAuthUser = cache(async () => {
  * Get the current user's ID. Returns null if not authenticated.
  */
 export async function getCurrentUserId(): Promise<string | null> {
-    if (useMock()) return "00000000-0000-0000-0000-000000000001"; // demo user
+    if (isMockMode()) return "00000000-0000-0000-0000-000000000001"; // demo user
     const user = await getAuthUser();
     return user?.id ?? null;
 }
@@ -49,7 +49,7 @@ export async function getCurrentUserId(): Promise<string | null> {
  * across all server actions in the same request.
  */
 export const getCurrentFarmId = cache(async (): Promise<string | null> => {
-    if (useMock()) return "00000000-0000-0000-0000-000000000010"; // demo farm
+    if (isMockMode()) return "00000000-0000-0000-0000-000000000010"; // demo farm
     const user = await getAuthUser();
     if (!user) return null;
 

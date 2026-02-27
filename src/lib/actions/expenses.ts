@@ -1,6 +1,6 @@
-"use server";
+﻿"use server";
 
-import { useMock, getDb, getCurrentFarmId, getCurrentUserId } from "@/lib/db";
+import { isMockMode, getDb, getCurrentFarmId, getCurrentUserId } from "@/lib/db";
 import type { Category, Expense } from "@/lib/types";
 
 // ============================================================
@@ -8,7 +8,7 @@ import type { Category, Expense } from "@/lib/types";
 // ============================================================
 
 export async function getCategories(): Promise<Category[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_CATEGORIES } = await import("@/lib/mock/mock-data");
         return MOCK_CATEGORIES;
     }
@@ -28,7 +28,7 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 export async function getExpenses(): Promise<Expense[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_CATEGORIES, MOCK_EXPENSES } = await import("@/lib/mock/mock-data");
         return MOCK_EXPENSES.map((e) => ({
             ...e,
@@ -65,7 +65,7 @@ export async function createExpense(expense: {
     date: string;
 }): Promise<Expense> {
     const parsed = createExpenseSchema.parse(expense);
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_CATEGORIES, MOCK_EXPENSES } = await import("@/lib/mock/mock-data");
         const newExpense: Expense = {
             id: `exp-${Date.now()}`,
@@ -105,7 +105,7 @@ export async function createCategory(category: {
     color: string;
     budget_planned?: number;
 }): Promise<Category> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_CATEGORIES } = await import("@/lib/mock/mock-data");
         const newCat: Category = {
             id: `cat-${Date.now()}`,
@@ -140,7 +140,7 @@ export async function updateExpense(
     updates: Partial<Pick<Expense, "amount" | "description" | "notes" | "date" | "category_id">>
 ): Promise<Expense> {
     const parsed = updateExpenseSchema.parse({ id, ...updates });
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_EXPENSES } = await import("@/lib/mock/mock-data");
         const idx = MOCK_EXPENSES.findIndex((e) => e.id === id);
         if (idx === -1) throw new Error("Expense not found");
@@ -149,9 +149,10 @@ export async function updateExpense(
     }
 
     const supabase = await getDb();
+    const { id: _id, ...validatedUpdates } = parsed;
     const { data, error } = await supabase
         .from("expenses")
-        .update(updates)
+        .update(validatedUpdates)
         .eq("id", id)
         .select("*, category:categories(*)")
         .single();
@@ -165,7 +166,7 @@ export async function updateExpense(
 // ============================================================
 
 export async function deleteExpense(id: string): Promise<void> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_EXPENSES } = await import("@/lib/mock/mock-data");
         const idx = MOCK_EXPENSES.findIndex((e) => e.id === id);
         if (idx !== -1) MOCK_EXPENSES.splice(idx, 1);

@@ -1,7 +1,7 @@
-"use server";
+﻿"use server";
 
 import { createServerSupabaseClient, createServiceRoleClient } from "@/lib/supabase/server";
-import { useMock } from "@/lib/db";
+import { isMockMode } from "@/lib/db";
 import { seedDemoData } from "@/lib/actions/seed";
 
 /**
@@ -18,7 +18,7 @@ export async function registerUser(input: {
     farmName: string;
     currency: string;
 }): Promise<{ success: boolean; error?: string; needsConfirmation?: boolean }> {
-    if (useMock()) {
+    if (isMockMode()) {
         return { success: true };
     }
 
@@ -44,7 +44,7 @@ export async function registerUser(input: {
 
     const userId = authData.user?.id;
     if (!userId) {
-        // Email confirmation is required — user needs to check inbox
+        // Email confirmation is required â€” user needs to check inbox
         return { success: true, needsConfirmation: true };
     }
 

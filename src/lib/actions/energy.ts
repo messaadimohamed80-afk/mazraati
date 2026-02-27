@@ -1,6 +1,6 @@
-"use server";
+﻿"use server";
 
-import { useMock, getDb, getCurrentFarmId } from "@/lib/db";
+import { isMockMode, getDb, getCurrentFarmId } from "@/lib/db";
 import type { SolarPanel, ElectricityMeter, Generator } from "@/lib/mock/mock-energy-data";
 
 // ============================================================
@@ -8,7 +8,7 @@ import type { SolarPanel, ElectricityMeter, Generator } from "@/lib/mock/mock-en
 // ============================================================
 
 export async function getSolarPanels(): Promise<SolarPanel[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_SOLAR } = await import("@/lib/mock/mock-energy-data");
         return MOCK_SOLAR;
     }
@@ -39,7 +39,7 @@ export async function createSolarPanel(panel: {
     total_cost?: number;
     notes?: string;
 }): Promise<SolarPanel> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_SOLAR } = await import("@/lib/mock/mock-energy-data");
         const newPanel: SolarPanel = {
             id: `solar-${Date.now()}`,
@@ -79,7 +79,7 @@ export async function createSolarPanel(panel: {
 // ============================================================
 
 export async function getElectricityMeters(): Promise<ElectricityMeter[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_ELECTRICITY } = await import("@/lib/mock/mock-energy-data");
         return MOCK_ELECTRICITY;
     }
@@ -109,7 +109,7 @@ export async function createElectricityMeter(meter: {
     status?: string;
     notes?: string;
 }): Promise<ElectricityMeter> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_ELECTRICITY } = await import("@/lib/mock/mock-energy-data");
         const newMeter: ElectricityMeter = {
             id: `elec-${Date.now()}`,
@@ -149,7 +149,7 @@ export async function createElectricityMeter(meter: {
 // ============================================================
 
 export async function getGenerators(): Promise<Generator[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_GENERATORS } = await import("@/lib/mock/mock-energy-data");
         return MOCK_GENERATORS;
     }
@@ -180,7 +180,7 @@ export async function createGenerator(gen: {
     total_cost?: number;
     notes?: string;
 }): Promise<Generator> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_GENERATORS } = await import("@/lib/mock/mock-energy-data");
         const newGen: Generator = {
             id: `gen-${Date.now()}`,

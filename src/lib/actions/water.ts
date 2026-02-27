@@ -1,6 +1,6 @@
-"use server";
+﻿"use server";
 
-import { useMock, getDb, getCurrentFarmId } from "@/lib/db";
+import { isMockMode, getDb, getCurrentFarmId } from "@/lib/db";
 import type { Well, WellLayer, WaterTank, IrrigationNetwork } from "@/lib/types";
 
 // ============================================================
@@ -8,7 +8,7 @@ import type { Well, WellLayer, WaterTank, IrrigationNetwork } from "@/lib/types"
 // ============================================================
 
 export async function getWells(): Promise<Well[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_WELLS } = await import("@/lib/mock/mock-water-data");
         return MOCK_WELLS;
     }
@@ -29,7 +29,7 @@ export async function getWells(): Promise<Well[]> {
 }
 
 export async function getWellLayers(wellId: string): Promise<WellLayer[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_WELL_LAYERS } = await import("@/lib/mock/mock-water-data");
         return MOCK_WELL_LAYERS.filter((l) => l.well_id === wellId);
     }
@@ -60,7 +60,7 @@ export async function createWell(well: {
     longitude?: number;
 }): Promise<Well> {
     const parsed = createWellSchema.parse(well);
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_WELLS } = await import("@/lib/mock/mock-water-data");
         const newWell: Well = {
             id: `well-${Date.now()}`,
@@ -99,7 +99,7 @@ export async function createWell(well: {
 // ============================================================
 
 export async function getTanks(): Promise<WaterTank[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_TANKS } = await import("@/lib/mock/mock-water-data");
         return MOCK_TANKS;
     }
@@ -127,7 +127,7 @@ export async function createTank(tank: {
     status?: string;
     notes?: string;
 }): Promise<WaterTank> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_TANKS } = await import("@/lib/mock/mock-water-data");
         const newTank: WaterTank = {
             id: `tank-${Date.now()}`,
@@ -164,7 +164,7 @@ export async function createTank(tank: {
 // ============================================================
 
 export async function getIrrigation(): Promise<IrrigationNetwork[]> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_IRRIGATION } = await import("@/lib/mock/mock-water-data");
         return MOCK_IRRIGATION;
     }
@@ -193,7 +193,7 @@ export async function createIrrigation(network: {
     flow_rate_lph?: number;
     notes?: string;
 }): Promise<IrrigationNetwork> {
-    if (useMock()) {
+    if (isMockMode()) {
         const { MOCK_IRRIGATION } = await import("@/lib/mock/mock-water-data");
         const newNet: IrrigationNetwork = {
             id: `irr-${Date.now()}`,
