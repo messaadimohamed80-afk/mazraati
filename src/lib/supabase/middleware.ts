@@ -2,17 +2,32 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-    // If mock mode or local development, pass through all requests (no auth required for UI testing)
-    if (process.env.USE_MOCK === "true" || process.env.NODE_ENV === "development") {
+    const isDev = process.env.NODE_ENV === "development";
+    const isMock = process.env.USE_MOCK === "true";
+
+    // Dev/mock convenience: skip auth for local UI testing
+    if (isMock || isDev) {
         return NextResponse.next({ request });
     }
 
-    // If Supabase is not configured yet, pass through all requests
+    // Production: Supabase MUST be configured — fail closed
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseKey || supabaseUrl === "your-supabase-url-here") {
-        return NextResponse.next({ request });
+        console.error(
+            "[mazraati] CRITICAL: Supabase env vars missing in production. " +
+            "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY. " +
+            "Redirecting all requests to /landing for safety."
+        );
+        // Avoid redirect loop on public routes
+        const isLanding = request.nextUrl.pathname === "/landing" ||
+            request.nextUrl.pathname.startsWith("/auth/");
+        if (isLanding) return NextResponse.next({ request });
+
+        const url = request.nextUrl.clone();
+        url.pathname = "/landing";
+        return NextResponse.redirect(url);
     }
 
     let supabaseResponse = NextResponse.next({ request });
