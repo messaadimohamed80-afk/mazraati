@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+﻿import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { cache } from "react";
 
 /**
@@ -25,7 +25,7 @@ export const getDb = cache(async () => {
 
 /**
  * Get the current authenticated user.
- * Cached per-request — no matter how many server actions call this,
+ * Cached per-request â€” no matter how many server actions call this,
  * it only hits Supabase auth once per request.
  */
 const getAuthUser = cache(async () => {
@@ -38,18 +38,18 @@ const getAuthUser = cache(async () => {
  * Get the current user's ID. Returns null if not authenticated.
  */
 export async function getCurrentUserId(): Promise<string | null> {
-    if (isMockMode()) return "00000000-0000-0000-0000-000000000001"; // demo user
+    if (isMockMode()) return "00000000-0000-4000-8000-000000000001"; // demo user
     const user = await getAuthUser();
     return user?.id ?? null;
 }
 
 /**
  * Get the current user's active farm ID.
- * Cached per-request via getAuthUser() — the auth call is shared
+ * Cached per-request via getAuthUser() â€” the auth call is shared
  * across all server actions in the same request.
  */
 export const getCurrentFarmId = cache(async (): Promise<string | null> => {
-    if (isMockMode()) return "00000000-0000-0000-0000-000000000010"; // demo farm
+    if (isMockMode()) return "00000000-0000-4000-8000-000000000010"; // demo farm
     const user = await getAuthUser();
     if (!user) return null;
 

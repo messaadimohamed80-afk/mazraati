@@ -4,7 +4,7 @@
 export const MOCK_WELLS: Well[] = [
     {
         id: "well-1",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø§Ù„Ø¨Ø¦Ø± Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ",
         depth_meters: 120,
         water_level_meters: 45,
@@ -18,7 +18,7 @@ export const MOCK_WELLS: Well[] = [
     },
     {
         id: "well-2",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø¨Ø¦Ø± Ø§Ù„Ù‚Ø·Ø¹Ø© Ø§Ù„Ø¬Ù†ÙˆØ¨ÙŠØ©",
         depth_meters: 85,
         water_level_meters: 32,
@@ -32,7 +32,7 @@ export const MOCK_WELLS: Well[] = [
     },
     {
         id: "well-3",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø¨Ø¦Ø± Ø§Ù„Ù‚Ø·Ø¹Ø© Ø§Ù„Ø´Ù…Ø§Ù„ÙŠØ©",
         depth_meters: 150,
         water_level_meters: 68,
@@ -46,7 +46,7 @@ export const MOCK_WELLS: Well[] = [
     },
     {
         id: "well-4",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø§Ù„Ø¨Ø¦Ø± Ø§Ù„Ù‚Ø¯ÙŠÙ…",
         depth_meters: 60,
         water_level_meters: 55,
@@ -73,7 +73,7 @@ export const MOCK_WELL_LAYERS: WellLayer[] = [
 export const MOCK_TANKS: WaterTank[] = [
     {
         id: "tank-1",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø§Ù„Ø®Ø²Ø§Ù† Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ",
         type: "elevated",
         capacity_liters: 10000,
@@ -86,7 +86,7 @@ export const MOCK_TANKS: WaterTank[] = [
     },
     {
         id: "tank-2",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø®Ø²Ø§Ù† Ø§Ù„Ø±ÙŠ",
         type: "ground",
         capacity_liters: 25000,
@@ -99,7 +99,7 @@ export const MOCK_TANKS: WaterTank[] = [
     },
     {
         id: "tank-3",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø®Ø²Ø§Ù† Ù…ÙŠØ§Ù‡ Ø§Ù„Ø£Ù…Ø·Ø§Ø±",
         type: "underground",
         capacity_liters: 50000,
@@ -112,7 +112,7 @@ export const MOCK_TANKS: WaterTank[] = [
     },
     {
         id: "tank-4",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø®Ø²Ø§Ù† Ø§Ø­ØªÙŠØ§Ø·ÙŠ",
         type: "ground",
         capacity_liters: 5000,
@@ -128,7 +128,7 @@ export const MOCK_TANKS: WaterTank[] = [
 export const MOCK_IRRIGATION: IrrigationNetwork[] = [
     {
         id: "irr-1",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø´Ø¨ÙƒØ© Ø§Ù„Ø±ÙŠ Ø¨Ø§Ù„ØªÙ†Ù‚ÙŠØ· â€” Ø§Ù„Ø²ÙŠØªÙˆÙ†",
         type: "drip",
         coverage_hectares: 2.5,
@@ -142,7 +142,7 @@ export const MOCK_IRRIGATION: IrrigationNetwork[] = [
     },
     {
         id: "irr-2",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø±Ø´Ø§Ø´Ø§Øª Ø§Ù„Ø­Ø¯ÙŠÙ‚Ø©",
         type: "sprinkler",
         coverage_hectares: 0.5,
@@ -155,7 +155,7 @@ export const MOCK_IRRIGATION: IrrigationNetwork[] = [
     },
     {
         id: "irr-3",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø±ÙŠ Ø§Ù„Ù‚Ø·Ø¹Ø© Ø§Ù„Ø¬Ù†ÙˆØ¨ÙŠØ©",
         type: "flood",
         coverage_hectares: 1.0,
@@ -169,7 +169,7 @@ export const MOCK_IRRIGATION: IrrigationNetwork[] = [
     },
     {
         id: "irr-4",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø´Ø¨ÙƒØ© Ø§Ù„ØªÙ†Ù‚ÙŠØ· â€” Ø§Ù„Ø®Ø¶Ø±ÙˆØ§Øª",
         type: "drip",
         coverage_hectares: 0.8,

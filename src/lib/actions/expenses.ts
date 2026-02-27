@@ -69,9 +69,9 @@ export async function createExpense(expense: {
         const { MOCK_CATEGORIES, MOCK_EXPENSES } = await import("@/lib/mock/mock-data");
         const newExpense: Expense = {
             id: crypto.randomUUID(),
-            farm_id: "00000000-0000-0000-0000-000000000010",
+            farm_id: "00000000-0000-4000-8000-000000000010",
             currency: "TND",
-            created_by: "00000000-0000-0000-0000-000000000001",
+            created_by: "00000000-0000-4000-8000-000000000001",
             created_at: new Date().toISOString(),
             category: MOCK_CATEGORIES.find((c) => c.id === expense.category_id),
             ...expense,
@@ -109,7 +109,7 @@ export async function createCategory(category: {
         const { MOCK_CATEGORIES } = await import("@/lib/mock/mock-data");
         const newCat: Category = {
             id: crypto.randomUUID(),
-            farm_id: "00000000-0000-0000-0000-000000000010",
+            farm_id: "00000000-0000-4000-8000-000000000010",
             created_at: new Date().toISOString(),
             ...category,
         };

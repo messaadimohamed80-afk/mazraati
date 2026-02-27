@@ -54,7 +54,7 @@ export interface Generator {
 export const MOCK_SOLAR: SolarPanel[] = [
     {
         id: "solar-1",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø§Ù„Ù…Ù†Ø¸ÙˆÙ…Ø© Ø§Ù„Ø´Ù…Ø³ÙŠØ© â€” Ø§Ù„Ù…Ø¶Ø®Ø©",
         capacity_kw: 5.5,
         panel_count: 12,
@@ -69,7 +69,7 @@ export const MOCK_SOLAR: SolarPanel[] = [
     },
     {
         id: "solar-2",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø£Ù„ÙˆØ§Ø­ Ø³Ù‚Ù Ø§Ù„Ù…Ø®Ø²Ù†",
         capacity_kw: 3.2,
         panel_count: 8,
@@ -84,7 +84,7 @@ export const MOCK_SOLAR: SolarPanel[] = [
     },
     {
         id: "solar-3",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ù…Ø´Ø±ÙˆØ¹ Ø§Ù„ØªÙˆØ³Ø¹Ø©",
         capacity_kw: 10,
         panel_count: 24,
@@ -102,7 +102,7 @@ export const MOCK_SOLAR: SolarPanel[] = [
 export const MOCK_ELECTRICITY: ElectricityMeter[] = [
     {
         id: "elec-1",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø§Ù„Ø¹Ø¯Ø§Ø¯ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ",
         meter_number: "TN-2024-889145",
         provider: "Ø§Ù„Ø³ØªØ§Øº",
@@ -117,7 +117,7 @@ export const MOCK_ELECTRICITY: ElectricityMeter[] = [
     },
     {
         id: "elec-2",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø¹Ø¯Ø§Ø¯ Ø§Ù„Ù…Ø³ÙƒÙ†",
         meter_number: "TN-2024-112847",
         provider: "Ø§Ù„Ø³ØªØ§Øº",
@@ -134,7 +134,7 @@ export const MOCK_ELECTRICITY: ElectricityMeter[] = [
 export const MOCK_GENERATORS: Generator[] = [
     {
         id: "gen-1",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø§Ù„Ù…ÙˆÙ„Ø¯ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ",
         fuel_type: "diesel",
         capacity_kva: 15,
@@ -149,7 +149,7 @@ export const MOCK_GENERATORS: Generator[] = [
     },
     {
         id: "gen-2",
-        farm_id: "00000000-0000-0000-0000-000000000010",
+        farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ù…ÙˆÙ„Ø¯ Ø§Ù„Ø±ÙŠ Ø§Ù„Ù…Ø­Ù…ÙˆÙ„",
         fuel_type: "gasoline",
         capacity_kva: 5,

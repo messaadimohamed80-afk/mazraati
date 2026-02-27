@@ -52,7 +52,7 @@ export async function createAnimal(animal: {
         const { MOCK_ANIMALS } = await import("@/lib/mock/mock-livestock-data");
         const newAnimal: Animal = {
             id: crypto.randomUUID(),
-            farm_id: "00000000-0000-0000-0000-000000000010",
+            farm_id: "00000000-0000-4000-8000-000000000010",
             name: animal.name,
             breed: animal.breed,
             tag_number: animal.tag_number,
@@ -214,7 +214,7 @@ export async function createFeedRecord(record: {
         const { MOCK_FEED } = await import("@/lib/mock/mock-livestock-data");
         const newRec: FeedRecord = {
             id: crypto.randomUUID(),
-            farm_id: "00000000-0000-0000-0000-000000000010",
+            farm_id: "00000000-0000-4000-8000-000000000010",
             created_at: new Date().toISOString(),
             ...record,
         };

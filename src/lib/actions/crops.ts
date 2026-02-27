@@ -68,7 +68,7 @@ export async function createCrop(crop: {
         const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
         const newCrop: Crop = {
             id: crypto.randomUUID(),
-            farm_id: "00000000-0000-0000-0000-000000000010",
+            farm_id: "00000000-0000-4000-8000-000000000010",
             created_at: new Date().toISOString(),
             crop_type: crop.crop_type,
             variety: crop.variety,
@@ -185,7 +185,7 @@ export async function createTask(task: {
         const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
         const newTask: Task = {
             id: crypto.randomUUID(),
-            farm_id: "00000000-0000-0000-0000-000000000010",
+            farm_id: "00000000-0000-4000-8000-000000000010",
             status: "pending" as const,
             recurring: task.recurring ?? false,
             created_at: new Date().toISOString(),

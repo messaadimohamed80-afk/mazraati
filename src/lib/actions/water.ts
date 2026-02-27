@@ -64,7 +64,7 @@ export async function createWell(well: {
         const { MOCK_WELLS } = await import("@/lib/mock/mock-water-data");
         const newWell: Well = {
             id: crypto.randomUUID(),
-            farm_id: "00000000-0000-0000-0000-000000000010",
+            farm_id: "00000000-0000-4000-8000-000000000010",
             name: well.name,
             depth_meters: well.depth_meters,
             water_level_meters: well.water_level_meters,
@@ -131,7 +131,7 @@ export async function createTank(tank: {
         const { MOCK_TANKS } = await import("@/lib/mock/mock-water-data");
         const newTank: WaterTank = {
             id: crypto.randomUUID(),
-            farm_id: "00000000-0000-0000-0000-000000000010",
+            farm_id: "00000000-0000-4000-8000-000000000010",
             name: tank.name,
             capacity_liters: tank.capacity_liters,
             current_level_percent: tank.current_level_percent ?? 0,
@@ -197,7 +197,7 @@ export async function createIrrigation(network: {
         const { MOCK_IRRIGATION } = await import("@/lib/mock/mock-water-data");
         const newNet: IrrigationNetwork = {
             id: `irr-${Date.now()}`,
-            farm_id: "00000000-0000-0000-0000-000000000010",
+            farm_id: "00000000-0000-4000-8000-000000000010",
             name: network.name,
             coverage_hectares: network.coverage_hectares,
             source_name: network.source_name,

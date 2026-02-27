@@ -43,7 +43,7 @@ export async function createSolarPanel(panel: {
         const { MOCK_SOLAR } = await import("@/lib/mock/mock-energy-data");
         const newPanel: SolarPanel = {
             id: `solar-${Date.now()}`,
-            farm_id: "00000000-0000-0000-0000-000000000010",
+            farm_id: "00000000-0000-4000-8000-000000000010",
             capacity_kw: panel.capacity_kw,
             panel_count: panel.panel_count,
             daily_production_kwh: panel.daily_production_kwh ?? 0,
@@ -113,7 +113,7 @@ export async function createElectricityMeter(meter: {
         const { MOCK_ELECTRICITY } = await import("@/lib/mock/mock-energy-data");
         const newMeter: ElectricityMeter = {
             id: `elec-${Date.now()}`,
-            farm_id: "00000000-0000-0000-0000-000000000010",
+            farm_id: "00000000-0000-4000-8000-000000000010",
             name: meter.name,
             meter_number: meter.meter_number,
             provider: meter.provider,
@@ -184,7 +184,7 @@ export async function createGenerator(gen: {
         const { MOCK_GENERATORS } = await import("@/lib/mock/mock-energy-data");
         const newGen: Generator = {
             id: crypto.randomUUID(),
-            farm_id: "00000000-0000-0000-0000-000000000010",
+            farm_id: "00000000-0000-4000-8000-000000000010",
             name: gen.name,
             capacity_kva: gen.capacity_kva,
             runtime_hours: gen.runtime_hours ?? 0,
