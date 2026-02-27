@@ -10,13 +10,21 @@ export function useCrops(initialData: Crop[]) {
     // Query
     const query = useQuery({
         queryKey: ["crops"],
-        queryFn: getCrops,
+        queryFn: async () => {
+            const res = await getCrops();
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         initialData,
     });
 
     // Create Mutation
     const createMutation = useMutation({
-        mutationFn: createCrop,
+        mutationFn: async (newCrop: Parameters<typeof createCrop>[0]) => {
+            const res = await createCrop(newCrop);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (newCrop) => {
             await queryClient.cancelQueries({ queryKey: ["crops"] });
             const previousCrops = queryClient.getQueryData<Crop[]>(["crops"]);
@@ -49,7 +57,11 @@ export function useCrops(initialData: Crop[]) {
 
     // Update Mutation
     const updateMutation = useMutation({
-        mutationFn: ({ id, updates }: { id: string, updates: Partial<Crop> }) => updateCrop(id, updates),
+        mutationFn: async ({ id, updates }: { id: string, updates: Partial<Crop> }) => {
+            const res = await updateCrop(id, updates);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async ({ id, updates }) => {
             await queryClient.cancelQueries({ queryKey: ["crops"] });
             const previousCrops = queryClient.getQueryData<Crop[]>(["crops"]);

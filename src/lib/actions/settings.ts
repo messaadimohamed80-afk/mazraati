@@ -1,4 +1,4 @@
-﻿"use server";
+"use server";
 
 import { isMockMode, getCurrentFarmId, getCurrentUserId } from "@/lib/db";
 import { createServerSupabaseClient } from "@/lib/supabase/server";

@@ -10,13 +10,17 @@ export function useExpenses(initialData: Expense[], categories: Category[]) {
     // Query
     const query = useQuery({
         queryKey: ["expenses"],
-        queryFn: () => getExpenses(),
+        queryFn: async () => { const res = await getExpenses(); if (!res.ok) throw new Error(res.error.message); return res.data; },
         initialData,
     });
 
     // Create Mutation
     const createMutation = useMutation({
-        mutationFn: createExpense,
+        mutationFn: async (newExpense: Parameters<typeof createExpense>[0]) => {
+            const res = await createExpense(newExpense);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (newExpense) => {
             await queryClient.cancelQueries({ queryKey: ["expenses"] });
             const previousExpenses = queryClient.getQueryData<Expense[]>(["expenses"]);
@@ -52,7 +56,11 @@ export function useExpenses(initialData: Expense[], categories: Category[]) {
 
     // Update Mutation
     const updateMutation = useMutation({
-        mutationFn: ({ id, updates }: { id: string, updates: Partial<Expense> }) => updateExpense(id, updates),
+        mutationFn: async ({ id, updates }: { id: string, updates: Partial<Expense> }) => {
+            const res = await updateExpense(id, updates);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async ({ id, updates }) => {
             await queryClient.cancelQueries({ queryKey: ["expenses"] });
             const previousExpenses = queryClient.getQueryData<Expense[]>(["expenses"]);
@@ -84,7 +92,11 @@ export function useExpenses(initialData: Expense[], categories: Category[]) {
 
     // Delete Mutation
     const deleteMutation = useMutation({
-        mutationFn: deleteExpense,
+        mutationFn: async (id: string) => {
+            const res = await deleteExpense(id);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (id) => {
             await queryClient.cancelQueries({ queryKey: ["expenses"] });
             const previousExpenses = queryClient.getQueryData<Expense[]>(["expenses"]);

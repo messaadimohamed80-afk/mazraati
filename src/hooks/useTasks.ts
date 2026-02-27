@@ -8,15 +8,24 @@ export function useTasks(initialData: Task[]) {
     const { addToast } = useToast();
 
     // Query
+    // Query
     const query = useQuery({
         queryKey: ["tasks"],
-        queryFn: getTasks,
+        queryFn: async () => {
+            const res = await getTasks();
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         initialData,
     });
 
     // Create Mutation
     const createMutation = useMutation({
-        mutationFn: createTask,
+        mutationFn: async (newTask: Parameters<typeof createTask>[0]) => {
+            const res = await createTask(newTask);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (newTask) => {
             await queryClient.cancelQueries({ queryKey: ["tasks"] });
             const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]);
@@ -50,7 +59,11 @@ export function useTasks(initialData: Task[]) {
 
     // Update Mutation
     const updateMutation = useMutation({
-        mutationFn: ({ id, updates }: { id: string, updates: Partial<Task> }) => updateTask(id, updates),
+        mutationFn: async ({ id, updates }: { id: string, updates: Partial<Task> }) => {
+            const res = await updateTask(id, updates);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async ({ id, updates }) => {
             await queryClient.cancelQueries({ queryKey: ["tasks"] });
             const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]);
@@ -80,7 +93,11 @@ export function useTasks(initialData: Task[]) {
 
     // Delete Mutation
     const deleteMutation = useMutation({
-        mutationFn: deleteTask,
+        mutationFn: async (id: string) => {
+            const res = await deleteTask(id);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (id) => {
             await queryClient.cancelQueries({ queryKey: ["tasks"] });
             const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]);

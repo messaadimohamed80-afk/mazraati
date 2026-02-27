@@ -1,4 +1,4 @@
-﻿/* --- Responsive — Expenses --- */
+/* --- Responsive — Expenses --- */
 @media (max-width: 1024px) {
   .expense-stats-grid {
     grid-template-columns: repeat(2, 1fr);

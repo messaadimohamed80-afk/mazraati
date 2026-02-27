@@ -1,4 +1,4 @@
-﻿/* ===== Livestock Types ===== */
+/* ===== Livestock Types ===== */
 
 export interface Animal {
     id: string;

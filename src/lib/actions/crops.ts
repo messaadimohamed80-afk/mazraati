@@ -1,52 +1,64 @@
-﻿"use server";
+"use server";
 
 import { isMockMode, getDb, getCurrentFarmId } from "@/lib/db";
 import type { Crop, Task } from "@/lib/types";
+import { z } from "zod";
+import { ActionResult, ok, err } from "@/lib/action-result";
+import { cropRowSchema, taskRowSchema } from "@/lib/validations";
 
 // ============================================================
-// CROPS â€” READ
+// CROPS - READ
 // ============================================================
 
-export async function getCrops(): Promise<Crop[]> {
-    if (isMockMode()) {
-        const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
-        return MOCK_CROPS;
+export async function getCrops(): Promise<ActionResult<Crop[]>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
+            return ok(z.array(cropRowSchema).parse(MOCK_CROPS));
+        }
+
+        const supabase = await getDb();
+        const farmId = await getCurrentFarmId();
+        if (!farmId) return ok([]);
+
+        const { data, error } = await supabase
+            .from("crops")
+            .select("*")
+            .eq("farm_id", farmId)
+            .order("created_at", { ascending: false })
+            .limit(100);
+
+        if (error) return err(`Failed to fetch crops: ${error.message}`, "DB_ERROR");
+        return ok(z.array(cropRowSchema).parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
     }
-
-    const supabase = await getDb();
-    const farmId = await getCurrentFarmId();
-    if (!farmId) return [];
-
-    const { data, error } = await supabase
-        .from("crops")
-        .select("*")
-        .eq("farm_id", farmId)
-        .order("created_at", { ascending: false })
-        .limit(100);
-
-    if (error) throw new Error(`Failed to fetch crops: ${error.message}`);
-    return data as Crop[];
 }
 
-export async function getCrop(id: string): Promise<Crop | null> {
-    if (isMockMode()) {
-        const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
-        return MOCK_CROPS.find((c) => c.id === id) ?? null;
+export async function getCrop(id: string): Promise<ActionResult<Crop>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
+            const crop = MOCK_CROPS.find((c) => c.id === id);
+            return crop ? ok(cropRowSchema.parse(crop)) : err("Crop not found", "NOT_FOUND");
+        }
+
+        const supabase = await getDb();
+        const { data, error } = await supabase
+            .from("crops")
+            .select("*")
+            .eq("id", id)
+            .single();
+
+        if (error || !data) return err("Crop not found", "NOT_FOUND");
+        return ok(cropRowSchema.parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
     }
-
-    const supabase = await getDb();
-    const { data, error } = await supabase
-        .from("crops")
-        .select("*")
-        .eq("id", id)
-        .single();
-
-    if (error) return null;
-    return data as Crop;
 }
 
 // ============================================================
-// CROPS â€” CREATE / UPDATE
+// CROPS - CREATE / UPDATE
 // ============================================================
 
 import { createCropSchema, updateCropSchema, createTaskSchema, updateTaskSchema } from "@/lib/validations";
@@ -62,113 +74,129 @@ export async function createCrop(crop: {
     latitude?: number;
     longitude?: number;
     notes?: string;
-}): Promise<Crop> {
-    const parsed = createCropSchema.parse(crop);
-    if (isMockMode()) {
-        const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
-        const newCrop: Crop = {
-            id: crypto.randomUUID(),
-            farm_id: "00000000-0000-4000-8000-000000000010",
-            created_at: new Date().toISOString(),
-            crop_type: crop.crop_type,
-            variety: crop.variety,
-            field_name: crop.field_name,
-            area_hectares: crop.area_hectares,
-            planting_date: crop.planting_date,
-            expected_harvest: crop.expected_harvest,
-            latitude: crop.latitude,
-            longitude: crop.longitude,
-            notes: crop.notes,
-            status: (crop.status as Crop["status"]) || "planned",
-        };
-        MOCK_CROPS.push(newCrop);
-        return newCrop;
+}): Promise<ActionResult<Crop>> {
+    try {
+        const parsed = createCropSchema.parse(crop);
+        if (isMockMode()) {
+            const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
+            const newCrop: Crop = {
+                id: crypto.randomUUID(),
+                farm_id: "00000000-0000-4000-8000-000000000010",
+                created_at: new Date().toISOString(),
+                crop_type: parsed.crop_type,
+                variety: parsed.variety,
+                field_name: parsed.field_name,
+                area_hectares: parsed.area_hectares,
+                planting_date: parsed.planting_date,
+                expected_harvest: parsed.expected_harvest,
+                latitude: parsed.latitude,
+                longitude: parsed.longitude,
+                notes: parsed.notes,
+                status: (parsed.status as Crop["status"]) || "planned",
+            };
+            MOCK_CROPS.push(newCrop);
+            return ok(cropRowSchema.parse(newCrop));
+        }
+
+        const supabase = await getDb();
+        const farmId = await getCurrentFarmId();
+        if (!farmId) return err("Not authenticated", "NOT_AUTHENTICATED");
+
+        const { data, error } = await supabase
+            .from("crops")
+            .insert({ farm_id: farmId, ...parsed })
+            .select()
+            .single();
+
+        if (error) return err(`Failed to create crop: ${error.message}`, "DB_ERROR");
+        return ok(cropRowSchema.parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), (e instanceof Error && e.name === "ZodError") ? "VALIDATION_ERROR" : "UNKNOWN");
     }
-
-    const supabase = await getDb();
-    const farmId = await getCurrentFarmId();
-    if (!farmId) throw new Error("Not authenticated");
-
-    const { data, error } = await supabase
-        .from("crops")
-        .insert({ farm_id: farmId, ...parsed })
-        .select()
-        .single();
-
-    if (error) throw new Error(`Failed to create crop: ${error.message}`);
-    return data as Crop;
 }
 
 export async function updateCrop(
     id: string,
     updates: Partial<Crop>
-): Promise<Crop> {
-    updateCropSchema.parse({ id, ...updates });
-    if (isMockMode()) {
-        const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
-        const idx = MOCK_CROPS.findIndex((c) => c.id === id);
-        if (idx === -1) throw new Error("Crop not found");
-        Object.assign(MOCK_CROPS[idx], updates);
-        return MOCK_CROPS[idx];
+): Promise<ActionResult<Crop>> {
+    try {
+        updateCropSchema.parse({ id, ...updates });
+        if (isMockMode()) {
+            const { MOCK_CROPS } = await import("@/lib/mock/mock-crops-tasks-data");
+            const idx = MOCK_CROPS.findIndex((c) => c.id === id);
+            if (idx === -1) return err("Crop not found", "NOT_FOUND");
+            Object.assign(MOCK_CROPS[idx], updates);
+            return ok(cropRowSchema.parse(MOCK_CROPS[idx]));
+        }
+
+        const supabase = await getDb();
+        const { data, error } = await supabase
+            .from("crops")
+            .update(updates)
+            .eq("id", id)
+            .select()
+            .single();
+
+        if (error) return err(`Failed to update crop: ${error.message}`, "DB_ERROR");
+        return ok(cropRowSchema.parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), (e instanceof Error && e.name === "ZodError") ? "VALIDATION_ERROR" : "UNKNOWN");
     }
-
-    const supabase = await getDb();
-    const { data, error } = await supabase
-        .from("crops")
-        .update(updates)
-        .eq("id", id)
-        .select()
-        .single();
-
-    if (error) throw new Error(`Failed to update crop: ${error.message}`);
-    return data as Crop;
 }
 
 // ============================================================
-// TASKS â€” READ
+// TASKS - READ
 // ============================================================
 
-export async function getTasks(): Promise<Task[]> {
-    if (isMockMode()) {
-        const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
-        return MOCK_TASKS;
+export async function getTasks(): Promise<ActionResult<Task[]>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
+            return ok(z.array(taskRowSchema).parse(MOCK_TASKS));
+        }
+
+        const supabase = await getDb();
+        const farmId = await getCurrentFarmId();
+        if (!farmId) return ok([]);
+
+        const { data, error } = await supabase
+            .from("tasks")
+            .select("*")
+            .eq("farm_id", farmId)
+            .order("due_date", { ascending: true })
+            .limit(100);
+
+        if (error) return err(`Failed to fetch tasks: ${error.message}`, "DB_ERROR");
+        return ok(z.array(taskRowSchema).parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
     }
-
-    const supabase = await getDb();
-    const farmId = await getCurrentFarmId();
-    if (!farmId) return [];
-
-    const { data, error } = await supabase
-        .from("tasks")
-        .select("*")
-        .eq("farm_id", farmId)
-        .order("due_date", { ascending: true })
-        .limit(100);
-
-    if (error) throw new Error(`Failed to fetch tasks: ${error.message}`);
-    return data as Task[];
 }
 
-export async function getTasksForCrop(cropId: string): Promise<Task[]> {
-    if (isMockMode()) {
-        const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
-        return MOCK_TASKS.filter((t) => t.id.includes("task")); // Mock: return all tasks
-    }
-    // In real mode, we'd filter by crop_id
-    const supabase = await getDb();
-    const { data, error } = await supabase
-        .from("tasks")
-        .select("*")
-        .eq("crop_id", cropId)
-        .order("due_date", { ascending: true })
-        .limit(100);
+export async function getTasksForCrop(cropId: string): Promise<ActionResult<Task[]>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
+            return ok(z.array(taskRowSchema).parse(MOCK_TASKS.filter((t) => t.id.includes("task")))); // Mock: return all tasks
+        }
+        // In real mode, we'd filter by crop_id
+        const supabase = await getDb();
+        const { data, error } = await supabase
+            .from("tasks")
+            .select("*")
+            .eq("crop_id", cropId)
+            .order("due_date", { ascending: true })
+            .limit(100);
 
-    if (error) throw new Error(`Failed to fetch tasks for crop: ${error.message}`);
-    return data as Task[];
+        if (error) return err(`Failed to fetch tasks for crop: ${error.message}`, "DB_ERROR");
+        return ok(z.array(taskRowSchema).parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
 }
 
 // ============================================================
-// TASKS â€” CREATE / UPDATE
+// TASKS - CREATE / UPDATE
 // ============================================================
 
 export async function createTask(task: {
@@ -179,75 +207,89 @@ export async function createTask(task: {
     priority?: string;
     crop_id?: string;
     recurring?: boolean;
-}): Promise<Task> {
-    createTaskSchema.parse(task);
-    if (isMockMode()) {
-        const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
-        const newTask: Task = {
-            id: crypto.randomUUID(),
-            farm_id: "00000000-0000-4000-8000-000000000010",
-            status: "pending" as const,
-            recurring: task.recurring ?? false,
-            created_at: new Date().toISOString(),
-            title: task.title,
-            description: task.description,
-            assigned_to: task.assigned_to,
-            due_date: task.due_date,
-            crop_id: task.crop_id,
-            priority: (task.priority as Task["priority"]) || "medium",
-        };
-        MOCK_TASKS.push(newTask);
-        return newTask;
+}): Promise<ActionResult<Task>> {
+    try {
+        const parsed = createTaskSchema.parse(task);
+        if (isMockMode()) {
+            const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
+            const newTask: Task = {
+                id: crypto.randomUUID(),
+                farm_id: "00000000-0000-4000-8000-000000000010",
+                status: "pending" as const,
+                recurring: parsed.recurring ?? false,
+                created_at: new Date().toISOString(),
+                title: parsed.title,
+                description: parsed.description,
+                assigned_to: parsed.assigned_to,
+                due_date: parsed.due_date,
+                crop_id: parsed.crop_id,
+                priority: (parsed.priority as Task["priority"]) || "medium",
+            };
+            MOCK_TASKS.push(newTask);
+            return ok(taskRowSchema.parse(newTask));
+        }
+
+        const supabase = await getDb();
+        const farmId = await getCurrentFarmId();
+        if (!farmId) return err("Not authenticated", "NOT_AUTHENTICATED");
+
+        const { data, error } = await supabase
+            .from("tasks")
+            .insert({ farm_id: farmId, ...parsed })
+            .select()
+            .single();
+
+        if (error) return err(`Failed to create task: ${error.message}`, "DB_ERROR");
+        return ok(taskRowSchema.parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), (e instanceof Error && e.name === "ZodError") ? "VALIDATION_ERROR" : "UNKNOWN");
     }
-
-    const supabase = await getDb();
-    const farmId = await getCurrentFarmId();
-    if (!farmId) throw new Error("Not authenticated");
-
-    const { data, error } = await supabase
-        .from("tasks")
-        .insert({ farm_id: farmId, ...task })
-        .select()
-        .single();
-
-    if (error) throw new Error(`Failed to create task: ${error.message}`);
-    return data as Task;
 }
 
 export async function updateTask(
     id: string,
     updates: Partial<Task>
-): Promise<Task> {
-    updateTaskSchema.parse({ id, ...updates });
-    if (isMockMode()) {
-        const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
-        const idx = MOCK_TASKS.findIndex((t) => t.id === id);
-        if (idx === -1) throw new Error("Task not found");
-        Object.assign(MOCK_TASKS[idx], updates);
-        return MOCK_TASKS[idx];
+): Promise<ActionResult<Task>> {
+    try {
+        updateTaskSchema.parse({ id, ...updates });
+        if (isMockMode()) {
+            const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
+            const idx = MOCK_TASKS.findIndex((t) => t.id === id);
+            if (idx === -1) return err("Task not found", "NOT_FOUND");
+            Object.assign(MOCK_TASKS[idx], updates);
+            return ok(taskRowSchema.parse(MOCK_TASKS[idx]));
+        }
+
+        const supabase = await getDb();
+        const { data, error } = await supabase
+            .from("tasks")
+            .update(updates)
+            .eq("id", id)
+            .select()
+            .single();
+
+        if (error) return err(`Failed to update task: ${error.message}`, "DB_ERROR");
+        return ok(taskRowSchema.parse(data));
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), (e instanceof Error && e.name === "ZodError") ? "VALIDATION_ERROR" : "UNKNOWN");
     }
-
-    const supabase = await getDb();
-    const { data, error } = await supabase
-        .from("tasks")
-        .update(updates)
-        .eq("id", id)
-        .select()
-        .single();
-
-    if (error) throw new Error(`Failed to update task: ${error.message}`);
-    return data as Task;
 }
 
-export async function deleteTask(id: string): Promise<void> {
-    if (isMockMode()) {
-        const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
-        const idx = MOCK_TASKS.findIndex((t) => t.id === id);
-        if (idx !== -1) MOCK_TASKS.splice(idx, 1);
-        return;
-    }
+export async function deleteTask(id: string): Promise<ActionResult<void>> {
+    try {
+        if (isMockMode()) {
+            const { MOCK_TASKS } = await import("@/lib/mock/mock-crops-tasks-data");
+            const idx = MOCK_TASKS.findIndex((t) => t.id === id);
+            if (idx !== -1) MOCK_TASKS.splice(idx, 1);
+            return ok(undefined);
+        }
 
-    const supabase = await getDb();
-    const { error } = await supabase.from("tasks").delete().eq("id", id);
-    if (error) throw new Error(`Failed to delete task: ${error.message}`);
+        const supabase = await getDb();
+        const { error } = await supabase.from("tasks").delete().eq("id", id);
+        if (error) return err(`Failed to delete task: ${error.message}`, "DB_ERROR");
+
+        return ok(undefined);
+    } catch (e: unknown) {
+        return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
+    }
 }

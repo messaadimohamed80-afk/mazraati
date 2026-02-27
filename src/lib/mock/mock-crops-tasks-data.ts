@@ -1,4 +1,4 @@
-﻿import { Crop, Task } from "../types";
+import { Crop, Task } from "../types";
 
 /* ===== Crop Categories ===== */
 export const CROP_CATEGORIES = [

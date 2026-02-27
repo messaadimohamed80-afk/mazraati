@@ -57,12 +57,12 @@ export default function SearchCommand({ open, onClose }: { open: boolean; onClos
         if (dataLoadedRef.current) return;
         dataLoadedRef.current = true;
         Promise.all([
-            getExpenses().then(setExpenses).catch(() => { }),
-            getCategories().then(setCategories).catch(() => { }),
-            getCrops().then(setCrops).catch(() => { }),
-            getTasks().then(setTasks).catch(() => { }),
-            getAnimals().then(setAnimals).catch(() => { }),
-            getInventory().then(setInventory).catch(() => { }),
+            getExpenses().then((res) => { if (res.ok) setExpenses(res.data); }).catch(() => { }),
+            getCategories().then((res) => { if (res.ok) setCategories(res.data); }).catch(() => { }),
+            getCrops().then((res) => { if (res.ok) setCrops(res.data); }).catch(() => { }),
+            getTasks().then((res) => { if (res.ok) setTasks(res.data); }).catch(() => { }),
+            getAnimals().then((res) => { if (res.ok) setAnimals(res.data); }).catch(() => { }),
+            getInventory().then((res) => { if (res.ok) setInventory(res.data); }).catch(() => { }),
         ]);
     }, []);
 

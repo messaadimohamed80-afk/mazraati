@@ -10,13 +10,21 @@ export function useInventory(initialData: InventoryItem[]) {
     // Query
     const query = useQuery({
         queryKey: ["inventory"],
-        queryFn: getInventory,
+        queryFn: async () => {
+            const res = await getInventory();
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         initialData,
     });
 
     // Create Mutation
     const createMutation = useMutation({
-        mutationFn: createInventoryItem,
+        mutationFn: async (newItem: Parameters<typeof createInventoryItem>[0]) => {
+            const res = await createInventoryItem(newItem);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (newItem) => {
             await queryClient.cancelQueries({ queryKey: ["inventory"] });
             const previousItems = queryClient.getQueryData<InventoryItem[]>(["inventory"]);
@@ -49,7 +57,11 @@ export function useInventory(initialData: InventoryItem[]) {
 
     // Update Mutation
     const updateMutation = useMutation({
-        mutationFn: ({ id, updates }: { id: string, updates: Partial<InventoryItem> }) => updateInventoryItem(id, updates),
+        mutationFn: async ({ id, updates }: { id: string, updates: Partial<InventoryItem> }) => {
+            const res = await updateInventoryItem(id, updates);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async ({ id, updates }) => {
             await queryClient.cancelQueries({ queryKey: ["inventory"] });
             const previousItems = queryClient.getQueryData<InventoryItem[]>(["inventory"]);
@@ -79,7 +91,11 @@ export function useInventory(initialData: InventoryItem[]) {
 
     // Delete Mutation
     const deleteMutation = useMutation({
-        mutationFn: deleteInventoryItem,
+        mutationFn: async (id: string) => {
+            const res = await deleteInventoryItem(id);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (id) => {
             await queryClient.cancelQueries({ queryKey: ["inventory"] });
             const previousItems = queryClient.getQueryData<InventoryItem[]>(["inventory"]);

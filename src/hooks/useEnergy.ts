@@ -4,7 +4,7 @@ import {
     getElectricityMeters, createElectricityMeter,
     getGenerators, createGenerator
 } from "@/lib/actions/energy";
-import { SolarPanel, ElectricityMeter, Generator } from "@/lib/mock/mock-energy-data";
+import { SolarPanel, ElectricityMeter, Generator } from "@/lib/types";
 import { useToast } from "@/components/Toast";
 
 export function useEnergy(
@@ -18,25 +18,41 @@ export function useEnergy(
     // Queries
     const solarQuery = useQuery({
         queryKey: ["solar"],
-        queryFn: getSolarPanels,
+        queryFn: async () => {
+            const res = await getSolarPanels();
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         initialData: initialSolar,
     });
 
     const metersQuery = useQuery({
         queryKey: ["meters"],
-        queryFn: getElectricityMeters,
+        queryFn: async () => {
+            const res = await getElectricityMeters();
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         initialData: initialMeters,
     });
 
     const generatorsQuery = useQuery({
         queryKey: ["generators"],
-        queryFn: getGenerators,
+        queryFn: async () => {
+            const res = await getGenerators();
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         initialData: initialGenerators,
     });
 
     // Mutations
     const createSolarMutation = useMutation({
-        mutationFn: createSolarPanel,
+        mutationFn: async (newPanel: Parameters<typeof createSolarPanel>[0]) => {
+            const res = await createSolarPanel(newPanel);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (newPanel) => {
             await queryClient.cancelQueries({ queryKey: ["solar"] });
             const previousSolar = queryClient.getQueryData<SolarPanel[]>(["solar"]);
@@ -67,7 +83,11 @@ export function useEnergy(
     });
 
     const createMeterMutation = useMutation({
-        mutationFn: createElectricityMeter,
+        mutationFn: async (newMeter: Parameters<typeof createElectricityMeter>[0]) => {
+            const res = await createElectricityMeter(newMeter);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (newMeter) => {
             await queryClient.cancelQueries({ queryKey: ["meters"] });
             const previousMeters = queryClient.getQueryData<ElectricityMeter[]>(["meters"]);
@@ -98,7 +118,11 @@ export function useEnergy(
     });
 
     const createGeneratorMutation = useMutation({
-        mutationFn: createGenerator,
+        mutationFn: async (newGen: Parameters<typeof createGenerator>[0]) => {
+            const res = await createGenerator(newGen);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (newGen) => {
             await queryClient.cancelQueries({ queryKey: ["generators"] });
             const previousGenerators = queryClient.getQueryData<Generator[]>(["generators"]);

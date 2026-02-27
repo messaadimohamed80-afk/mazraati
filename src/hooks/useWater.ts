@@ -14,25 +14,41 @@ export function useWater(
     // Queries
     const wellsQuery = useQuery({
         queryKey: ["wells"],
-        queryFn: getWells,
+        queryFn: async () => {
+            const res = await getWells();
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         initialData: initialWells,
     });
 
     const tanksQuery = useQuery({
         queryKey: ["tanks"],
-        queryFn: getTanks,
+        queryFn: async () => {
+            const res = await getTanks();
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         initialData: initialTanks,
     });
 
     const irrigationQuery = useQuery({
         queryKey: ["irrigation"],
-        queryFn: getIrrigation,
+        queryFn: async () => {
+            const res = await getIrrigation();
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         initialData: initialIrrigation,
     });
 
     // Mutations
     const createWellMutation = useMutation({
-        mutationFn: createWell,
+        mutationFn: async (newWell: Parameters<typeof createWell>[0]) => {
+            const res = await createWell(newWell);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (newWell) => {
             await queryClient.cancelQueries({ queryKey: ["wells"] });
             const previousWells = queryClient.getQueryData<Well[]>(["wells"]);
@@ -64,7 +80,11 @@ export function useWater(
     });
 
     const createTankMutation = useMutation({
-        mutationFn: createTank,
+        mutationFn: async (newTank: Parameters<typeof createTank>[0]) => {
+            const res = await createTank(newTank);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (newTank) => {
             await queryClient.cancelQueries({ queryKey: ["tanks"] });
             const previousTanks = queryClient.getQueryData<WaterTank[]>(["tanks"]);
@@ -96,7 +116,11 @@ export function useWater(
     });
 
     const createIrrigationMutation = useMutation({
-        mutationFn: createIrrigation,
+        mutationFn: async (newIrr: Parameters<typeof createIrrigation>[0]) => {
+            const res = await createIrrigation(newIrr);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (newIrr) => {
             await queryClient.cancelQueries({ queryKey: ["irrigation"] });
             const previousIrr = queryClient.getQueryData<IrrigationNetwork[]>(["irrigation"]);

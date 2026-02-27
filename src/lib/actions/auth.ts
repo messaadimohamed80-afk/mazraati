@@ -1,4 +1,4 @@
-﻿"use server";
+"use server";
 
 import { createServerSupabaseClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { isMockMode } from "@/lib/db";

@@ -28,8 +28,8 @@ export default function CropDetailPage({ params }: { params: Promise<{ id: strin
 
     useEffect(() => {
         Promise.all([
-            getCrop(id).then((c) => { if (c) setCrop(c); }).catch(() => { }),
-            getTasksForCrop(id).then(setTasks).catch(() => { }),
+            getCrop(id).then((c) => { if (c && c.ok) setCrop(c.data); }).catch(() => { }),
+            getTasksForCrop(id).then((t) => { if (t && t.ok) setTasks(t.data); }).catch(() => { }),
         ]).finally(() => setLoaded(true));
     }, [id]);
 

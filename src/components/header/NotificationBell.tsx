@@ -49,11 +49,11 @@ export default function NotificationBell() {
         if (dataLoaded) return;
         setDataLoaded(true);
         Promise.all([
-            getTasks().then(setTasks).catch(() => { }),
-            getVaccinations().then(setVaccinations).catch(() => { }),
-            getFeedRecords().then(setFeed).catch(() => { }),
-            getInventory().then(setInventory).catch(() => { }),
-            getAnimals().then(setAnimals).catch(() => { }),
+            getTasks().then((res) => { if (res.ok) setTasks(res.data); }).catch(() => { }),
+            getVaccinations().then((res) => { if (res.ok) setVaccinations(res.data); }).catch(() => { }),
+            getFeedRecords().then((res) => { if (res.ok) setFeed(res.data); }).catch(() => { }),
+            getInventory().then((res) => { if (res.ok) setInventory(res.data); }).catch(() => { }),
+            getAnimals().then((res) => { if (res.ok) setAnimals(res.data); }).catch(() => { }),
         ]);
     }, [dataLoaded]);
 

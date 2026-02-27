@@ -1,4 +1,4 @@
-﻿
+
 
 
 /* ===== Types (inline for energy module) ===== */

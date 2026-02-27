@@ -2,9 +2,13 @@ import { getAnimals, getVaccinations, getFeedRecords } from "@/lib/actions/lives
 import ClientLivestock from "./ClientLivestock";
 
 export default async function LivestockPage() {
-    const animals = await getAnimals();
-    const vaccinations = await getVaccinations();
-    const feed = await getFeedRecords();
+    const animalsR = await getAnimals();
+    const vaccinationsR = await getVaccinations();
+    const feedR = await getFeedRecords();
+
+    const animals = animalsR.ok ? animalsR.data : [];
+    const vaccinations = vaccinationsR.ok ? vaccinationsR.data : [];
+    const feed = feedR.ok ? feedR.data : [];
 
     return <ClientLivestock initialAnimals={animals} initialVaccinations={vaccinations} initialFeed={feed} />;
 }

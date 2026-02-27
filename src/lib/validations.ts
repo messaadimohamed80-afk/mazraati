@@ -133,4 +133,108 @@ export const createEnergyAssetSchema = z.object({
     status: z.string(), // Extensively validated in UI
     total_cost: z.number().nonnegative().optional(),
     notes: z.string().max(500).optional(),
-}).passthrough(); // Generic passthrough until energy modules are fully fleshed out
+});
+
+// --- Row Validations (DB Returns) ---
+// Note: using .passthrough() on base tables safely wraps standard DB fields without Fighting null vs undefined for optional fields
+
+const dbRowBase = z.object({
+    id: z.string().uuid(),
+    farm_id: z.string().uuid(),
+    created_at: z.string(),
+}).passthrough();
+
+export const cropRowSchema = createCropSchema.extend(dbRowBase.shape).passthrough();
+export const taskRowSchema = createTaskSchema.extend(dbRowBase.shape).passthrough();
+
+export const expenseRowSchema = createExpenseSchema.extend(
+    dbRowBase.extend({ created_by: z.string().uuid() }).shape
+).passthrough();
+
+export const categoryRowSchema = z.object({
+    id: z.string().uuid(),
+    farm_id: z.string().uuid(),
+    name: z.string(),
+    icon: z.string(),
+    color: z.string(),
+    budget_planned: z.number().optional(),
+    created_at: z.string(),
+}).passthrough();
+
+export const wellRowSchema = createWellSchema.extend(dbRowBase.shape).passthrough();
+export const tankRowSchema = createTankSchema.extend(dbRowBase.shape).passthrough();
+export const irrigationRowSchema = createIrrigationSchema.extend(dbRowBase.shape).passthrough();
+export const wellLayerRowSchema = z.object({
+    id: z.string().uuid(),
+    well_id: z.string().uuid(),
+    depth_from: z.number(),
+    depth_to: z.number(),
+    layer_type: z.enum(["soil", "rock", "clay", "water", "sand", "gravel"]),
+    notes: z.string().optional(),
+}).passthrough();
+
+export const animalRowSchema = createAnimalSchema.extend(dbRowBase.shape).passthrough();
+export const vaccinationRowSchema = z.object({
+    id: z.string().uuid(),
+    animal_id: z.string().uuid(),
+    vaccine_name: z.string(),
+    date: z.string(),
+    next_due: z.string().optional(),
+    administered_by: z.string().optional(),
+    cost: z.number().optional(),
+    notes: z.string().optional(),
+    created_at: z.string(),
+}).passthrough();
+
+export const feedRowSchema = z.object({
+    id: z.string().uuid(),
+    farm_id: z.string().uuid(),
+    feed_type: z.string(),
+    quantity_kg: z.number(),
+    cost_per_kg: z.number(),
+    purchase_date: z.string(),
+    remaining_kg: z.number(),
+    notes: z.string().optional(),
+    created_at: z.string(),
+}).passthrough();
+
+export const inventoryItemRowSchema = createInventoryItemSchema.extend(dbRowBase.shape).passthrough();
+
+export const solarPanelRowSchema = dbRowBase.extend({
+    name: z.string(),
+    capacity_kw: z.number(),
+    panel_count: z.number(),
+    daily_production_kwh: z.number(),
+    efficiency_percent: z.number(),
+    installation_date: z.string(),
+    inverter_type: z.string(),
+    status: z.enum(["active", "maintenance", "inactive"]),
+    total_cost: z.number(),
+    notes: z.string().optional(),
+}).passthrough();
+
+export const electricityMeterRowSchema = dbRowBase.extend({
+    name: z.string(),
+    meter_number: z.string(),
+    provider: z.string(),
+    monthly_consumption_kwh: z.number(),
+    monthly_cost: z.number(),
+    currency: z.string(),
+    tariff_type: z.enum(["agricultural", "residential", "commercial"]),
+    status: z.enum(["active", "suspended", "disconnected"]),
+    last_reading_date: z.string(),
+    notes: z.string().optional(),
+}).passthrough();
+
+export const generatorRowSchema = dbRowBase.extend({
+    name: z.string(),
+    fuel_type: z.enum(["diesel", "gasoline", "gas"]),
+    capacity_kva: z.number(),
+    runtime_hours: z.number(),
+    fuel_consumption_lph: z.number(),
+    last_maintenance: z.string(),
+    next_maintenance_hours: z.number(),
+    status: z.enum(["running", "standby", "maintenance", "broken"]),
+    total_cost: z.number(),
+    notes: z.string().optional(),
+}).passthrough();

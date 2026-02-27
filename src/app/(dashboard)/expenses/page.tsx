@@ -3,8 +3,10 @@ import ClientExpenses from "./ClientExpenses";
 
 export default async function ExpensesPage() {
     // Fetch data directly on the server (no useEffect, no loading spinners)
-    const expenses = await getExpenses();
-    const categories = await getCategories();
+    const expensesR = await getExpenses();
+    const categoriesR = await getCategories();
+    const expenses = expensesR.ok ? expensesR.data : [];
+    const categories = categoriesR.ok ? categoriesR.data : [];
 
     return <ClientExpenses initialExpenses={expenses} initialCategories={categories} />;
 }

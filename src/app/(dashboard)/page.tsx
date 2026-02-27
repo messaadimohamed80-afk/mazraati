@@ -12,7 +12,7 @@ import { getInventory } from "@/lib/actions/inventory";
 
 export default async function DashboardPage() {
   /* ===== Fetch data from server actions ===== */
-  const [expenses, categories, wells, crops, tasks, animals, inventory] = await Promise.all([
+  const [expensesR, categoriesR, wellsR, cropsR, tasksR, animalsR, inventoryR] = await Promise.all([
     getExpenses(),
     getCategories(),
     getWells(),
@@ -21,6 +21,14 @@ export default async function DashboardPage() {
     getAnimals(),
     getInventory(),
   ]);
+
+  const expenses = expensesR.ok ? expensesR.data : [];
+  const categories = categoriesR.ok ? categoriesR.data : [];
+  const wells = wellsR.ok ? wellsR.data : [];
+  const crops = cropsR.ok ? cropsR.data : [];
+  const tasks = tasksR.ok ? tasksR.data : [];
+  const animals = animalsR.ok ? animalsR.data : [];
+  const inventory = inventoryR.ok ? inventoryR.data : [];
 
   /* ===== Real stats ===== */
   const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0);

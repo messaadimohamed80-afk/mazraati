@@ -23,25 +23,41 @@ export function useLivestock(
     // Queries
     const animalsQuery = useQuery({
         queryKey: ["animals"],
-        queryFn: getAnimals,
+        queryFn: async () => {
+            const res = await getAnimals();
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         initialData: initialAnimals,
     });
 
     const vaccinationsQuery = useQuery({
         queryKey: ["vaccinations"],
-        queryFn: () => getVaccinations(),
+        queryFn: async () => {
+            const res = await getVaccinations();
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         initialData: initialVaccinations,
     });
 
     const feedQuery = useQuery({
         queryKey: ["feed"],
-        queryFn: getFeedRecords,
+        queryFn: async () => {
+            const res = await getFeedRecords();
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         initialData: initialFeedRecords,
     });
 
     // Mutations - Animals
     const createAnimalMutation = useMutation({
-        mutationFn: createAnimal,
+        mutationFn: async (newAnimal: Parameters<typeof createAnimal>[0]) => {
+            const res = await createAnimal(newAnimal);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (newAnimal) => {
             await queryClient.cancelQueries({ queryKey: ["animals"] });
             const previousAnimals = queryClient.getQueryData<Animal[]>(["animals"]);
@@ -72,7 +88,11 @@ export function useLivestock(
     });
 
     const updateAnimalMutation = useMutation({
-        mutationFn: ({ id, updates }: { id: string, updates: Partial<Animal> }) => updateAnimal(id, updates),
+        mutationFn: async ({ id, updates }: { id: string, updates: Partial<Animal> }) => {
+            const res = await updateAnimal(id, updates);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async ({ id, updates }) => {
             await queryClient.cancelQueries({ queryKey: ["animals"] });
             const previousAnimals = queryClient.getQueryData<Animal[]>(["animals"]);
@@ -97,7 +117,11 @@ export function useLivestock(
     });
 
     const deleteAnimalMutation = useMutation({
-        mutationFn: deleteAnimal,
+        mutationFn: async (id: string) => {
+            const res = await deleteAnimal(id);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (id) => {
             await queryClient.cancelQueries({ queryKey: ["animals"] });
             const previousAnimals = queryClient.getQueryData<Animal[]>(["animals"]);
@@ -122,7 +146,11 @@ export function useLivestock(
 
     // Mutations - Vaccinations
     const createVaccinationMutation = useMutation({
-        mutationFn: createVaccination,
+        mutationFn: async (newVax: Parameters<typeof createVaccination>[0]) => {
+            const res = await createVaccination(newVax);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (newVax) => {
             await queryClient.cancelQueries({ queryKey: ["vaccinations"] });
             const prevVax = queryClient.getQueryData<VaccinationRecord[]>(["vaccinations"]);
@@ -152,7 +180,11 @@ export function useLivestock(
 
     // Mutations - Feed
     const createFeedMutation = useMutation({
-        mutationFn: createFeedRecord,
+        mutationFn: async (newFeed: Parameters<typeof createFeedRecord>[0]) => {
+            const res = await createFeedRecord(newFeed);
+            if (!res.ok) throw new Error(res.error.message);
+            return res.data;
+        },
         onMutate: async (newFeed) => {
             await queryClient.cancelQueries({ queryKey: ["feed"] });
             const prevFeed = queryClient.getQueryData<FeedRecord[]>(["feed"]);

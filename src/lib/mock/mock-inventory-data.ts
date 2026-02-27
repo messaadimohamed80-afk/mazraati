@@ -1,4 +1,4 @@
-﻿/* ===== Inventory Types ===== */
+/* ===== Inventory Types ===== */
 
 export interface InventoryItem {
     id: string;

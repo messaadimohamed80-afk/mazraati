@@ -8,14 +8,14 @@ import ClientReports from "./ClientReports";
 export default async function ReportsPage() {
     // Fetch all necessary data parallelly for the report page
     const [
-        expenses,
-        categories,
-        crops,
-        tasks,
-        animals,
-        feed,
-        inventory,
-        wells
+        expensesR,
+        categoriesR,
+        cropsR,
+        tasksR,
+        animalsR,
+        feedR,
+        inventoryR,
+        wellsR
     ] = await Promise.all([
         getExpenses(),
         getCategories(),
@@ -26,6 +26,15 @@ export default async function ReportsPage() {
         getInventory(),
         getWells(),
     ]);
+
+    const expenses = expensesR.ok ? expensesR.data : [];
+    const categories = categoriesR.ok ? categoriesR.data : [];
+    const crops = cropsR.ok ? cropsR.data : [];
+    const tasks = tasksR.ok ? tasksR.data : [];
+    const animals = animalsR.ok ? animalsR.data : [];
+    const feed = feedR.ok ? feedR.data : [];
+    const inventory = inventoryR.ok ? inventoryR.data : [];
+    const wells = wellsR.ok ? wellsR.data : [];
 
     return (
         <ClientReports
