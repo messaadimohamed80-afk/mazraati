@@ -28,3 +28,8 @@ export function err<T = never>(
 ): ActionResult<T> {
     return { ok: false, error: { message, code } };
 }
+
+/** Create a success result for void actions (delete, etc.) */
+export function okVoid(): ActionResult<void> {
+    return { ok: true, data: undefined as unknown as void };
+}

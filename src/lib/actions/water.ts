@@ -2,7 +2,7 @@
 
 import { isMockMode, getDb, getCurrentFarmId } from "@/lib/db";
 import type { Well, WellLayer, WaterTank, IrrigationNetwork } from "@/lib/types";
-import { ActionResult, ok, err } from "@/lib/action-result";
+import { ActionResult, ok, err, okVoid } from "@/lib/action-result";
 import { wellRowSchema, wellLayerRowSchema, tankRowSchema, irrigationRowSchema } from "@/lib/validations";
 
 // ============================================================
@@ -296,13 +296,13 @@ export async function deleteWell(id: string): Promise<ActionResult<void>> {
             const idx = MOCK_WELLS.findIndex((w) => w.id === id);
             if (idx === -1) return err("Well not found", "NOT_FOUND");
             MOCK_WELLS.splice(idx, 1);
-            return ok(undefined as void);
+            return okVoid();
         }
 
         const supabase = await getDb();
         const { error } = await supabase.from("wells").delete().eq("id", id);
         if (error) return err(`Failed to delete well: ${error.message}`, "DB_ERROR");
-        return ok(undefined as void);
+        return okVoid();
     } catch (e: unknown) {
         return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
     }
@@ -347,13 +347,13 @@ export async function deleteTank(id: string): Promise<ActionResult<void>> {
             const idx = MOCK_TANKS.findIndex((t) => t.id === id);
             if (idx === -1) return err("Tank not found", "NOT_FOUND");
             MOCK_TANKS.splice(idx, 1);
-            return ok(undefined as void);
+            return okVoid();
         }
 
         const supabase = await getDb();
         const { error } = await supabase.from("water_tanks").delete().eq("id", id);
         if (error) return err(`Failed to delete tank: ${error.message}`, "DB_ERROR");
-        return ok(undefined as void);
+        return okVoid();
     } catch (e: unknown) {
         return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
     }
@@ -398,13 +398,13 @@ export async function deleteIrrigation(id: string): Promise<ActionResult<void>> 
             const idx = MOCK_IRRIGATION.findIndex((n) => n.id === id);
             if (idx === -1) return err("Irrigation network not found", "NOT_FOUND");
             MOCK_IRRIGATION.splice(idx, 1);
-            return ok(undefined as void);
+            return okVoid();
         }
 
         const supabase = await getDb();
         const { error } = await supabase.from("irrigation_networks").delete().eq("id", id);
         if (error) return err(`Failed to delete irrigation: ${error.message}`, "DB_ERROR");
-        return ok(undefined as void);
+        return okVoid();
     } catch (e: unknown) {
         return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
     }
