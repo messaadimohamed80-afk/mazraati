@@ -1,6 +1,6 @@
 # Quality Baseline — Mazraati
 
-> This document tracks codebase quality standards, migration notes, and quality gates.
+> Tracks codebase quality standards, migration notes, and quality gates.
 
 ## Quality Gates
 
@@ -9,8 +9,8 @@ All four must pass before merging any PR:
 ```bash
 npm run lint         # 0 errors, 0 warnings
 npm run typecheck    # tsc --noEmit, 0 errors
-npm run test:ci      # All tests pass (127+ tests)
-npm run build        # Compiled successfully, 0 warnings
+npm run test:ci      # All tests pass (140+ tests)
+npm run build        # Compiled successfully
 ```
 
 CI workflow (`.github/workflows/ci.yml`) enforces lint → typecheck → test → build on every PR and push to `main`.
@@ -21,13 +21,15 @@ CI workflow (`.github/workflows/ci.yml`) enforces lint → typecheck → test �
 |------|-------|----------|
 | Validation schemas | 34 | Zod parse/reject for all entity types |
 | Action results | 4 | `ok()`, `err()`, `okVoid()` helpers |
+| Environment helper | 7 | `requireEnv`, `getSupabaseEnv`, `getServiceRoleKey` |
 | DB middleware | 7 | Mock mode detection, farm/user resolution |
 | Auth + Settings | 5 | `registerUser`, `updateFarmSettings` |
 | Water CRUD actions | 16 | Full CRUD for wells, tanks, irrigation + NOT_FOUND |
 | Energy CRUD actions | 16 | Full CRUD for solar, meters, generators + NOT_FOUND |
-| Component (Expenses) | 9 | Rendering, search, filter, modal, delete, stats |
+| Component (Expenses) | 12 | Rendering, search, category filter, sort, modal, delete, stats, empty state |
 | Component (Crops) | 8 | Rendering, search, status filter, modal, create |
 | Component (Tasks) | 8 | Rendering, search, status filter, badges, assignee |
+| Component (SearchCommand) | 6 | ARIA dialog, Escape dismiss, overlay click, empty results |
 | Hook behavior (Expenses) | 5 | Optimistic create, success/error toast, rollback, delete |
 | Hook behavior (Crops) | 5 | Optimistic create/update, success/error toast, rollback |
 | Hook behavior (Tasks) | 6 | Optimistic create/update/delete, success/error toast |
@@ -35,65 +37,53 @@ CI workflow (`.github/workflows/ci.yml`) enforces lint → typecheck → test �
 
 ## CRUD Completeness
 
-All 6 entity types now have full CRUD (Create, Read, Update, Delete):
-
-| Entity | Actions File | Operations |
-|--------|-------------|------------|
-| Expenses | `expenses.ts` | get, create, update, delete |
-| Crops | `crops.ts` | get, create, update |
-| Tasks | `crops.ts` | get, create, update, delete |
-| Wells / Tanks / Irrigation | `water.ts` | get, create, update, delete |
-| Solar / Meters / Generators | `energy.ts` | get, create, update, delete |
-| Animals / Vaccines / Feed | `livestock.ts` | get, create |
+| Entity | Actions File | Create | Read | Update | Delete |
+|--------|-------------|--------|------|--------|--------|
+| Expenses | `expenses.ts` | ✅ | ✅ | ✅ | ✅ |
+| Categories | `expenses.ts` | — | ✅ | — | — |
+| Crops | `crops.ts` | ✅ | ✅ | ✅ | — |
+| Tasks | `crops.ts` | ✅ | ✅ | ✅ | ✅ |
+| Wells | `water.ts` | ✅ | ✅ | ✅ | ✅ |
+| Tanks | `water.ts` | ✅ | ✅ | ✅ | ✅ |
+| Irrigation | `water.ts` | ✅ | ✅ | ✅ | ✅ |
+| Solar Panels | `energy.ts` | ✅ | ✅ | ✅ | ✅ |
+| Electricity Meters | `energy.ts` | ✅ | ✅ | ✅ | ✅ |
+| Generators | `energy.ts` | ✅ | ✅ | ✅ | ✅ |
+| Animals | `livestock.ts` | ✅ | ✅ | — | — |
+| Inventory | `inventory.ts` | ✅ | ✅ | — | — |
 
 ## Action Result Pattern
 
-Server actions in `src/lib/action-result.ts` provide:
-
 ```typescript
-type ActionResult<T> =
-  | { ok: true; data: T }
-  | { ok: false; error: ActionError }
+type ActionResult<T> = { ok: true; data: T } | { ok: false; error: ActionError }
 ```
 
 Helpers: `ok(data)`, `err(message, code)`, `okVoid()` (for delete actions).
 
-## Font Self-Hosting
+## Environment Safety
 
-- **What:** IBM Plex Sans Arabic (weights 400/600/700) is self-hosted under `src/app/fonts/`.
-- **Why:** `next/font/google` requires network access during build. Self-hosting eliminates this dependency.
-- **Fallback:** The CSS variable `--font-arabic` falls back to `system-ui, sans-serif` if the font fails to load.
+All Supabase env vars go through `src/lib/env.ts`:
 
-## Proxy Migration (Next.js 16)
+- `requireEnv(name)` — throws descriptive error if var is missing
+- `getSupabaseEnv()` — returns `{ url, anonKey }`
+- `getServiceRoleKey()` — returns service role key (server-side only)
 
-- **What:** `middleware.ts` was renamed to `proxy.ts` per Next.js 16 convention.
-- **Function:** `middleware()` → `proxy()`.
+No `process.env!` non-null assertions remain in supabase clients.
 
-## Auth Security Model
+## Accessibility
 
-| Environment | Behavior |
-|---|---|
-| Development (`NODE_ENV=development`) | Auth bypassed for convenience |
-| Mock mode (`USE_MOCK=true`) | Auth bypassed |
-| Production + Supabase configured | Full auth with session refresh |
-| **Production + Supabase MISSING** | **Fail-closed** — redirects to `/landing` + CRITICAL log |
-
-## Mock Mode
-
-- **Gate:** `isMockMode()` in `src/lib/db/index.ts`
-- **Precedence:** `USE_MOCK=true` → missing Supabase URL → fallback to mock data
-- **UUID parity:** All mock IDs use RFC 4122 v4 format — validated by the same Zod schemas as real data
-
-## CSS Formatting
-
-- **Rule:** Section headers must use `/* --- Section Name --- */` format (single-line).
-- **Forbidden:** Multi-line `/* ===== */` headers cause CSS optimizer warnings during build.
+| Feature | Implementation |
+|---------|---------------|
+| Focus trap | ExpenseModal, CropModal, SearchCommand |
+| `role="dialog"` + `aria-modal` | ExpenseModal, CropModal, SearchCommand |
+| Arabic `aria-label` | 10+ interactive elements |
+| `prefers-reduced-motion` | Disables animations in `animations.css` |
+| Keyboard dismiss (Escape) | All modals and search dialog |
 
 ## Known Risks
 
 | Risk | Mitigation |
 |---|---|
-| Leaflet Draw types rely on `eslint-disable` comments | `@types/leaflet-draw` doesn't expose all needed types |
-| Supabase `as Entity` return casts in actions | Safe for known schema; DTO types constrain inputs |
-| `process.env!` non-null assertions (6 total) | Acceptable: env vars always present in Vercel + local dev |
-| Energy schema uses `.passthrough()` | Acceptable in prototype; tighten for production |
+| Leaflet Draw types rely on `eslint-disable` | `@types/leaflet-draw` incomplete |
+| Supabase `as Entity` return casts | Safe for known schema |
+| Energy schema uses `.passthrough()` | Acceptable in prototype |

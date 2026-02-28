@@ -90,10 +90,46 @@ export default function SearchCommand({ open, onClose }: { open: boolean; onClos
         ).slice(0, 8);
     }, [searchQuery, allItems]);
 
+    // Focus trap: keep Tab/Shift+Tab inside the dialog
+    useEffect(() => {
+        if (!open) return;
+
+        const handleKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") { onClose(); return; }
+            if (e.key !== "Tab") return;
+
+            const modal = document.querySelector(".search-modal") as HTMLElement | null;
+            if (!modal) return;
+
+            const focusable = modal.querySelectorAll<HTMLElement>(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            if (focusable.length === 0) return;
+
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+
+            if (e.shiftKey) {
+                if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        };
+
+        window.addEventListener("keydown", handleKey);
+        return () => window.removeEventListener("keydown", handleKey);
+    }, [open, onClose]);
+
     if (!open) return null;
 
     return (
-        <div className="search-overlay" onClick={onClose}>
+        <div className="search-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="البحث في المزرعة">
             <div className="search-modal" onClick={(e) => e.stopPropagation()}>
                 <div className="search-modal-input-row">
                     <span className="search-modal-icon">🔍</span>
