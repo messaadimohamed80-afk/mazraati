@@ -222,4 +222,58 @@ describe("ClientExpenses", () => {
 
         expect(screen.getByText(/عرض 3 من 3 معاملة/)).toBeInTheDocument();
     });
+
+    it("filters expenses by category dropdown", () => {
+        render(
+            <ClientExpenses
+                initialExpenses={MOCK_EXPENSES}
+                initialCategories={MOCK_CATEGORIES}
+            />
+        );
+
+        // Select "وقود" category (cat-2)
+        const categorySelect = screen.getByDisplayValue("كل التصنيفات");
+        fireEvent.change(categorySelect, { target: { value: "cat-2" } });
+
+        // Only fuel expense should remain
+        expect(screen.getByText("وقود للجرار")).toBeInTheDocument();
+        expect(screen.queryByText("شراء أعلاف")).not.toBeInTheDocument();
+        expect(screen.queryByText("سماد عضوي")).not.toBeInTheDocument();
+    });
+
+    it("renders empty state when no initial expenses", () => {
+        render(
+            <ClientExpenses
+                initialExpenses={[]}
+                initialCategories={MOCK_CATEGORIES}
+            />
+        );
+
+        expect(screen.getByText("لا توجد مصاريف مطابقة")).toBeInTheDocument();
+    });
+
+    it("toggles sort direction when clicking column header", () => {
+        const { container } = render(
+            <ClientExpenses
+                initialExpenses={MOCK_EXPENSES}
+                initialCategories={MOCK_CATEGORIES}
+            />
+        );
+
+        // Default sort is date desc — first row is exp-2 (Feb 5)
+        const rows = container.querySelectorAll("tr.expense-row");
+        const firstRowText = rows[0]?.textContent;
+        expect(firstRowText).toContain("وقود للجرار");
+
+        // Click the date column header (th element)
+        const thElements = container.querySelectorAll("th");
+        const dateHeader = Array.from(thElements).find(th => th.textContent?.includes("التاريخ"));
+        expect(dateHeader).toBeDefined();
+        fireEvent.click(dateHeader!);
+
+        // After asc sort — first row should be exp-3 (Jan 20)
+        const rowsAfter = container.querySelectorAll("tr.expense-row");
+        const firstRowTextAfter = rowsAfter[0]?.textContent;
+        expect(firstRowTextAfter).toContain("سماد عضوي");
+    });
 });

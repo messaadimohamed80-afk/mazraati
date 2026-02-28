@@ -94,7 +94,7 @@ export default function ExpenseModal({
     const selectedCat = categories.find((c) => c.id === categoryId);
 
     const modalContent = (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="إضافة مصروف">
             <div className="modal-container glass-card" onClick={(e) => e.stopPropagation()}>
                 {/* Header */}
                 <div className="modal-header">

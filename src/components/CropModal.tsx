@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface CropModalProps {
     onClose: () => void;
@@ -28,8 +28,50 @@ export default function CropModal({ onClose, onSave }: CropModalProps) {
         onClose();
     };
 
+    // Close on Escape
+    useEffect(() => {
+        const handleKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") onClose();
+        };
+        window.addEventListener("keydown", handleKey);
+        return () => window.removeEventListener("keydown", handleKey);
+    }, [onClose]);
+
+    // Focus trap: keep focus within modal
+    useEffect(() => {
+        const modal = document.querySelector(".modal-container") as HTMLElement | null;
+        if (!modal) return;
+
+        const focusable = modal.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        first.focus();
+
+        const trap = (e: KeyboardEvent) => {
+            if (e.key !== "Tab") return;
+            if (e.shiftKey) {
+                if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        };
+
+        modal.addEventListener("keydown", trap);
+        return () => modal.removeEventListener("keydown", trap);
+    }, []);
+
     return (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="إضافة محصول جديد">
             <div className="modal-container" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
                     <h2 className="modal-title">🌾 إضافة محصول جديد</h2>
