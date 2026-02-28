@@ -5,7 +5,10 @@ export default defineConfig({
     test: {
         globals: true,
         environment: "jsdom",
-        setupFiles: ["./vitest.setup.ts"],
+        setupFiles: ["./src/test/setup.ts"],
+    },
+    esbuild: {
+        jsx: "automatic",
     },
     resolve: {
         alias: {
