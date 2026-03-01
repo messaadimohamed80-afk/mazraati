@@ -28,7 +28,7 @@ export function useExpenses(initialData: Expense[], categories: Category[]) {
             queryClient.setQueryData<Expense[]>(["expenses"], (old) => {
                 const category = categories.find((c) => c.id === newExpense.category_id);
                 const optimisticExpense: Expense = {
-                    id: `temp-${Date.now()}`,
+                    id: crypto.randomUUID(),
                     farm_id: "temp",
                     currency: "TND",
                     created_by: "temp",

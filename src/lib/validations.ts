@@ -51,6 +51,18 @@ export const createIrrigationSchema = z.object({
     notes: z.string().max(500).optional(),
 });
 
+export const updateWellSchema = createWellSchema.partial().extend({
+    id: z.string().uuid(),
+});
+
+export const updateTankSchema = createTankSchema.partial().extend({
+    id: z.string().uuid(),
+});
+
+export const updateIrrigationSchema = createIrrigationSchema.partial().extend({
+    id: z.string().uuid(),
+});
+
 // --- Validations: Crops & Tasks ---
 export const createCropSchema = z.object({
     crop_type: z.string().min(2).max(100),
@@ -131,6 +143,48 @@ export const updateInventoryItemSchema = createInventoryItemSchema.partial().ext
 export const createEnergyAssetSchema = z.object({
     name: z.string().min(2).max(100),
     status: z.string(), // Extensively validated in UI
+    total_cost: z.number().nonnegative().optional(),
+    notes: z.string().max(500).optional(),
+});
+
+export const updateSolarPanelSchema = z.object({
+    id: z.string().uuid(),
+    name: z.string().min(2).max(100).optional(),
+    capacity_kw: z.number().nonnegative().optional(),
+    panel_count: z.number().nonnegative().optional(),
+    daily_production_kwh: z.number().nonnegative().optional(),
+    efficiency_percent: z.number().min(0).max(100).optional(),
+    installation_date: z.string().optional(),
+    inverter_type: z.string().optional(),
+    status: z.enum(["active", "maintenance", "inactive"]).optional(),
+    total_cost: z.number().nonnegative().optional(),
+    notes: z.string().max(500).optional(),
+});
+
+export const updateElectricityMeterSchema = z.object({
+    id: z.string().uuid(),
+    name: z.string().min(2).max(100).optional(),
+    meter_number: z.string().optional(),
+    provider: z.string().optional(),
+    monthly_consumption_kwh: z.number().nonnegative().optional(),
+    monthly_cost: z.number().nonnegative().optional(),
+    currency: z.string().optional(),
+    tariff_type: z.enum(["agricultural", "residential", "commercial"]).optional(),
+    status: z.enum(["active", "suspended", "disconnected"]).optional(),
+    last_reading_date: z.string().optional(),
+    notes: z.string().max(500).optional(),
+});
+
+export const updateGeneratorSchema = z.object({
+    id: z.string().uuid(),
+    name: z.string().min(2).max(100).optional(),
+    fuel_type: z.enum(["diesel", "gasoline", "gas"]).optional(),
+    capacity_kva: z.number().nonnegative().optional(),
+    runtime_hours: z.number().nonnegative().optional(),
+    fuel_consumption_lph: z.number().nonnegative().optional(),
+    last_maintenance: z.string().optional(),
+    next_maintenance_hours: z.number().nonnegative().optional(),
+    status: z.enum(["running", "standby", "maintenance", "broken"]).optional(),
     total_cost: z.number().nonnegative().optional(),
     notes: z.string().max(500).optional(),
 });

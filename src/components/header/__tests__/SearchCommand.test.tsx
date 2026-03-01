@@ -1,14 +1,27 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import React from "react";
 import SearchCommand from "../SearchCommand";
+
+// Suppress React act() warnings from async server action calls inside useEffect
+// This is a known pattern for components that fetch data in effects
+const originalError = console.error;
+beforeAll(() => {
+    console.error = (...args: unknown[]) => {
+        if (typeof args[0] === "string" && args[0].includes("was not wrapped in act")) return;
+        originalError(...args);
+    };
+});
+afterAll(() => {
+    console.error = originalError;
+});
 
 // Mock next/navigation
 vi.mock("next/navigation", () => ({
     useRouter: () => ({ push: vi.fn() }),
 }));
 
-// Mock all action modules to prevent server-side imports
+// Mock all action modules
 vi.mock("@/lib/actions/expenses", () => ({
     getExpenses: vi.fn().mockResolvedValue({ ok: true, data: [] }),
     getCategories: vi.fn().mockResolvedValue({ ok: true, data: [] }),
@@ -67,12 +80,14 @@ describe("SearchCommand", () => {
         expect(mockClose).toHaveBeenCalledTimes(1);
     });
 
-    it("shows empty state when searching with no results", () => {
+    it("shows empty state when searching with no results", async () => {
         render(<SearchCommand open={true} onClose={mockClose} />);
 
         const input = screen.getByPlaceholderText("ابحث عن مصروف، محصول، حيوان، مهمة...");
         fireEvent.change(input, { target: { value: "xxxxxx" } });
 
-        expect(screen.getByText(/لا توجد نتائج/)).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText(/لا توجد نتائج/)).toBeInTheDocument();
+        });
     });
 });

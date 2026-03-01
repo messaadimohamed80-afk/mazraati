@@ -3,7 +3,7 @@
 import { isMockMode, getDb, getCurrentFarmId } from "@/lib/db";
 import type { Well, WellLayer, WaterTank, IrrigationNetwork } from "@/lib/types";
 import { ActionResult, ok, err, okVoid } from "@/lib/action-result";
-import { wellRowSchema, wellLayerRowSchema, tankRowSchema, irrigationRowSchema } from "@/lib/validations";
+import { wellRowSchema, wellLayerRowSchema, tankRowSchema, irrigationRowSchema, updateWellSchema, updateTankSchema, updateIrrigationSchema } from "@/lib/validations";
 
 // ============================================================
 // WELLS
@@ -224,7 +224,7 @@ export async function createIrrigation(network: {
         if (isMockMode()) {
             const { MOCK_IRRIGATION } = await import("@/lib/mock/mock-water-data");
             const newNet: IrrigationNetwork = {
-                id: `irr-${Date.now()}`,
+                id: crypto.randomUUID(),
                 farm_id: "00000000-0000-4000-8000-000000000010",
                 name: network.name,
                 coverage_hectares: network.coverage_hectares,
@@ -266,18 +266,21 @@ export async function updateWell(
     updates: Partial<Omit<Well, "id" | "farm_id" | "created_at">>
 ): Promise<ActionResult<Well>> {
     try {
+        const parsed = updateWellSchema.parse({ id, ...updates });
+        const { id: _parsedId, ...validatedUpdates } = parsed;
+        void _parsedId;
         if (isMockMode()) {
             const { MOCK_WELLS } = await import("@/lib/mock/mock-water-data");
             const idx = MOCK_WELLS.findIndex((w) => w.id === id);
             if (idx === -1) return err("Well not found", "NOT_FOUND");
-            Object.assign(MOCK_WELLS[idx], updates);
+            Object.assign(MOCK_WELLS[idx], validatedUpdates);
             return ok(wellRowSchema.parse(MOCK_WELLS[idx]));
         }
 
         const supabase = await getDb();
         const { data, error } = await supabase
             .from("wells")
-            .update(updates)
+            .update(validatedUpdates)
             .eq("id", id)
             .select()
             .single();
@@ -317,18 +320,21 @@ export async function updateTank(
     updates: Partial<Omit<WaterTank, "id" | "farm_id" | "created_at">>
 ): Promise<ActionResult<WaterTank>> {
     try {
+        const parsed = updateTankSchema.parse({ id, ...updates });
+        const { id: _parsedId, ...validatedUpdates } = parsed;
+        void _parsedId;
         if (isMockMode()) {
             const { MOCK_TANKS } = await import("@/lib/mock/mock-water-data");
             const idx = MOCK_TANKS.findIndex((t) => t.id === id);
             if (idx === -1) return err("Tank not found", "NOT_FOUND");
-            Object.assign(MOCK_TANKS[idx], updates);
+            Object.assign(MOCK_TANKS[idx], validatedUpdates);
             return ok(tankRowSchema.parse(MOCK_TANKS[idx]));
         }
 
         const supabase = await getDb();
         const { data, error } = await supabase
             .from("water_tanks")
-            .update(updates)
+            .update(validatedUpdates)
             .eq("id", id)
             .select()
             .single();
@@ -368,18 +374,21 @@ export async function updateIrrigation(
     updates: Partial<Omit<IrrigationNetwork, "id" | "farm_id" | "created_at">>
 ): Promise<ActionResult<IrrigationNetwork>> {
     try {
+        const parsed = updateIrrigationSchema.parse({ id, ...updates });
+        const { id: _parsedId, ...validatedUpdates } = parsed;
+        void _parsedId;
         if (isMockMode()) {
             const { MOCK_IRRIGATION } = await import("@/lib/mock/mock-water-data");
             const idx = MOCK_IRRIGATION.findIndex((n) => n.id === id);
             if (idx === -1) return err("Irrigation network not found", "NOT_FOUND");
-            Object.assign(MOCK_IRRIGATION[idx], updates);
+            Object.assign(MOCK_IRRIGATION[idx], validatedUpdates);
             return ok(irrigationRowSchema.parse(MOCK_IRRIGATION[idx]));
         }
 
         const supabase = await getDb();
         const { data, error } = await supabase
             .from("irrigation_networks")
-            .update(updates)
+            .update(validatedUpdates)
             .eq("id", id)
             .select()
             .single();

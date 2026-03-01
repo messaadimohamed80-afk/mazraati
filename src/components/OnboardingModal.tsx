@@ -95,6 +95,9 @@ export default function OnboardingModal() {
         <div
             className={`onboarding-overlay ${isClosing ? "onboarding-overlay-closing" : ""}`}
             onClick={handleClose}
+            role="dialog"
+            aria-modal="true"
+            aria-label="مرحبًا بك في مزرعتي"
         >
             <div
                 className={`onboarding-modal glass-card ${isClosing ? "onboarding-modal-closing" : ""}`}

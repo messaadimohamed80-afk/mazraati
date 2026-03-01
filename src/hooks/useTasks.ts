@@ -31,7 +31,7 @@ export function useTasks(initialData: Task[]) {
 
             queryClient.setQueryData<Task[]>(["tasks"], (old) => {
                 const optimisticTask: Task = {
-                    id: `temp-${Date.now()}`,
+                    id: crypto.randomUUID(),
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
                     title: newTask.title,

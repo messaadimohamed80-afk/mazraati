@@ -30,7 +30,7 @@ export default function LivestockModal({ onClose, onSave }: LivestockModalProps)
     };
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="إضافة حيوان جديد">
             <div className="modal-container" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
                     <h2 className="modal-title">🐑 إضافة حيوان جديد</h2>

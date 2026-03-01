@@ -3,7 +3,7 @@
 import { isMockMode, getDb, getCurrentFarmId } from "@/lib/db";
 import type { SolarPanel, ElectricityMeter, Generator } from "@/lib/types";
 import { ActionResult, ok, err, okVoid } from "@/lib/action-result";
-import { solarPanelRowSchema, electricityMeterRowSchema, generatorRowSchema } from "@/lib/validations";
+import { solarPanelRowSchema, electricityMeterRowSchema, generatorRowSchema, updateSolarPanelSchema, updateElectricityMeterSchema, updateGeneratorSchema } from "@/lib/validations";
 
 // ============================================================
 // SOLAR PANELS
@@ -257,18 +257,21 @@ export async function updateSolarPanel(
     updates: Partial<Omit<SolarPanel, "id" | "farm_id" | "created_at">>
 ): Promise<ActionResult<SolarPanel>> {
     try {
+        const parsed = updateSolarPanelSchema.parse({ id, ...updates });
+        const { id: _parsedId, ...validatedUpdates } = parsed;
+        void _parsedId;
         if (isMockMode()) {
             const { MOCK_SOLAR } = await import("@/lib/mock/mock-energy-data");
             const idx = MOCK_SOLAR.findIndex((p) => p.id === id);
             if (idx === -1) return err("Solar panel not found", "NOT_FOUND");
-            Object.assign(MOCK_SOLAR[idx], updates);
+            Object.assign(MOCK_SOLAR[idx], validatedUpdates);
             return ok(solarPanelRowSchema.parse(MOCK_SOLAR[idx]));
         }
 
         const supabase = await getDb();
         const { data, error } = await supabase
             .from("solar_panels")
-            .update(updates)
+            .update(validatedUpdates)
             .eq("id", id)
             .select()
             .single();
@@ -308,18 +311,21 @@ export async function updateElectricityMeter(
     updates: Partial<Omit<ElectricityMeter, "id" | "farm_id" | "created_at">>
 ): Promise<ActionResult<ElectricityMeter>> {
     try {
+        const parsed = updateElectricityMeterSchema.parse({ id, ...updates });
+        const { id: _parsedId, ...validatedUpdates } = parsed;
+        void _parsedId;
         if (isMockMode()) {
             const { MOCK_ELECTRICITY } = await import("@/lib/mock/mock-energy-data");
             const idx = MOCK_ELECTRICITY.findIndex((m) => m.id === id);
             if (idx === -1) return err("Meter not found", "NOT_FOUND");
-            Object.assign(MOCK_ELECTRICITY[idx], updates);
+            Object.assign(MOCK_ELECTRICITY[idx], validatedUpdates);
             return ok(electricityMeterRowSchema.parse(MOCK_ELECTRICITY[idx]));
         }
 
         const supabase = await getDb();
         const { data, error } = await supabase
             .from("electricity_meters")
-            .update(updates)
+            .update(validatedUpdates)
             .eq("id", id)
             .select()
             .single();
@@ -359,18 +365,21 @@ export async function updateGenerator(
     updates: Partial<Omit<Generator, "id" | "farm_id" | "created_at">>
 ): Promise<ActionResult<Generator>> {
     try {
+        const parsed = updateGeneratorSchema.parse({ id, ...updates });
+        const { id: _parsedId, ...validatedUpdates } = parsed;
+        void _parsedId;
         if (isMockMode()) {
             const { MOCK_GENERATORS } = await import("@/lib/mock/mock-energy-data");
             const idx = MOCK_GENERATORS.findIndex((g) => g.id === id);
             if (idx === -1) return err("Generator not found", "NOT_FOUND");
-            Object.assign(MOCK_GENERATORS[idx], updates);
+            Object.assign(MOCK_GENERATORS[idx], validatedUpdates);
             return ok(generatorRowSchema.parse(MOCK_GENERATORS[idx]));
         }
 
         const supabase = await getDb();
         const { data, error } = await supabase
             .from("generators")
-            .update(updates)
+            .update(validatedUpdates)
             .eq("id", id)
             .select()
             .single();

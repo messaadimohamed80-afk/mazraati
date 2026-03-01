@@ -22,7 +22,7 @@ export interface InventoryItem {
 
 export const MOCK_INVENTORY: InventoryItem[] = [
     {
-        id: "inv-1",
+        id: "00000000-0000-4000-8000-000000002001",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø¬Ø±Ø§Ø± ÙÙŠØ§Øª 640",
         category: "equipment",
@@ -39,7 +39,7 @@ export const MOCK_INVENTORY: InventoryItem[] = [
         created_at: "2023-04-15T10:00:00Z",
     },
     {
-        id: "inv-2",
+        id: "00000000-0000-4000-8000-000000002002",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ù…Ø¶Ø®Ø© ØºØ§Ø·Ø³Ø© Pedrollo",
         category: "equipment",
@@ -56,7 +56,7 @@ export const MOCK_INVENTORY: InventoryItem[] = [
         created_at: "2024-08-15T10:00:00Z",
     },
     {
-        id: "inv-3",
+        id: "00000000-0000-4000-8000-000000002003",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ù…Ø­Ø±Ø§Ø« Ù‚Ù„Ø§Ø¨",
         category: "equipment",
@@ -72,7 +72,7 @@ export const MOCK_INVENTORY: InventoryItem[] = [
         created_at: "2023-06-20T08:00:00Z",
     },
     {
-        id: "inv-4",
+        id: "00000000-0000-4000-8000-000000002004",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø³Ù…Ø§Ø¯ NPK 15-15-15",
         category: "chemicals",
@@ -87,7 +87,7 @@ export const MOCK_INVENTORY: InventoryItem[] = [
         created_at: "2025-01-10T09:00:00Z",
     },
     {
-        id: "inv-5",
+        id: "00000000-0000-4000-8000-000000002005",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ù…Ø¨ÙŠØ¯ Ø­Ø´Ø±ÙŠ â€” ÙƒØ§Ø±Ø§ØªÙŠ",
         category: "chemicals",
@@ -102,7 +102,7 @@ export const MOCK_INVENTORY: InventoryItem[] = [
         created_at: "2025-01-20T10:00:00Z",
     },
     {
-        id: "inv-6",
+        id: "00000000-0000-4000-8000-000000002006",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø¨Ø°ÙˆØ± Ø·Ù…Ø§Ø·Ù… â€” ÙƒØ§Ù„ÙŠÙ†Ø¯Ø§",
         category: "seeds",
@@ -117,7 +117,7 @@ export const MOCK_INVENTORY: InventoryItem[] = [
         created_at: "2025-02-01T08:00:00Z",
     },
     {
-        id: "inv-7",
+        id: "00000000-0000-4000-8000-000000002007",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø¨Ø°ÙˆØ± ÙÙ„ÙÙ„ Ø­Ø§Ø±",
         category: "seeds",
@@ -132,7 +132,7 @@ export const MOCK_INVENTORY: InventoryItem[] = [
         created_at: "2025-01-15T09:00:00Z",
     },
     {
-        id: "inv-8",
+        id: "00000000-0000-4000-8000-000000002008",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ù…Ù‚Øµ ØªÙ‚Ù„ÙŠÙ… ÙƒÙ‡Ø±Ø¨Ø§Ø¦ÙŠ",
         category: "tools",
@@ -147,7 +147,7 @@ export const MOCK_INVENTORY: InventoryItem[] = [
         created_at: "2024-11-20T10:00:00Z",
     },
     {
-        id: "inv-9",
+        id: "00000000-0000-4000-8000-000000002009",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø£Ù†Ø§Ø¨ÙŠØ¨ Ø±ÙŠ 16mm",
         category: "supplies",
@@ -161,7 +161,7 @@ export const MOCK_INVENTORY: InventoryItem[] = [
         created_at: "2024-10-01T08:00:00Z",
     },
     {
-        id: "inv-10",
+        id: "00000000-0000-4000-8000-000000002010",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ù†Ù‚Ø§Ø·Ø§Øª Ø±ÙŠ",
         category: "supplies",
@@ -176,7 +176,7 @@ export const MOCK_INVENTORY: InventoryItem[] = [
         created_at: "2024-10-01T08:00:00Z",
     },
     {
-        id: "inv-11",
+        id: "00000000-0000-4000-8000-000000002011",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "ÙÙ„ØªØ± Ø²ÙŠØª Ø¬Ø±Ø§Ø±",
         category: "spare_parts",
@@ -190,7 +190,7 @@ export const MOCK_INVENTORY: InventoryItem[] = [
         created_at: "2025-01-05T09:00:00Z",
     },
     {
-        id: "inv-12",
+        id: "00000000-0000-4000-8000-000000002012",
         farm_id: "00000000-0000-4000-8000-000000000010",
         name: "Ø±Ø´Ø§Ø´ Ø¸Ù‡Ø±ÙŠ 16 Ù„ØªØ±",
         category: "tools",

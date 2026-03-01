@@ -65,7 +65,7 @@ describe("useCrops hook behavior", () => {
 
         const optimistic = result.current.crops.find(c => c.crop_type === "قمح");
         expect(optimistic).toBeDefined();
-        expect(optimistic!.id).toMatch(/^temp-/);
+        expect(optimistic!.id).toMatch(/^[0-9a-f]{8}-/);
     });
 
     it("shows success toast on create", async () => {

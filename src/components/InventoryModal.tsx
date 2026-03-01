@@ -30,7 +30,7 @@ export default function InventoryModal({ onClose, onSave }: InventoryModalProps)
     };
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="إضافة عنصر جديد">
             <div className="modal-container" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
                     <h2 className="modal-title">📦 إضافة عنصر جديد</h2>

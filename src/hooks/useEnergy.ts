@@ -59,7 +59,7 @@ export function useEnergy(
 
             queryClient.setQueryData<SolarPanel[]>(["solar"], (old) => {
                 const optimisticPanel: SolarPanel = {
-                    id: `temp-${Date.now()}`,
+                    id: crypto.randomUUID(),
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
                     name: newPanel.name,
@@ -102,7 +102,7 @@ export function useEnergy(
 
             queryClient.setQueryData<ElectricityMeter[]>(["meters"], (old) => {
                 const optimisticMeter: ElectricityMeter = {
-                    id: `temp-${Date.now()}`,
+                    id: crypto.randomUUID(),
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
                     name: newMeter.name,
@@ -145,7 +145,7 @@ export function useEnergy(
 
             queryClient.setQueryData<Generator[]>(["generators"], (old) => {
                 const optimisticGen: Generator = {
-                    id: `temp-${Date.now()}`,
+                    id: crypto.randomUUID(),
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
                     name: newGen.name,

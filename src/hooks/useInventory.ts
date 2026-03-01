@@ -31,7 +31,7 @@ export function useInventory(initialData: InventoryItem[]) {
 
             queryClient.setQueryData<InventoryItem[]>(["inventory"], (old) => {
                 const optimisticItem: InventoryItem = {
-                    id: `temp-${Date.now()}`,
+                    id: crypto.randomUUID(),
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
                     name: newItem.name,

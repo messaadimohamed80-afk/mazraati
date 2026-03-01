@@ -49,8 +49,8 @@ CI workflow (`.github/workflows/ci.yml`) enforces lint → typecheck → test �
 | Solar Panels | `energy.ts` | ✅ | ✅ | ✅ | ✅ |
 | Electricity Meters | `energy.ts` | ✅ | ✅ | ✅ | ✅ |
 | Generators | `energy.ts` | ✅ | ✅ | ✅ | ✅ |
-| Animals | `livestock.ts` | ✅ | ✅ | — | — |
-| Inventory | `inventory.ts` | ✅ | ✅ | — | — |
+| Animals | `livestock.ts` | ✅ | ✅ | ✅ | ✅ |
+| Inventory | `inventory.ts` | ✅ | ✅ | ✅ | ✅ |
 
 ## Action Result Pattern
 
@@ -75,7 +75,7 @@ No `process.env!` non-null assertions remain in supabase clients.
 | Feature | Implementation |
 |---------|---------------|
 | Focus trap | ExpenseModal, CropModal, SearchCommand |
-| `role="dialog"` + `aria-modal` | ExpenseModal, CropModal, SearchCommand |
+| `role="dialog"` + `aria-modal` | ExpenseModal, CropModal, SearchCommand, InventoryModal, LivestockModal, OnboardingModal |
 | Arabic `aria-label` | 10+ interactive elements |
 | `prefers-reduced-motion` | Disables animations in `animations.css` |
 | Keyboard dismiss (Escape) | All modals and search dialog |

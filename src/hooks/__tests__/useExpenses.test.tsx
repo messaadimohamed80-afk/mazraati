@@ -86,7 +86,7 @@ describe("useExpenses hook behavior", () => {
         // The optimistic entry shows the correct description
         const newEntry = result.current.expenses.find(e => e.description === "جديد");
         expect(newEntry).toBeDefined();
-        expect(newEntry!.id).toMatch(/^temp-/);
+        expect(newEntry!.id).toMatch(/^[0-9a-f]{8}-/);
     });
 
     it("shows success toast after create resolves", async () => {

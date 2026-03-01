@@ -51,10 +51,11 @@ npm run test:ci      # CI mode (verbose reporter)
 
 ## Quality Gates (CI)
 
-All three must pass on every PR:
+All four must pass on every PR:
 
 ```
 npm run lint         # 0 errors, 0 warnings
+npm run typecheck    # tsc --noEmit
 npm run test:ci      # All tests pass
 npm run build        # Compiled successfully
 ```

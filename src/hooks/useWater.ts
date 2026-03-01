@@ -55,7 +55,7 @@ export function useWater(
 
             queryClient.setQueryData<Well[]>(["wells"], (old) => {
                 const optimisticWell: Well = {
-                    id: `temp-${Date.now()}`,
+                    id: crypto.randomUUID(),
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
                     name: newWell.name,
@@ -97,7 +97,7 @@ export function useWater(
 
             queryClient.setQueryData<WaterTank[]>(["tanks"], (old) => {
                 const optimisticTank: WaterTank = {
-                    id: `temp-${Date.now()}`,
+                    id: crypto.randomUUID(),
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
                     name: newTank.name,
@@ -137,7 +137,7 @@ export function useWater(
 
             queryClient.setQueryData<IrrigationNetwork[]>(["irrigation"], (old) => {
                 const optimisticIrr: IrrigationNetwork = {
-                    id: `temp-${Date.now()}`,
+                    id: crypto.randomUUID(),
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
                     name: newIrr.name,

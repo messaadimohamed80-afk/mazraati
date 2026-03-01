@@ -6,7 +6,7 @@ import { useToast } from "@/components/Toast";
 /** Build an optimistic Crop with required defaults */
 function buildOptimisticCrop(input: Parameters<typeof createCrop>[0]): Crop {
     return {
-        id: `temp-${Date.now()}`,
+        id: crypto.randomUUID(),
         farm_id: "temp",
         created_at: new Date().toISOString(),
         crop_type: input.crop_type,

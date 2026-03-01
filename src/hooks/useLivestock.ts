@@ -64,7 +64,7 @@ export function useLivestock(
 
             queryClient.setQueryData<Animal[]>(["animals"], (old) => {
                 const optimisticAnimal: Animal = {
-                    id: `temp-${Date.now()}`,
+                    id: crypto.randomUUID(),
                     farm_id: "temp",
                     created_at: new Date().toISOString(),
                     name: newAnimal.name,
@@ -167,7 +167,7 @@ export function useLivestock(
 
             queryClient.setQueryData<VaccinationRecord[]>(["vaccinations"], (old) => {
                 const optimisticVax: VaccinationRecord = {
-                    id: `temp-${Date.now()}`,
+                    id: crypto.randomUUID(),
                     animal_id: newVax.animal_id,
                     vaccine_name: newVax.vaccine_name,
                     date: newVax.date ?? new Date().toISOString(),
@@ -206,7 +206,7 @@ export function useLivestock(
 
             queryClient.setQueryData<FeedRecord[]>(["feed"], (old) => {
                 const optimisticFeed: FeedRecord = {
-                    id: `temp-${Date.now()}`,
+                    id: crypto.randomUUID(),
                     farm_id: "temp",
                     feed_type: newFeed.feed_type,
                     quantity_kg: newFeed.quantity_kg,
