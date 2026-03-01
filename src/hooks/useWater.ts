@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getWells, getTanks, getIrrigation, createWell, createTank, createIrrigation } from "@/lib/actions/water";
+import { unwrap } from "@/lib/action-result";
 import { Well, WaterTank, IrrigationNetwork } from "@/lib/types";
 import { useToast } from "@/components/Toast";
 
@@ -14,31 +15,19 @@ export function useWater(
     // Queries
     const wellsQuery = useQuery({
         queryKey: ["wells"],
-        queryFn: async () => {
-            const res = await getWells();
-            if (!res.ok) throw new Error(res.error.message);
-            return res.data;
-        },
+        queryFn: () => unwrap(getWells),
         initialData: initialWells,
     });
 
     const tanksQuery = useQuery({
         queryKey: ["tanks"],
-        queryFn: async () => {
-            const res = await getTanks();
-            if (!res.ok) throw new Error(res.error.message);
-            return res.data;
-        },
+        queryFn: () => unwrap(getTanks),
         initialData: initialTanks,
     });
 
     const irrigationQuery = useQuery({
         queryKey: ["irrigation"],
-        queryFn: async () => {
-            const res = await getIrrigation();
-            if (!res.ok) throw new Error(res.error.message);
-            return res.data;
-        },
+        queryFn: () => unwrap(getIrrigation),
         initialData: initialIrrigation,
     });
 

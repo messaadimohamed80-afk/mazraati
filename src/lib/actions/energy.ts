@@ -1,9 +1,10 @@
 "use server";
 
+import { z } from "zod";
 import { isMockMode, getDb, getCurrentFarmId } from "@/lib/db";
 import type { SolarPanel, ElectricityMeter, Generator } from "@/lib/types";
 import { ActionResult, ok, err, okVoid } from "@/lib/action-result";
-import { solarPanelRowSchema, electricityMeterRowSchema, generatorRowSchema, updateSolarPanelSchema, updateElectricityMeterSchema, updateGeneratorSchema } from "@/lib/validations";
+import { createEnergyAssetSchema, solarPanelRowSchema, electricityMeterRowSchema, generatorRowSchema, updateSolarPanelSchema, updateElectricityMeterSchema, updateGeneratorSchema } from "@/lib/validations";
 
 // ============================================================
 // SOLAR PANELS
@@ -32,9 +33,6 @@ export async function getSolarPanels(): Promise<ActionResult<SolarPanel[]>> {
         return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
     }
 }
-
-import { z } from "zod";
-import { createEnergyAssetSchema } from "@/lib/validations";
 
 export async function createSolarPanel(panel: {
     name: string;

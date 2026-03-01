@@ -1,9 +1,10 @@
 "use server";
 
+import { z } from "zod";
 import { isMockMode, getDb, getCurrentFarmId } from "@/lib/db";
 import type { Well, WellLayer, WaterTank, IrrigationNetwork } from "@/lib/types";
 import { ActionResult, ok, err, okVoid } from "@/lib/action-result";
-import { wellRowSchema, wellLayerRowSchema, tankRowSchema, irrigationRowSchema, updateWellSchema, updateTankSchema, updateIrrigationSchema } from "@/lib/validations";
+import { createWellSchema, wellRowSchema, wellLayerRowSchema, tankRowSchema, irrigationRowSchema, updateWellSchema, updateTankSchema, updateIrrigationSchema } from "@/lib/validations";
 
 // ============================================================
 // WELLS
@@ -55,9 +56,6 @@ export async function getWellLayers(wellId: string): Promise<ActionResult<WellLa
         return err(e instanceof Error ? e.message : String(e), "UNKNOWN");
     }
 }
-
-import { z } from "zod";
-import { createWellSchema } from "@/lib/validations";
 
 export async function createWell(well: {
     name: string;

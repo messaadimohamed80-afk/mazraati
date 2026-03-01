@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getInventory, createInventoryItem, updateInventoryItem, deleteInventoryItem } from "@/lib/actions/inventory";
+import { unwrap } from "@/lib/action-result";
 import { InventoryItem } from "@/lib/types";
 import { useToast } from "@/components/Toast";
 
@@ -10,11 +11,7 @@ export function useInventory(initialData: InventoryItem[]) {
     // Query
     const query = useQuery({
         queryKey: ["inventory"],
-        queryFn: async () => {
-            const res = await getInventory();
-            if (!res.ok) throw new Error(res.error.message);
-            return res.data;
-        },
+        queryFn: () => unwrap(getInventory),
         initialData,
     });
 

@@ -33,3 +33,11 @@ export function err<T = never>(
 export function okVoid(): ActionResult<void> {
     return { ok: true, data: undefined as unknown as void };
 }
+
+/** Unwrap an ActionResult — returns data on success, throws on error.
+ *  Designed for React Query queryFn where thrown errors become query errors. */
+export async function unwrap<T>(fn: () => Promise<ActionResult<T>>): Promise<T> {
+    const res = await fn();
+    if (!res.ok) throw new Error(res.error.message);
+    return res.data;
+}

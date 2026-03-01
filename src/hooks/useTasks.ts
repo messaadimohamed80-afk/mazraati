@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTasks, createTask, updateTask, deleteTask } from "@/lib/actions/crops";
+import { unwrap } from "@/lib/action-result";
 import { Task } from "@/lib/types";
 import { useToast } from "@/components/Toast";
 
@@ -10,11 +11,7 @@ export function useTasks(initialData: Task[]) {
     // Query
     const query = useQuery({
         queryKey: ["tasks"],
-        queryFn: async () => {
-            const res = await getTasks();
-            if (!res.ok) throw new Error(res.error.message);
-            return res.data;
-        },
+        queryFn: () => unwrap(getTasks),
         initialData,
     });
 

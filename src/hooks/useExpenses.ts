@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getExpenses, createExpense, updateExpense, deleteExpense } from "@/lib/actions/expenses";
+import { unwrap } from "@/lib/action-result";
 import { Expense, Category } from "@/lib/types";
 import { useToast } from "@/components/Toast";
 
@@ -10,7 +11,7 @@ export function useExpenses(initialData: Expense[], categories: Category[]) {
     // Query
     const query = useQuery({
         queryKey: ["expenses"],
-        queryFn: async () => { const res = await getExpenses(); if (!res.ok) throw new Error(res.error.message); return res.data; },
+        queryFn: () => unwrap(getExpenses),
         initialData,
     });
 

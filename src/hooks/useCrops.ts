@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCrops, createCrop, updateCrop } from "@/lib/actions/crops";
+import { unwrap } from "@/lib/action-result";
 import { Crop } from "@/lib/types";
 import { useToast } from "@/components/Toast";
 
@@ -29,11 +30,7 @@ export function useCrops(initialData: Crop[]) {
     // Query
     const query = useQuery({
         queryKey: ["crops"],
-        queryFn: async () => {
-            const res = await getCrops();
-            if (!res.ok) throw new Error(res.error.message);
-            return res.data;
-        },
+        queryFn: () => unwrap(getCrops),
         initialData,
     });
 

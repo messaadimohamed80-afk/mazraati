@@ -9,6 +9,7 @@ import {
     getFeedRecords,
     createFeedRecord
 } from "@/lib/actions/livestock";
+import { unwrap } from "@/lib/action-result";
 import { Animal, VaccinationRecord, FeedRecord } from "@/lib/types";
 import { useToast } from "@/components/Toast";
 
@@ -23,31 +24,19 @@ export function useLivestock(
     // Queries
     const animalsQuery = useQuery({
         queryKey: ["animals"],
-        queryFn: async () => {
-            const res = await getAnimals();
-            if (!res.ok) throw new Error(res.error.message);
-            return res.data;
-        },
+        queryFn: () => unwrap(getAnimals),
         initialData: initialAnimals,
     });
 
     const vaccinationsQuery = useQuery({
         queryKey: ["vaccinations"],
-        queryFn: async () => {
-            const res = await getVaccinations();
-            if (!res.ok) throw new Error(res.error.message);
-            return res.data;
-        },
+        queryFn: () => unwrap(getVaccinations),
         initialData: initialVaccinations,
     });
 
     const feedQuery = useQuery({
         queryKey: ["feed"],
-        queryFn: async () => {
-            const res = await getFeedRecords();
-            if (!res.ok) throw new Error(res.error.message);
-            return res.data;
-        },
+        queryFn: () => unwrap(getFeedRecords),
         initialData: initialFeedRecords,
     });
 

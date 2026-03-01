@@ -4,6 +4,7 @@ import {
     getElectricityMeters, createElectricityMeter,
     getGenerators, createGenerator
 } from "@/lib/actions/energy";
+import { unwrap } from "@/lib/action-result";
 import { SolarPanel, ElectricityMeter, Generator } from "@/lib/types";
 import { useToast } from "@/components/Toast";
 
@@ -18,31 +19,19 @@ export function useEnergy(
     // Queries
     const solarQuery = useQuery({
         queryKey: ["solar"],
-        queryFn: async () => {
-            const res = await getSolarPanels();
-            if (!res.ok) throw new Error(res.error.message);
-            return res.data;
-        },
+        queryFn: () => unwrap(getSolarPanels),
         initialData: initialSolar,
     });
 
     const metersQuery = useQuery({
         queryKey: ["meters"],
-        queryFn: async () => {
-            const res = await getElectricityMeters();
-            if (!res.ok) throw new Error(res.error.message);
-            return res.data;
-        },
+        queryFn: () => unwrap(getElectricityMeters),
         initialData: initialMeters,
     });
 
     const generatorsQuery = useQuery({
         queryKey: ["generators"],
-        queryFn: async () => {
-            const res = await getGenerators();
-            if (!res.ok) throw new Error(res.error.message);
-            return res.data;
-        },
+        queryFn: () => unwrap(getGenerators),
         initialData: initialGenerators,
     });
 

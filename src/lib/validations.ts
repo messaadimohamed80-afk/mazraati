@@ -1,5 +1,12 @@
 import { z } from "zod";
 
+// --- Base Row Shape (shared by all DB tables) ---
+const dbRowBase = z.object({
+    id: z.string().uuid(),
+    farm_id: z.string().uuid(),
+    created_at: z.string(),
+}).passthrough();
+
 // --- Validations: Expenses ---
 export const createExpenseSchema = z.object({
     category_id: z.string().uuid("معرف التصنيف غير صالح"),
@@ -147,56 +154,61 @@ export const createEnergyAssetSchema = z.object({
     notes: z.string().max(500).optional(),
 });
 
-export const updateSolarPanelSchema = z.object({
-    id: z.string().uuid(),
-    name: z.string().min(2).max(100).optional(),
-    capacity_kw: z.number().nonnegative().optional(),
-    panel_count: z.number().nonnegative().optional(),
-    daily_production_kwh: z.number().nonnegative().optional(),
-    efficiency_percent: z.number().min(0).max(100).optional(),
-    installation_date: z.string().optional(),
-    inverter_type: z.string().optional(),
-    status: z.enum(["active", "maintenance", "inactive"]).optional(),
-    total_cost: z.number().nonnegative().optional(),
-    notes: z.string().max(500).optional(),
-});
+export const solarPanelRowSchema = dbRowBase.extend({
+    name: z.string(),
+    capacity_kw: z.number(),
+    panel_count: z.number(),
+    daily_production_kwh: z.number(),
+    efficiency_percent: z.number(),
+    installation_date: z.string(),
+    inverter_type: z.string(),
+    status: z.enum(["active", "maintenance", "inactive"]),
+    total_cost: z.number(),
+    notes: z.string().optional(),
+}).passthrough();
 
-export const updateElectricityMeterSchema = z.object({
-    id: z.string().uuid(),
-    name: z.string().min(2).max(100).optional(),
-    meter_number: z.string().optional(),
-    provider: z.string().optional(),
-    monthly_consumption_kwh: z.number().nonnegative().optional(),
-    monthly_cost: z.number().nonnegative().optional(),
-    currency: z.string().optional(),
-    tariff_type: z.enum(["agricultural", "residential", "commercial"]).optional(),
-    status: z.enum(["active", "suspended", "disconnected"]).optional(),
-    last_reading_date: z.string().optional(),
-    notes: z.string().max(500).optional(),
-});
+export const electricityMeterRowSchema = dbRowBase.extend({
+    name: z.string(),
+    meter_number: z.string(),
+    provider: z.string(),
+    monthly_consumption_kwh: z.number(),
+    monthly_cost: z.number(),
+    currency: z.string(),
+    tariff_type: z.enum(["agricultural", "residential", "commercial"]),
+    status: z.enum(["active", "suspended", "disconnected"]),
+    last_reading_date: z.string(),
+    notes: z.string().optional(),
+}).passthrough();
 
-export const updateGeneratorSchema = z.object({
-    id: z.string().uuid(),
-    name: z.string().min(2).max(100).optional(),
-    fuel_type: z.enum(["diesel", "gasoline", "gas"]).optional(),
-    capacity_kva: z.number().nonnegative().optional(),
-    runtime_hours: z.number().nonnegative().optional(),
-    fuel_consumption_lph: z.number().nonnegative().optional(),
-    last_maintenance: z.string().optional(),
-    next_maintenance_hours: z.number().nonnegative().optional(),
-    status: z.enum(["running", "standby", "maintenance", "broken"]).optional(),
-    total_cost: z.number().nonnegative().optional(),
-    notes: z.string().max(500).optional(),
-});
+export const generatorRowSchema = dbRowBase.extend({
+    name: z.string(),
+    fuel_type: z.enum(["diesel", "gasoline", "gas"]),
+    capacity_kva: z.number(),
+    runtime_hours: z.number(),
+    fuel_consumption_lph: z.number(),
+    last_maintenance: z.string(),
+    next_maintenance_hours: z.number(),
+    status: z.enum(["running", "standby", "maintenance", "broken"]),
+    total_cost: z.number(),
+    notes: z.string().optional(),
+}).passthrough();
+
+export const updateSolarPanelSchema = solarPanelRowSchema
+    .omit({ farm_id: true, created_at: true })
+    .partial()
+    .extend({ id: z.string().uuid() });
+
+export const updateElectricityMeterSchema = electricityMeterRowSchema
+    .omit({ farm_id: true, created_at: true })
+    .partial()
+    .extend({ id: z.string().uuid() });
+
+export const updateGeneratorSchema = generatorRowSchema
+    .omit({ farm_id: true, created_at: true })
+    .partial()
+    .extend({ id: z.string().uuid() });
 
 // --- Row Validations (DB Returns) ---
-// Note: using .passthrough() on base tables safely wraps standard DB fields without Fighting null vs undefined for optional fields
-
-const dbRowBase = z.object({
-    id: z.string().uuid(),
-    farm_id: z.string().uuid(),
-    created_at: z.string(),
-}).passthrough();
 
 export const cropRowSchema = createCropSchema.extend(dbRowBase.shape).passthrough();
 export const taskRowSchema = createTaskSchema.extend(dbRowBase.shape).passthrough();
@@ -253,42 +265,3 @@ export const feedRowSchema = z.object({
 }).passthrough();
 
 export const inventoryItemRowSchema = createInventoryItemSchema.extend(dbRowBase.shape).passthrough();
-
-export const solarPanelRowSchema = dbRowBase.extend({
-    name: z.string(),
-    capacity_kw: z.number(),
-    panel_count: z.number(),
-    daily_production_kwh: z.number(),
-    efficiency_percent: z.number(),
-    installation_date: z.string(),
-    inverter_type: z.string(),
-    status: z.enum(["active", "maintenance", "inactive"]),
-    total_cost: z.number(),
-    notes: z.string().optional(),
-}).passthrough();
-
-export const electricityMeterRowSchema = dbRowBase.extend({
-    name: z.string(),
-    meter_number: z.string(),
-    provider: z.string(),
-    monthly_consumption_kwh: z.number(),
-    monthly_cost: z.number(),
-    currency: z.string(),
-    tariff_type: z.enum(["agricultural", "residential", "commercial"]),
-    status: z.enum(["active", "suspended", "disconnected"]),
-    last_reading_date: z.string(),
-    notes: z.string().optional(),
-}).passthrough();
-
-export const generatorRowSchema = dbRowBase.extend({
-    name: z.string(),
-    fuel_type: z.enum(["diesel", "gasoline", "gas"]),
-    capacity_kva: z.number(),
-    runtime_hours: z.number(),
-    fuel_consumption_lph: z.number(),
-    last_maintenance: z.string(),
-    next_maintenance_hours: z.number(),
-    status: z.enum(["running", "standby", "maintenance", "broken"]),
-    total_cost: z.number(),
-    notes: z.string().optional(),
-}).passthrough();

@@ -1,9 +1,10 @@
 "use server";
 
+import { z } from "zod";
 import { isMockMode, getDb, getCurrentFarmId } from "@/lib/db";
 import type { Animal, VaccinationRecord, FeedRecord } from "@/lib/types";
 import { ActionResult, ok, err } from "@/lib/action-result";
-import { animalRowSchema, vaccinationRowSchema, feedRowSchema } from "@/lib/validations";
+import { animalRowSchema, vaccinationRowSchema, feedRowSchema, createAnimalSchema, updateAnimalSchema } from "@/lib/validations";
 
 // ============================================================
 // ANIMALS â€” READ
@@ -37,8 +38,6 @@ export async function getAnimals(): Promise<ActionResult<Animal[]>> {
 // ============================================================
 // ANIMALS â€” CREATE / UPDATE / DELETE
 // ============================================================
-
-import { createAnimalSchema, updateAnimalSchema } from "@/lib/validations";
 
 export async function createAnimal(animal: {
     name: string;
@@ -145,8 +144,6 @@ export async function deleteAnimal(id: string): Promise<ActionResult<void>> {
 // ============================================================
 // VACCINATIONS
 // ============================================================
-
-import { z } from "zod";
 
 export async function getVaccinations(animalId?: string): Promise<ActionResult<VaccinationRecord[]>> {
     try {

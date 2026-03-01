@@ -245,7 +245,7 @@ export async function seedDemoData(farmId: string, userId: string): Promise<void
             .update({ demo_data_seeded: true })
             .eq("id", farmId);
 
-        console.log(`✅ Demo data seeded for farm ${farmId}`);
+
     } catch (err) {
         console.error("⚠️ Demo data seeding failed:", err);
         // Don't throw — seeding failure shouldn't block registration
